@@ -5,6 +5,7 @@ const initialState = {
   expiredTime: null,
   loading: null,
   user: {},
+  error: {},
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -22,6 +23,18 @@ export const authReducer = (state = initialState, action) => {
         expiredTime: accessToken.expiredTime,
         user,
         loading: false,
+        error: {}
+      };
+    case actionTypes.AUTH_LOGIN_FAIL:
+      const { status, message } = action.payload;
+      
+      return {
+        ...state,
+        loading: false,
+        error: {
+          status,
+          message
+        }
       };
     case actionTypes.AUTH_REFRESH_TOKEN_REQUEST:
       return {
@@ -37,7 +50,13 @@ export const authReducer = (state = initialState, action) => {
         expiredTime: newAccessToken.expiredTime,
         user: newUser,
         loading: false,
+        error: {}
       };
+    case actionTypes.AUTH_RESET_ERROR:
+      return {
+        ...state,
+        error: {}
+      }
     default:
       return state;
   }

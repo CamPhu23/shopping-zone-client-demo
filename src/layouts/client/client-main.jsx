@@ -4,12 +4,10 @@ import { Footer } from './footer';
 
 export const ClientLayout = ({ component }) => {
   return (
-    <>
+    <div>
       <Header />
-        <div className='relative overflow-y-auto'>
-          {component}
-        </div>
+      {component}
       <Footer />
-    </>
+    </div>
   )
 };

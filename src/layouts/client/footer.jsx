@@ -2,6 +2,8 @@ import React from 'react';
 
 export const Footer = () => {
   return (
-    <div>Footer</div>
+    <footer className="text-gray-700 text-center p-2 bg-slate-100 text-sm">
+        &copy; 2022 Copyright: Shopping Zone | Developed by Tang Cam Phu & Nguyen Van Quang Huy 
+    </footer>
   )
 };

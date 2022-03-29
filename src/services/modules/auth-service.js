@@ -1,10 +1,8 @@
-import axios from "axios";
-import store from "../store";
+import { store } from "../store";
 import {BASE_URL} from '../../constants/http';
 import axiosRequest from "../../config/http-request";
 import { refreshTokenRequest } from '../../services/actions/auth-action';
 import { systemService } from '../../services/modules';
-
 
 const handleLogin = (formInput) => {
   return axiosRequest
