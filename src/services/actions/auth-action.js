@@ -35,8 +35,29 @@ export const refreshTokenSuccess = (newToken) => {
   }
 }
 
-export const resetError = () => {
+export const resetAuthError = () => {
   return {
     type: actionTypes.AUTH_RESET_ERROR
   }
+}
+
+export const registerRequest = (formData) => {
+  return {
+    type: actionTypes.AUTH_REGISTER_REQUEST,
+    payload: formData,
+  };
+}
+
+export const registerSuccess = (tokenData) => {
+  return {
+    type: actionTypes.AUTH_REGISTER_SUCCESS,
+    payload: tokenData,
+  };
+}
+
+export const registerFail = (error) => {
+  return {
+    type: actionTypes.AUTH_REGISTER_FAIL,
+    payload: error,
+  };
 }

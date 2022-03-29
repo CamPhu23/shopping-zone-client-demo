@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { loginRequest, resetError } from '../../services/actions/auth-action';
+import { loginRequest, resetAuthError } from '../../services/actions/auth-action';
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
@@ -11,7 +11,7 @@ export const LoginForm = () => {
   const isLoading = useSelector(state => state.auth.loading);
   const authError = useSelector(state => state.auth.error);
 
-  useEffect(() => dispatch(resetError()), []);
+  useEffect(() => dispatch(resetAuthError()), []);
   useEffect(() => {
     if (!_.isEmpty(authError)) {
       const { message } = authError;

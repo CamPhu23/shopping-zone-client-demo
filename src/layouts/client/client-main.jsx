@@ -1,6 +1,6 @@
-import React from 'react';
-import { Header } from './header';
-import { Footer } from './footer';
+import React from "react";
+import { Header } from "./header";
+import { Footer } from "./footer";
 
 export const ClientLayout = ({ component }) => {
   return (
@@ -9,5 +9,5 @@ export const ClientLayout = ({ component }) => {
       {component}
       <Footer />
     </div>
-  )
+  );
 };

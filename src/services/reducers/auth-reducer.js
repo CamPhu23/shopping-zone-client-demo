@@ -23,18 +23,18 @@ export const authReducer = (state = initialState, action) => {
         expiredTime: accessToken.expiredTime,
         user,
         loading: false,
-        error: {}
+        error: {},
       };
     case actionTypes.AUTH_LOGIN_FAIL:
       const { status, message } = action.payload;
-      
+
       return {
         ...state,
         loading: false,
         error: {
           status,
-          message
-        }
+          message,
+        },
       };
     case actionTypes.AUTH_REFRESH_TOKEN_REQUEST:
       return {
@@ -50,13 +50,40 @@ export const authReducer = (state = initialState, action) => {
         expiredTime: newAccessToken.expiredTime,
         user: newUser,
         loading: false,
-        error: {}
+        error: {},
       };
     case actionTypes.AUTH_RESET_ERROR:
       return {
         ...state,
-        error: {}
-      }
+        error: {},
+      };
+    case actionTypes.AUTH_REGISTER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+        error: {},
+      };
+    case actionTypes.AUTH_REGISTER_SUCCESS:
+      const { registerAccessToken, registerUser } = action.payload;
+      return {
+        ...state,
+        accessToken: registerAccessToken.token,
+        expiredTime: registerAccessToken.expiredTime,
+        user: registerUser,
+        loading: false,
+        error: {},
+      };
+    case actionTypes.AUTH_REGISTER_FAIL:
+      const payload = action.payload;
+
+      return {
+        ...state,
+        loading: false,
+        error: {
+          status: payload.status,
+          message: payload.message,
+        },
+      };
     default:
       return state;
   }

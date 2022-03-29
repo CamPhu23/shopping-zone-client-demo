@@ -1,15 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import _ from 'lodash';
-import { useDispatch } from 'react-redux';
-import { registerRequest } from '../../services/actions/auth-action';
 
-export const RegisterForm = () => {
-  const { register, handleSubmit, formState: { errors }, watch, clearErrors } = useForm();
-  const dispatch = useDispatch();
+export const RegisterForm = ({handleSubmitForm, registerError}) => {
+  const { register, handleSubmit, formState: { errors }, watch, clearErrors, reset, setFocus, setError } = useForm();
 
-  const handleRegister = (data) => {
-    console.log(data);
+  useEffect(() => {
+    if (!_.isEmpty(registerError)) {
+      const { message } = registerError;
+      setFocus('username');
+
+      setError('duplicatedError', {
+        type: "duplicate",
+        message,
+      });
+    } else {
+      clearErrors('duplicatedError');
+    }
+  }, [registerError]);
+
+  const handleRegister = ({email, username, password}) => {
+    handleSubmitForm({email, username, password});
+    reset();
   };
 
   return (
@@ -31,7 +43,7 @@ export const RegisterForm = () => {
                 type="text"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Tên tài khoản"
-                onChangeCapture={() => clearErrors('serverError')}
+                onChangeCapture={() => clearErrors('duplicatedError')}
                 {...register("username", {
                   required: {
                     value: true,
@@ -54,7 +66,7 @@ export const RegisterForm = () => {
                 type="email"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Email"
-                onChangeCapture={() => clearErrors('serverError')}
+                onChangeCapture={() => clearErrors('duplicatedError')}
                 {...register("email", {
                   required: {
                     value: true,
@@ -83,7 +95,7 @@ export const RegisterForm = () => {
                 autoComplete="current-password"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Mật khẩu"
-                onChangeCapture={() => clearErrors('serverError')}
+                onChangeCapture={() => clearErrors('duplicatedError')}
                 {...register("password", {
                   required: {
                     value: true,
@@ -112,7 +124,7 @@ export const RegisterForm = () => {
                 autoComplete="current-password"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Mật khẩu xác nhận"
-                onChangeCapture={() => clearErrors('serverError')}
+                onChangeCapture={() => clearErrors('duplicatedError')}
                 {...register("confirmPassword", {
                   required: {
                     value: true,
@@ -123,7 +135,7 @@ export const RegisterForm = () => {
                     message: "Mật khẩu xác nhận cần ít nhất 8 ký tự"
                   },
                   validate: (value) => {
-                    if (watch('password') != value) {
+                    if (watch('password') !== value) {
                       return "Mật khẩu và mật khẩu xác nhận phải trùng nhau";
                     }
                   }
@@ -133,6 +145,10 @@ export const RegisterForm = () => {
 
               {errors.confirmPassword && (errors.confirmPassword.type === "required" || "minLength") && (
                 <span className='text-red-500' role="alert">{errors.confirmPassword.message}</span>
+              )}
+
+              {!errors.confirmPassword && errors.duplicatedError && errors.duplicatedError.type === "duplicate" && (
+                <span className='text-red-500' role="alert">{errors.duplicatedError.message}</span>
               )}
             </div>
           </div>

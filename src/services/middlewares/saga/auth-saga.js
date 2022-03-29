@@ -1,5 +1,5 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { loginFail, loginSuccess, refreshTokenSuccess } from '../../actions/auth-action';
+import { loginFail, loginSuccess, refreshTokenSuccess, registerFail, registerSuccess } from '../../actions/auth-action';
 import { type as actionTypes } from '../../constants/auth-constant';
 import { authService, systemService } from '../../modules'
 
@@ -32,9 +32,27 @@ function* refreshTokenWorker(action) {
   }
 }
 
+function* registerWorker(action) {
+  try {
+    const response = yield call(authService.handleRegister, action.payload);
+    const { accessToken, refreshToken, user } = response;
+    yield put(registerSuccess({registerAccessToken: accessToken, registerUser: user}));
+    systemService.saveRefreshToken(refreshToken);
+  } catch (error) {
+    const { status } = JSON.parse(error.message);
+    const message = status == 400
+      ? "Tên tài khoản hoặc email đã tồn tại"
+      : "Lỗi đăng ký, vui lòng thử lại sau";
+
+    yield put(registerFail({ status, message }))
+    console.log(error.message); //something like that: {"status":404,"statusText":"Not Found"}
+  }
+}
+
 function* authSaga() {
   yield takeEvery(actionTypes.AUTH_LOGIN_REQUEST, loginWorker);
   yield takeLatest(actionTypes.AUTH_REFRESH_TOKEN_REQUEST, refreshTokenWorker);
+  yield takeEvery(actionTypes.AUTH_REGISTER_REQUEST, registerWorker);
 }
 
 export default authSaga;
