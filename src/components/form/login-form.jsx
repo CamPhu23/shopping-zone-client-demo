@@ -1,20 +1,14 @@
 import React, { useEffect } from 'react'
-import { loginRequest, resetAuthError } from '../../services/actions/auth-action';
 import { useForm } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 
-export const LoginForm = () => {
+export const LoginForm = ({handleSubmitForm, loginError}) => {
+  const originURL = window.location.origin
   const { register, handleSubmit, formState: { errors }, setError, setFocus, clearErrors, reset } = useForm();
 
-  const dispatch = useDispatch();
-  const isLoading = useSelector(state => state.auth.loading);
-  const authError = useSelector(state => state.auth.error);
-
-  useEffect(() => dispatch(resetAuthError()), []);
   useEffect(() => {
-    if (!_.isEmpty(authError)) {
-      const { message } = authError;
+    if (!_.isEmpty(loginError)) {
+      const { message } = loginError;
       setFocus('username');
 
       setError('serverError', {
@@ -24,21 +18,21 @@ export const LoginForm = () => {
     } else {
       clearErrors('serverError');
     }
-  }, [isLoading, authError]);
+  }, [loginError]);
 
   const handleLogin = (data) => {
-    dispatch(loginRequest(data));
+    handleSubmitForm(data)
     reset();
   };
 
   return (
-    <div className=" py-2 col-span-3 md:col-span-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="py-2 col-span-3 md:col-span-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md lg:w-4/5 space-y-8">
         <div>
           <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">Đăng nhập tài khoản của bạn</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             hoặc{' '}
-            <a href={window.location.origin + '/sign-up'} className="font-medium text-teal-600 hover:text-teal-500">
+            <a href={originURL + '/sign-up'} className="font-medium text-teal-600 hover:text-teal-500">
               Tạo tài khoản mới
             </a>
           </p>
@@ -58,12 +52,15 @@ export const LoginForm = () => {
                 placeholder="Tên tài khoản"
                 onChangeCapture={() => clearErrors('serverError')}
                 {...register("username", {
-                  required: true,
+                  required: {
+                    value: true,
+                    message: "Tên tài khoản không được bỏ trống"
+                  },
                 })}
               />
 
               {errors.username && errors.username.type === "required" && (
-                <span className='text-red-500' role="alert">Tên tài khoản không được bỏ trống</span>
+                <span className='text-red-500' role="alert">{errors.username.message}</span>
               )}
             </div>
 
@@ -79,14 +76,19 @@ export const LoginForm = () => {
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Mật khẩu"
                 onChangeCapture={() => clearErrors('serverError')}
-                {...register("password", { required: true, minLength: 8 })}
+                {...register("password", { 
+                  required: {
+                    value: true,
+                    message: "Mật khẩu không được bỏ trống"
+                  }, 
+                  minLength: {
+                    value: 8,
+                    message: "Mật khẩu cần ít nhất 8 ký tự"
+                  } })}
               />
 
-              {errors.password && errors.password.type === "required" && (
-                <span className='text-red-500' role="alert">Mật khẩu không được bỏ trống</span>
-              )}
-              {errors.password && errors.password.type === "minLength" && (
-                <span className='text-red-500' role="alert">Mật khẩu cần ít nhất 8 ký tự</span>
+              {errors.password && (errors.password.type === "required" || "minLength") && (
+                <span className='text-red-500' role="alert">{errors.password.message}</span>
               )}
 
               {!errors.password && errors.serverError && errors.serverError.type === "server" && (
@@ -119,7 +121,7 @@ export const LoginForm = () => {
           </button>
 
           <div className="text-sm mt-3 pt-3 flex items-center justify-center">
-            <a href={window.location.origin + '/forgot-password'} className="font-medium text-teal-600 hover:text-teal-500">
+            <a href={originURL + '/forgot-password'} className="font-medium text-teal-600 hover:text-teal-500">
               Bạn quên mật khẩu?
             </a>
           </div>

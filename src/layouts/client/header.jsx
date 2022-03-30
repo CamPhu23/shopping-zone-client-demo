@@ -1,6 +1,8 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon } from '@heroicons/react/outline'
+import { useSelector } from 'react-redux'
+import _ from 'lodash'
 
 const navigation = {
   categories: [
@@ -94,10 +96,13 @@ function classNames(...classes) {
 }
 
 export const Header = () => {
+  const originURL = window.location.origin
   const [open, setOpen] = useState(false)
+  const user = useSelector(state => state.auth.user)
 
   return (
     <div className="bg-white z-40 sticky top-0">
+    {/* <div className="bg-white"> */}
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="z-50 fixed inset-0 flex z-40 lg:hidden" onClose={setOpen}>
@@ -203,7 +208,7 @@ export const Header = () => {
                     Thương hiệu
                   </a>
                 </div>
-                
+
                 <div className="flow-root">
                   <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
                     Liên hệ
@@ -212,16 +217,34 @@ export const Header = () => {
               </div>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                <div className="flow-root">
-                  <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
-                    Đăng nhập
-                  </a>
-                </div>
-                <div className="flow-root">
-                  <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
-                    Tạo tài khoản
-                  </a>
-                </div>
+
+
+                {_.isEmpty(user) ?
+
+                  (<>
+                    <div className="flow-root">
+                      <a href={originURL + "/sign-in"} className="-m-2 p-2 block font-medium text-gray-900">
+                        Đăng nhập
+                      </a>
+                    </div>
+                    <div className="flow-root">
+                      <a href={originURL + "/sign-up"} className="-m-2 p-2 block font-medium text-gray-900">
+                        Tạo tài khoản
+                      </a>
+                    </div>
+                  </>)
+
+                  :
+
+                  (
+                    <>
+                      <div className="flow-root">
+                        <a href={originURL + "/sign-out"} className="-m-2 p-2 block font-medium text-gray-900">
+                          Đăng xuất
+                        </a>
+                      </div>
+                    </>)
+                }
               </div>
             </div>
           </Transition.Child>
@@ -363,15 +386,36 @@ export const Header = () => {
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Đăng nhập
-                  </a>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Tạo tài khoản
-                  </a>
-                </div>
+
+                {_.isEmpty(user) ?
+
+                  (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <a href={originURL + "/sign-in"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Đăng nhập
+                    </a>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <a href={originURL + "/sign-up"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Tạo tài khoản
+                    </a>
+                  </div>)
+
+                  :
+
+                  (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+
+                      <img
+                        className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                        src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                      />
+                    </a>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <a href={originURL + "/sign-out"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Đăng xuất
+                    </a>
+                  </div>)
+                }
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
@@ -397,6 +441,6 @@ export const Header = () => {
           </div>
         </nav>
       </header>
-    </div>
+    </div >
   )
 }
