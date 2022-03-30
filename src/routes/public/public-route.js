@@ -1,8 +1,15 @@
-import {HomePage, LoginPage} from '../../pages';
+import {HomePage, LoginPage, ProductPage, RegisterPage} from '../../pages';
 
 const CLIENT_LOGIN_ROUTE = {
-  path: '/login',
+  path: '/sign-in',
   component: <LoginPage />,
+  exact: true,
+  private: false,
+};
+
+const CLIENT_REGISTER_ROUTE = {
+  path: '/sign-up',
+  component: <RegisterPage />,
   exact: true,
   private: false,
 };
@@ -14,7 +21,16 @@ const HOME_ROUTE = {
   private: false,
 };
 
+const PRODUCT_ROUTE = {
+  path: '/product',
+  component: <ProductPage />,
+  exact: true,
+  private: false,
+};
+
 export default [
   HOME_ROUTE,
   CLIENT_LOGIN_ROUTE,
+  CLIENT_REGISTER_ROUTE,
+  PRODUCT_ROUTE
 ];

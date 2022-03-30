@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const UnAuthorizationPage = () => {
+export default function UnAuthorizationPage() {
   return (
     <div>UnAuthorizationPage</div>
   )

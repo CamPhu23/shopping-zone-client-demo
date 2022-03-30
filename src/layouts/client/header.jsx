@@ -1,38 +1,22 @@
-// import React from 'react';
-
-// export const Header = () => {
-//   return (
-//     <div>Header</div>
-//   )
-// };
-
-
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
 import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
-import { MenuIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/react/outline'
+import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon } from '@heroicons/react/outline'
+import { useDispatch, useSelector } from 'react-redux'
+import _ from 'lodash'
+import { logoutRequest } from '../../services/actions/auth-action'
 
 const navigation = {
   categories: [
     {
       id: 'women',
-      name: 'Women',
+      name: 'Nữ',
       featured: [
+        {
+          name: 'New Arrivals',
+          href: '#',
+          imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
+          imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
+        },
         {
           name: 'New Arrivals',
           href: '#',
@@ -62,40 +46,24 @@ const navigation = {
             { name: 'Browse All', href: '#' },
           ],
         },
-        {
-          id: 'accessories',
-          name: 'Accessories',
-          items: [
-            { name: 'Watches', href: '#' },
-            { name: 'Wallets', href: '#' },
-            { name: 'Bags', href: '#' },
-            { name: 'Sunglasses', href: '#' },
-            { name: 'Hats', href: '#' },
-            { name: 'Belts', href: '#' },
-          ],
-        },
-        {
-          id: 'brands',
-          name: 'Brands',
-          items: [
-            { name: 'Full Nelson', href: '#' },
-            { name: 'My Way', href: '#' },
-            { name: 'Re-Arranged', href: '#' },
-            { name: 'Counterfeit', href: '#' },
-            { name: 'Significant Other', href: '#' },
-          ],
-        },
       ],
     },
     {
       id: 'men',
-      name: 'Men',
+      name: 'Nam',
       featured: [
         {
           name: 'New Arrivals',
           href: '#',
           imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg',
           imageAlt: 'Drawstring top with elastic loop closure and textured interior padding.',
+        },
+        {
+          name: 'Artwork Tees',
+          href: '#',
+          imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg',
+          imageAlt:
+            'Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.',
         },
         {
           name: 'Artwork Tees',
@@ -119,49 +87,24 @@ const navigation = {
             { name: 'Browse All', href: '#' },
           ],
         },
-        {
-          id: 'accessories',
-          name: 'Accessories',
-          items: [
-            { name: 'Watches', href: '#' },
-            { name: 'Wallets', href: '#' },
-            { name: 'Bags', href: '#' },
-            { name: 'Sunglasses', href: '#' },
-            { name: 'Hats', href: '#' },
-            { name: 'Belts', href: '#' },
-          ],
-        },
-        {
-          id: 'brands',
-          name: 'Brands',
-          items: [
-            { name: 'Re-Arranged', href: '#' },
-            { name: 'Counterfeit', href: '#' },
-            { name: 'Full Nelson', href: '#' },
-            { name: 'My Way', href: '#' },
-          ],
-        },
       ],
     },
-  ],
-  pages: [
-    { name: 'Company', href: '#' },
-    { name: 'Stores', href: '#' },
-  ],
+  ]
 }
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const Header = () => {
+export const Header = ({handleLogout, user}) => {
+  const originURL = window.location.origin
   const [open, setOpen] = useState(false)
 
   return (
     <div className="bg-white">
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 flex z-40 lg:hidden" onClose={setOpen}>
+        <Dialog as="div" className="z-50 fixed inset-0 flex z-40 lg:hidden" onClose={setOpen}>
           <Transition.Child
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -204,7 +147,7 @@ export const Header = () => {
                         key={category.name}
                         className={({ selected }) =>
                           classNames(
-                            selected ? 'text-indigo-600 border-indigo-600' : 'text-gray-900 border-transparent',
+                            selected ? 'text-teal-600 border-teal-600' : 'text-gray-900 border-transparent',
                             'flex-1 whitespace-nowrap py-4 px-1 border-b-2 text-base font-medium'
                           )
                         }
@@ -259,38 +202,48 @@ export const Header = () => {
               </Tab.Group>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                {navigation.pages.map((page) => (
-                  <div key={page.name} className="flow-root">
-                    <a href={page.href} className="-m-2 p-2 block font-medium text-gray-900">
-                      {page.name}
-                    </a>
-                  </div>
-                ))}
+                <div className="flow-root">
+                  <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
+                    Thương hiệu
+                  </a>
+                </div>
+
+                <div className="flow-root">
+                  <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
+                    Liên hệ
+                  </a>
+                </div>
               </div>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                <div className="flow-root">
-                  <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
-                    Sign in
-                  </a>
-                </div>
-                <div className="flow-root">
-                  <a href="#" className="-m-2 p-2 block font-medium text-gray-900">
-                    Create account
-                  </a>
-                </div>
-              </div>
 
-              <div className="border-t border-gray-200 py-6 px-4">
-                <a href="#" className="-m-2 p-2 flex items-center">
-                  <img
-                    src="https://tailwindui.com/img/flags/flag-canada.svg"
-                    alt=""
-                    className="w-5 h-auto block flex-shrink-0"
-                  />
-                  <span className="ml-3 block text-base font-medium text-gray-900">VN</span>
-                  <span className="sr-only">, change currency</span>
-                </a>
+
+                {_.isEmpty(user) ?
+
+                  (<>
+                    <div className="flow-root">
+                      <a href={originURL + "/sign-in"} className="-m-2 p-2 block font-medium text-gray-900">
+                        Đăng nhập
+                      </a>
+                    </div>
+                    <div className="flow-root">
+                      <a href={originURL + "/sign-up"} className="-m-2 p-2 block font-medium text-gray-900">
+                        Tạo tài khoản
+                      </a>
+                    </div>
+                  </>)
+
+                  :
+
+                  (
+                    <>
+                      <div className="flow-root">
+                        <button onClick={handleLogout} className="-m-2 p-2 block font-medium text-gray-900">
+                          Đăng xuất
+                        </button>
+                      </div>
+                    </>)
+                }
               </div>
             </div>
           </Transition.Child>
@@ -298,11 +251,11 @@ export const Header = () => {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <p className="bg-indigo-600 h-10 flex items-center justify-center text-sm font-medium text-white px-4 sm:px-6 lg:px-8">
-          Get free delivery on orders over $100
+        <p className="bg-teal-600 h-10 flex items-center justify-center text-sm font-medium text-white px-4 sm:px-6 lg:px-8">
+          Giao hàng miễn phí toàn quốc với hóa đơn trên 200.000 đồng
         </p>
 
-        <nav aria-label="Top" className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-200 sticky top-0">
+        <nav aria-label="Top" className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-200">
           <div className="">
             <div className="h-16 flex items-center">
               <button
@@ -316,7 +269,7 @@ export const Header = () => {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="#">
+                <a href={originURL}>
                   <span className="sr-only">Workflow</span>
                   <img
                     className="h-8 w-auto"
@@ -337,7 +290,7 @@ export const Header = () => {
                             <Popover.Button
                               className={classNames(
                                 open
-                                  ? 'border-indigo-600 text-indigo-600'
+                                  ? 'border-teal-600 text-teal-600'
                                   : 'border-transparent text-gray-700 hover:text-gray-800',
                                 'relative z-10 flex items-center transition-colors ease-out duration-200 text-sm font-medium border-b-2 -mb-px pt-px'
                               )}
@@ -361,8 +314,8 @@ export const Header = () => {
 
                               <div className="relative bg-white">
                                 <div className="max-w-7xl mx-auto px-8">
-                                  <div className="grid grid-cols-2 gap-y-10 gap-x-8 py-16">
-                                    <div className="col-start-2 grid grid-cols-2 gap-x-8">
+                                  <div className="grid grid-cols-4 gap-y-10 gap-x-8 py-16">
+                                    <div className="col-span-3 col-start-2 grid grid-cols-3 gap-x-8">
                                       {category.featured.map((item) => (
                                         <div key={item.name} className="group relative text-base sm:text-sm">
                                           <div className="aspect-w-1 aspect-h-1 rounded-lg bg-gray-100 overflow-hidden group-hover:opacity-75">
@@ -382,7 +335,7 @@ export const Header = () => {
                                         </div>
                                       ))}
                                     </div>
-                                    <div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
+                                    <div className="row-start-1 grid grid-cols-1 gap-y-10 gap-x-8 text-sm">
                                       {category.sections.map((section) => (
                                         <div key={section.name}>
                                           <p id={`${section.name}-heading`} className="font-medium text-gray-900">
@@ -414,40 +367,54 @@ export const Header = () => {
                     </Popover>
                   ))}
 
-                  {navigation.pages.map((page) => (
-                    <a
-                      key={page.name}
-                      href={page.href}
-                      className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-                    >
-                      {page.name}
-                    </a>
-                  ))}
+                  <a
+                    href="#"
+                    className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
+                  >
+                    Thương hiệu
+                  </a>
+
+                  <a
+                    href="#"
+                    className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
+                  >
+                    Liên hệ
+                  </a>
+
                 </div>
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Sign in
-                  </a>
-                  <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                  <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                    Create account
-                  </a>
-                </div>
 
-                <div className="hidden lg:ml-8 lg:flex">
-                  <a href="#" className="text-gray-700 hover:text-gray-800 flex items-center">
-                    <img
-                      src="https://tailwindui.com/img/flags/flag-canada.svg"
-                      alt=""
-                      className="w-5 h-auto block flex-shrink-0"
-                    />
-                    <span className="ml-3 block text-sm font-medium">VN</span>
-                    <span className="sr-only">, change currency</span>
-                  </a>
-                </div>
+                {_.isEmpty(user) ?
+
+                  (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <a href={originURL + "/sign-in"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Đăng nhập
+                    </a>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <a href={originURL + "/sign-up"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Tạo tài khoản
+                    </a>
+                  </div>)
+
+                  :
+
+                  (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                    <a href="#" className="text-sm font-medium text-gray-700 hover:text-gray-800">
+
+                      <img
+                        className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
+                        src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        alt=""
+                      />
+                    </a>
+                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <button onClick={handleLogout} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                      Đăng xuất
+                    </button>
+                  </div>)
+                }
 
                 {/* Search */}
                 <div className="flex lg:ml-6">
@@ -460,7 +427,7 @@ export const Header = () => {
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">
                   <a href="#" className="group -m-2 p-2 flex items-center">
-                    <ShoppingBagIcon
+                    <ShoppingCartIcon
                       className="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
                     />
@@ -473,6 +440,6 @@ export const Header = () => {
           </div>
         </nav>
       </header>
-    </div>
+    </div >
   )
 }

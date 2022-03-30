@@ -41,7 +41,12 @@ const getRefreshToken = () => {
   return secretFlag === SECRET_JWT_FLAG ? refreshToken : null;
 }
 
+const deleteRefreshToken = () => {
+  removeRefreshToken();
+};
+
 export default {
   saveRefreshToken,
   getRefreshToken,
+  deleteRefreshToken,
 }

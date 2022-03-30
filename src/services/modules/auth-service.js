@@ -1,10 +1,8 @@
-import axios from "axios";
-import store from "../store";
-import {BASE_URL} from '../../constants/http';
+import { store } from "../store";
+import { BASE_URL } from "../../constants/http";
 import axiosRequest from "../../config/http-request";
-import { refreshTokenRequest } from '../../services/actions/auth-action';
-import { systemService } from '../../services/modules';
-
+import { refreshTokenRequest } from "../../services/actions/auth-action";
+import { systemService } from "../../services/modules";
 
 const handleLogin = (formInput) => {
   return axiosRequest
@@ -13,24 +11,24 @@ const handleLogin = (formInput) => {
     .catch((err) => {
       throw new Error(err);
     });
-} 
+};
 
 const getAcessToken = () => {
   const state = store.getState();
-  const {accessToken, expiredTime} = state.auth;
+  const { accessToken, expiredTime } = state.auth;
 
   if (Date.parse(expiredTime) < Date.now()) {
     const refreshToken = systemService.getRefreshToken();
 
     if (refreshToken) {
-      store.dispatch(refreshTokenRequest({token: refreshToken}));
+      store.dispatch(refreshTokenRequest({ token: refreshToken }));
     }
 
     return refreshToken ? state.auth.accessToken : null;
   }
-  
+
   return accessToken;
-}
+};
 
 const handleRefreshToken = (token) => {
   return axiosRequest
@@ -39,10 +37,25 @@ const handleRefreshToken = (token) => {
     .catch((err) => {
       throw new Error(err);
     });
+};
+
+const handleRegister = (formInput) => {
+  return axiosRequest
+    .post(`${BASE_URL}/auth/register`, formInput)
+    .then((res) => res)
+    .catch((error) => {
+      throw new Error(error);
+    });
+};
+
+const handleLogout = () => {
+  systemService.deleteRefreshToken();
 }
 
 export default {
   handleLogin,
   getAcessToken,
-  handleRefreshToken
-}
+  handleRefreshToken,
+  handleRegister,
+  handleLogout,
+};

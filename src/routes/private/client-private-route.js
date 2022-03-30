@@ -17,4 +17,4 @@ const PRIVATE_CLIENT_ROUTE = {
 
 
 export default [
-];;
+];
