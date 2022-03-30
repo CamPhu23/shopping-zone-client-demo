@@ -101,8 +101,7 @@ export const Header = ({handleLogout, user}) => {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="bg-white z-40 sticky top-0">
-    {/* <div className="bg-white"> */}
+    <div className="bg-white">
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
         <Dialog as="div" className="z-50 fixed inset-0 flex z-40 lg:hidden" onClose={setOpen}>
@@ -270,7 +269,7 @@ export const Header = ({handleLogout, user}) => {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="#">
+                <a href={originURL}>
                   <span className="sr-only">Workflow</span>
                   <img
                     className="h-8 w-auto"

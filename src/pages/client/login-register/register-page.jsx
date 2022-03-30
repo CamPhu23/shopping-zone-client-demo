@@ -21,20 +21,6 @@ export default function RegisterPage() {
     <Navigate to="/" replace />
   ) : (
     <>
-      {/* {isLoading ? (
-        <div className="flex m-20 sm:m-32 md:m-50 items-center h-full justify-center">
-          <Loader />
-        </div>
-      ) : (
-        <div className="min-h-full grid grid-cols-3">
-          <div className="hidden md:col-span-2 md:flex bg-signin-signup bg-no-repeat h-full w-full bg-cover"></div>
-
-          <RegisterForm
-            handleSubmitForm={(data) => onSubmitForm(data)}
-            registerError={authError}
-          />
-        </div>
-      )} */}
       <div className="min-h-full grid grid-cols-3">
         <div className="hidden md:col-span-2 md:flex bg-signin-signup bg-no-repeat h-full w-full bg-cover"></div>
 
