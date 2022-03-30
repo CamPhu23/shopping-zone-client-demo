@@ -55,6 +55,7 @@ export const authReducer = (state = initialState, action) => {
     case actionTypes.AUTH_RESET_ERROR:
       return {
         ...state,
+        loading: false,
         error: {},
       };
     case actionTypes.AUTH_REGISTER_REQUEST:

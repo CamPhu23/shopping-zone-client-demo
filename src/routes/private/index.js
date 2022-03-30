@@ -5,7 +5,7 @@ import { UnAuthorizationPage } from '../../pages'
 import { ClientLayout } from '../../layouts/client/client-main.jsx'
 import _ from 'lodash'
 
-const ClientPrivateRoutes = ({ component, requirePermission, path }) => {
+const ClientPrivateRoutes = ({ component, requirePermission }) => {
   const user = useSelector(state => state.auth.user);
   if (_.isEmpty(user)) {
     return <Navigate to="/login" />;
@@ -18,7 +18,13 @@ const ClientPrivateRoutes = ({ component, requirePermission, path }) => {
   return <ClientLayout component={component} />;
 };
 
-const AdminPrivateRoutes = () => {
+const AdminPrivateRoutes = ({ component, requirePermission }) => {
+  const user = useSelector(state => state.auth.user);
+  console.log(user);
+  if (user.permission !== requirePermission) {
+    return <UnAuthorizationPage />;
+  }
+
   return (  
     <div>ClientPrivateRoutes</div>
   )
