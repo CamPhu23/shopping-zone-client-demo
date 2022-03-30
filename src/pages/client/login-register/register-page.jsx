@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import _ from "lodash";
-import { RegisterForm } from "../../components/form/register-form";
+import { RegisterForm } from "../../../components/form/register-form";
 import {
   registerRequest,
   resetAuthError,
-} from "../../services/actions/auth-action";
+} from "../../../services/actions/auth-action";
 import { useEffect } from "react";
-import Loader from "../../components/loader/loader";
+import Loader from "../../../components/loader/loader";
 
 export default function RegisterPage() {
   const user = useSelector((state) => state.auth.user);

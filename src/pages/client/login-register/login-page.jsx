@@ -1,8 +1,8 @@
 import { Navigate } from "react-router-dom";
 import _ from "lodash";
-import { LoginForm } from "../../components/form/login-form";
+import { LoginForm } from "../../../components/form/login-form";
 import { useDispatch, useSelector } from "react-redux";
-import { loginRequest } from "../../services/actions/auth-action";
+import { loginRequest } from "../../../services/actions/auth-action";
 
 export default function LoginPage() {
   const user = useSelector((state) => state.auth.user);
