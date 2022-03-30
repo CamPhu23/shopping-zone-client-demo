@@ -1,29 +1,42 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import _ from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetAuthError } from '../../services/actions/auth-action';
 
-export const LoginForm = ({handleSubmitForm, loginError}) => {
-  const originURL = window.location.origin
-  const { register, handleSubmit, formState: { errors }, setError, setFocus, clearErrors, reset } = useForm();
+export const LoginForm = ({handleSubmitForm}) => {
+  const originURL = window.location.origin;
+  const { register, handleSubmit, formState: { errors }, setFocus, reset } = useForm();
+  
+  const dispatch = useDispatch();
+  const authError = useSelector(state => state.auth.error);
+  const [serverError, setServerError] = useState("");
 
   useEffect(() => {
-    if (!_.isEmpty(loginError)) {
-      const { message } = loginError;
+    if (!_.isEmpty(authError)) {
+      dispatch(resetAuthError());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!_.isEmpty(authError)) {
+      const { message } = authError;
       setFocus('username');
 
-      setError('serverError', {
-        type: "server",
-        message,
-      });
-    } else {
-      clearErrors('serverError');
-    }
-  }, [loginError]);
+      setServerError(message);
+    } 
+  }, [authError]);
 
   const handleLogin = (data) => {
-    handleSubmitForm(data)
+    handleSubmitForm(data);
     reset();
   };
+
+  const handleOnChange = () => {
+    if (!_.isEmpty(serverError)) {
+      setServerError("");
+    }
+  }
 
   return (
     <div className="py-2 col-span-3 md:col-span-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -50,12 +63,12 @@ export const LoginForm = ({handleSubmitForm, loginError}) => {
                 type="text"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Tên tài khoản"
-                onChangeCapture={() => clearErrors('serverError')}
+                onChangeCapture={handleOnChange}
                 {...register("username", {
                   required: {
                     value: true,
                     message: "Tên tài khoản không được bỏ trống"
-                  },
+                  }, 
                 })}
               />
 
@@ -75,7 +88,7 @@ export const LoginForm = ({handleSubmitForm, loginError}) => {
                 autoComplete="current-password"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Mật khẩu"
-                onChangeCapture={() => clearErrors('serverError')}
+                onChangeCapture={handleOnChange}
                 {...register("password", { 
                   required: {
                     value: true,
@@ -84,15 +97,16 @@ export const LoginForm = ({handleSubmitForm, loginError}) => {
                   minLength: {
                     value: 8,
                     message: "Mật khẩu cần ít nhất 8 ký tự"
-                  } })}
+                  }
+                })}
               />
 
               {errors.password && (errors.password.type === "required" || "minLength") && (
                 <span className='text-red-500' role="alert">{errors.password.message}</span>
               )}
 
-              {!errors.password && errors.serverError && errors.serverError.type === "server" && (
-                <span className='text-red-500' role="alert">{errors.serverError.message}</span>
+              {!errors.password && serverError && (
+                <span className='text-red-500' role="alert">{serverError}</span>
               )}
             </div>
           </div>
@@ -112,7 +126,6 @@ export const LoginForm = ({handleSubmitForm, loginError}) => {
           </div>
 
           <button
-            type=""
             className="group relative w-full flex justify-center py-2 px-4 border border-transparent border-red-600 text-sm font-medium rounded-md text-red-500 bg-white-600 hover:text-white hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-red-500"
           >
             <span className="absolute left-0 inset-y-0 flex items-center pl-3">

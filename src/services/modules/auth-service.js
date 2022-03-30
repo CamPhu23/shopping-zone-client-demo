@@ -48,9 +48,14 @@ const handleRegister = (formInput) => {
     });
 };
 
+const handleLogout = () => {
+  systemService.deleteRefreshToken();
+}
+
 export default {
   handleLogin,
   getAcessToken,
   handleRefreshToken,
   handleRegister,
+  handleLogout,
 };

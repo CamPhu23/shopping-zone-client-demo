@@ -1,8 +1,9 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon } from '@heroicons/react/outline'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
+import { logoutRequest } from '../../services/actions/auth-action'
 
 const navigation = {
   categories: [
@@ -95,10 +96,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const Header = () => {
+export const Header = ({handleLogout, user}) => {
   const originURL = window.location.origin
   const [open, setOpen] = useState(false)
-  const user = useSelector(state => state.auth.user)
 
   return (
     <div className="bg-white z-40 sticky top-0">
@@ -239,9 +239,9 @@ export const Header = () => {
                   (
                     <>
                       <div className="flow-root">
-                        <a href={originURL + "/sign-out"} className="-m-2 p-2 block font-medium text-gray-900">
+                        <button onClick={handleLogout} className="-m-2 p-2 block font-medium text-gray-900">
                           Đăng xuất
-                        </a>
+                        </button>
                       </div>
                     </>)
                 }
@@ -411,9 +411,9 @@ export const Header = () => {
                       />
                     </a>
                     <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                    <a href={originURL + "/sign-out"} className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                    <button onClick={handleLogout} className="text-sm font-medium text-gray-700 hover:text-gray-800">
                       Đăng xuất
-                    </a>
+                    </button>
                   </div>)
                 }
 

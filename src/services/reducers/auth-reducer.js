@@ -3,7 +3,7 @@ import { type as actionTypes } from "../constants/auth-constant";
 const initialState = {
   accessToken: null,
   expiredTime: null,
-  loading: null,
+  loading: false,
   user: {},
   error: {},
 };
@@ -55,7 +55,6 @@ export const authReducer = (state = initialState, action) => {
     case actionTypes.AUTH_RESET_ERROR:
       return {
         ...state,
-        loading: false,
         error: {},
       };
     case actionTypes.AUTH_REGISTER_REQUEST:
@@ -84,6 +83,15 @@ export const authReducer = (state = initialState, action) => {
           status: payload.status,
           message: payload.message,
         },
+      };
+    case actionTypes.AUTH_LOGOUT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case actionTypes.AUTH_LOGOUT_SUCCESS:
+      return {
+        ...initialState,
       };
     default:
       return state;

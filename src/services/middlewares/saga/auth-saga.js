@@ -1,5 +1,5 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { loginFail, loginSuccess, refreshTokenSuccess, registerFail, registerSuccess } from '../../actions/auth-action';
+import { call, put, takeEvery, takeLatest, delay } from 'redux-saga/effects';
+import { loginFail, loginSuccess, logoutSuccess, refreshTokenSuccess, registerFail, registerSuccess } from '../../actions/auth-action';
 import { type as actionTypes } from '../../constants/auth-constant';
 import { authService, systemService } from '../../modules'
 
@@ -49,10 +49,21 @@ function* registerWorker(action) {
   }
 }
 
+function* logoutWorker() {
+  try {
+    yield call(authService.handleLogout);
+    yield delay(1000);
+    yield put(logoutSuccess());
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 function* authSaga() {
   yield takeEvery(actionTypes.AUTH_LOGIN_REQUEST, loginWorker);
   yield takeLatest(actionTypes.AUTH_REFRESH_TOKEN_REQUEST, refreshTokenWorker);
   yield takeEvery(actionTypes.AUTH_REGISTER_REQUEST, registerWorker);
+  yield takeLatest(actionTypes.AUTH_LOGOUT_REQUEST, logoutWorker);
 }
 
 export default authSaga;

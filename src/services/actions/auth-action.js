@@ -61,3 +61,15 @@ export const registerFail = (error) => {
     payload: error,
   };
 }
+
+export const logoutRequest = () => {
+  return {
+    type: actionTypes.AUTH_LOGOUT_REQUEST,
+  };
+};
+
+export const logoutSuccess = () => {
+  return {
+    type: actionTypes.AUTH_LOGOUT_SUCCESS,
+  };
+};

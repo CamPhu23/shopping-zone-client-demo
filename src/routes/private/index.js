@@ -8,7 +8,7 @@ import _ from 'lodash'
 const ClientPrivateRoutes = ({ component, requirePermission }) => {
   const user = useSelector(state => state.auth.user);
   if (_.isEmpty(user)) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/sign-in" />;
   }
 
   if (user.permission !== requirePermission) {
