@@ -1,10 +1,10 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { XIcon } from '@heroicons/react/outline'
+import { FireIcon, XIcon } from '@heroicons/react/outline'
 import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
 
-// PAGING
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
+import { Paging } from '../../../components/paging/paging'
+import { Filter } from '../../../components/filter/filter'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -14,46 +14,42 @@ const sortOptions = [
   { name: 'Price: High to Low', href: '#', current: false },
 ]
 const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
+  { name: 'Áo thun nam', href: '#' },
+  { name: 'Áo thun nữ', href: '#' },
+  { name: 'Áo sơ mi nam', href: '#' },
+  { name: 'Áo sơ mi nữ', href: '#' },
+  { name: 'Áo khoác nam', href: '#' },
+  { name: 'Áo khoác nữ', href: '#' },
 ]
 const filters = [
   {
     id: 'color',
-    name: 'Color',
+    name: 'Màu sắc',
     options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
+      { value: 'white', label: 'Trắng', checked: false },
+      { value: 'black', label: 'Đen', checked: false },
+      { value: 'blue', label: 'Xanh', checked: false },
+      { value: 'gray', label: 'Xám', checked: false },
     ],
   },
   {
     id: 'size',
     name: 'Size',
     options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
+      { value: 'S', label: 'S', checked: false },
+      { value: 'M', label: 'M', checked: false },
+      { value: 'L', label: 'L', checked: false },
+      { value: 'XL', label: 'XL', checked: false },
+      { value: 'XXL', label: 'XXL', checked: false },
+    ],
+  },
+  {
+    id: 'services-and-sales',
+    name: 'Dịch vụ & Khuyến mãi',
+    options: [
+      { value: 'new-arrivals', label: 'Sản phẩm mới', checked: false },
+      { value: 'flash-sales', label: 'Sản phẩm khuyến mãi', checked: false },
+      { value: 'best-seller', label: 'Sản phẩm bán chạy', checked: false },
     ],
   },
 ]
@@ -123,7 +119,7 @@ export default function ProductPage() {
             >
               <div className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                 <div className="px-4 flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                  <h2 className="text-lg font-medium text-gray-900">Bộ lọc</h2>
                   <button
                     type="button"
                     className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
@@ -147,47 +143,8 @@ export default function ProductPage() {
                     ))}
                   </ul>
 
-                  {filters.map((section) => (
-                    <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
-                      {({ open }) => (
-                        <>
-                          <h3 className="-mx-2 -my-3 flow-root">
-                            <Disclosure.Button className="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">{section.name}</span>
-                              <span className="ml-6 flex items-center">
-                                {open ? (
-                                  <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
-                                ) : (
-                                  <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
-                                )}
-                              </span>
-                            </Disclosure.Button>
-                          </h3>
-                          <Disclosure.Panel className="pt-6">
-                            <div className="space-y-6">
-                              {section.options.map((option, optionIdx) => (
-                                <div key={option.value} className="flex items-center">
-                                  <input
-                                    id={`filter-mobile-${section.id}-${optionIdx}`}
-                                    name={`${section.id}[]`}
-                                    defaultValue={option.value}
-                                    type="checkbox"
-                                    defaultChecked={option.checked}
-                                    className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                  />
-                                  <label
-                                    htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                    className="ml-3 min-w-0 flex-1 text-gray-500"
-                                  >
-                                    {option.label}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
+                  {filters && filters.map((section) => (
+                    <Filter section={section} key={section.id} />
                   ))}
                 </form>
               </div>
@@ -275,47 +232,8 @@ export default function ProductPage() {
                   ))}
                 </ul>
 
-                {filters.map((section) => (
-                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
-                    {({ open }) => (
-                      <>
-                        <h3 className="-my-3 flow-root">
-                          <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">{section.name}</span>
-                            <span className="ml-6 flex items-center">
-                              {open ? (
-                                <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
-                              ) : (
-                                <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
-                              )}
-                            </span>
-                          </Disclosure.Button>
-                        </h3>
-                        <Disclosure.Panel className="pt-6">
-                          <div className="space-y-4">
-                            {section.options.map((option, optionIdx) => (
-                              <div key={option.value} className="flex items-center">
-                                <input
-                                  id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  defaultValue={option.value}
-                                  type="checkbox"
-                                  defaultChecked={option.checked}
-                                  className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                />
-                                <label
-                                  htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 text-sm text-gray-600"
-                                >
-                                  {option.label}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </Disclosure.Panel>
-                      </>
-                    )}
-                  </Disclosure>
+                {filters && filters.map((section) => (
+                  <Filter section={section} key={section.id} />
                 ))}
               </form>
 
@@ -355,89 +273,8 @@ export default function ProductPage() {
                 </div>
 
                 {/* PAGING */}
-                <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                  <div className="flex-1 flex justify-between sm:hidden">
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      href="#"
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  </div>
-                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                        <span className="font-medium">97</span> results
-                      </p>
-                    </div>
-                    <div>
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        <a
-                          href="#"
-                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                          <span className="sr-only">Previous</span>
-                          <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-                        </a>
-                        {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
-                        <a
-                          href="#"
-                          aria-current="page"
-                          className="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          1
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          2
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          3
-                        </a>
-                        <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                          ...
-                        </span>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          8
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          9
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          10
-                        </a>
-                        <a
-                          href="#"
-                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                          <span className="sr-only">Next</span>
-                          <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-                        </a>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
+                <Paging totalItem={100} numOfShowingPerPage={10} />
+
                 {/* /End replace */}
               </div>
             </div>

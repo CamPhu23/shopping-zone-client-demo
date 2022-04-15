@@ -1,9 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon } from '@heroicons/react/outline'
-import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
-import { logoutRequest } from '../../services/actions/auth-action'
 
 const navigation = {
   categories: [
@@ -18,7 +16,7 @@ const navigation = {
           imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
         },
         {
-          name: 'New Arrivals',
+          name: 'New Arrivals 2',
           href: '#',
           imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
           imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
@@ -66,7 +64,7 @@ const navigation = {
             'Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.',
         },
         {
-          name: 'Artwork Tees',
+          name: 'Artwork Tees 2',
           href: '#',
           imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg',
           imageAlt:
@@ -96,7 +94,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const Header = ({handleLogout, user}) => {
+export const Header = ({ handleLogout, user }) => {
   const originURL = window.location.origin
   const [open, setOpen] = useState(false)
 
