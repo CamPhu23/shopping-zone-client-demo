@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
-import _ from 'lodash'
+import _, { round } from 'lodash'
 
 export const Paging = ({
   totalItem,
-  numOfShowingPerPage
+  numOfShowingPerPage,
+  handleChangePage
 }) => {
   const LIMIT_PAGES = 4;
-  const url = window.location.href;
-  const totalPage = totalItem / numOfShowingPerPage;
+
+  let totalPage = 1;
+  if (totalItem > numOfShowingPerPage) totalPage = Math.round(totalItem / numOfShowingPerPage);
 
   const [currentPage, setCurrentPage] = useState(1);
+
+  // used to handle next and prev button; used to calculation for the current page. 
   const [transiPage, setTransiPage] = useState(1);
 
   const handlePageTransition = (({ indexPage, tranPage }) => {
@@ -18,25 +22,17 @@ export const Paging = ({
 
     if (!_.isEmpty(tranPage)) {
       tranPage === "next" ? setTransiPage(transiPage + 1) : setTransiPage(transiPage - 1)
-    } 
+    }
+
+    handleChangePage('p', currentPage);
   })
 
-  useEffect(() => {
-    if (url.includes('p=')) {
-      console.log(url.substring(0, url.indexOf("p=") + 2) + currentPage + url.substring(url.indexOf("&")));
-      window.history.pushState({}, null, url.substring(0, url.indexOf("p=") + 2) + currentPage + url.substring(url.indexOf("&")));
-    } else {
-      console.log("no p=");
-      // window.history.pushState({}, null, url + "p=" + currentPage + url.substring(url.indexOf("&")));
-    }
-  }, [currentPage])
-
   return (
-    <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+    <div className="bg-white mt-10 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
       <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Sản phẩm <span className="font-medium">{currentPage * 10 - 9}</span> đến <span className="font-medium">{currentPage * 10}</span> trong{' '}
+            Sản phẩm <span className="font-medium">{totalItem == 0 ? '0' : currentPage * numOfShowingPerPage - (numOfShowingPerPage - 1)}</span> đến <span className="font-medium">{currentPage != totalPage ? totalItem - (totalItem - currentPage * numOfShowingPerPage) : totalItem}</span> trong{' '}
             <span className="font-medium">{totalItem}</span> sản phẩm
           </p>
         </div>

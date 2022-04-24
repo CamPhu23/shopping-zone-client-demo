@@ -1,18 +1,28 @@
-import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { FireIcon, XIcon } from '@heroicons/react/outline'
-import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
-
+import { Fragment, useEffect, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
+import { FilterIcon } from '@heroicons/react/solid'
 import { Paging } from '../../../components/paging/paging'
 import { Filter } from '../../../components/filter/filter'
+import { ProducList } from '../../../components/product/product-list'
+import { Sort } from '../../../components/sort/sort'
+import axiosRequest from '../../../config/http-request'
+import { BASE_URL } from '../../../constants/http'
+import {
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE
+}
+  from '../../../constants/default-axios-product'
+import _ from 'lodash'
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
+const intialSortOptions = [
+  { name: 'Bán chạy', value: 'most-popular', current: false },
+  { name: 'Đánh giá cao', value: 'most-rating', current: true },
+  { name: 'Mới nhất', value: 'newest', current: false },
+  { name: 'Giá: Thấp tới cao', value: 'price-asc', current: false },
+  { name: 'Giá: Cao tới Thấp', value: 'price-desc', current: false },
 ]
+
 const subCategories = [
   { name: 'Áo thun nam', href: '#' },
   { name: 'Áo thun nữ', href: '#' },
@@ -44,7 +54,7 @@ const filters = [
     ],
   },
   {
-    id: 'services-and-sales',
+    id: 'feature',
     name: 'Dịch vụ & Khuyến mãi',
     options: [
       { value: 'new-arrivals', label: 'Sản phẩm mới', checked: false },
@@ -53,42 +63,130 @@ const filters = [
     ],
   },
 ]
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-  },
-  {
-    id: 3,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-  },
-]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+const initialProducts = {
+  products: [
+    {
+      id: 1,
+      name: 'Basic Tee',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: '$35',
+      color: 'Black',
+    }
+  ],
+  info: {
+    currentIndex: DEFAULT_PAGE,
+    numberOfIndex: DEFAULT_PAGE_SIZE,
+    total: 1
+  }
 }
+
+let parameters = [
+  { name: 'p', value: DEFAULT_PAGE },
+  { name: 's', value: DEFAULT_PAGE_SIZE },
+  { name: 'category', value: [] },
+  { name: 'color', value: [] },
+  { name: 'size', value: [] },
+  { name: 'feature', value: [] },
+];
 
 export default function ProductPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [sortOptions, setSortOptions] = useState(intialSortOptions)
+
+  const [products, setProducts] = useState(initialProducts);
+
+  const handleProduct = () => {
+    let apiProduct = `${BASE_URL}/products?`;
+    apiProduct += parameters[0].name + '=' + parameters[0].value; 
+    parameters.slice(1).map(p => {
+      !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
+    })
+    console.log(apiProduct);
+    axiosRequest
+      .get(apiProduct)
+      .then((data) => {
+        setProducts(data);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  }
+
+  const handleAddParameter = (name, value) => {
+    var parameter = parameters.find(x => x.name == name);
+    
+    if (name !== 'p' && name !== 's') {
+      if (!_.isEmpty(parameter) && !parameter.value.includes(value))  parameter.value.push(value);
+    } else {
+      parameter.value = value;
+    }
+
+    console.log(parameters);
+
+    handleProduct();
+  }
+
+  const handleRemoveParameter = (name, value) => {
+    var parameter = parameters.find(x => x.name == name);
+
+    if(parameter.value.includes(value)) parameter.value = parameter.value.filter(item => value != item)
+    console.log(parameter);
+    
+    handleProduct();
+  }
+
+  // const handleAddParameter = (name, value) => {
+  //   const parameter = name + '='
+
+  //   if (apiProduct.includes(parameter)) {
+  //     apiProduct = apiProduct.substring(0, apiProduct.indexOf(parameter) + parameter.length) 
+  //                 + value 
+  //                 + apiProduct.substring(apiProduct.indexOf(parameter) + parameter.length + value.length + 1);
+  //   } else {
+  //     apiProduct = apiProduct + '&' + parameter + value;
+  //   }
+  //   console.log(apiProduct);
+
+  // }
+
+  // const handleProduct = ({
+  //   category = DEFAULT_CATERGORY,
+  //   color = DEFAULT_COLOR,
+  //   size = DEFAULT_SIZE,
+  //   feature = DEFAULT_FEATURE,
+  //   p = DEFAULT_PAGE,
+  //   s = DEFAULT_PAGE_SIZE,
+  // }) => {
+  //   apiProduct += '?p=' + p + '&s=' + s;
+  //   if (!_.isEmpty(category)) apiProduct += '&category=' + category;
+  //   if (!_.isEmpty(color)) apiProduct += '&color=' + color;
+  //   if (!_.isEmpty(size)) apiProduct += '&size=' + size;
+  //   if (!_.isEmpty(feature)) apiProduct += '&feature=' + feature;
+
+  //   console.log(apiProduct);
+  //   axiosRequest
+  //     .get(apiProduct)
+  //     .then((data) => {
+  //       setProducts(data.products)
+  //       console.log(data.products)
+  //     })
+  //     .catch((err) => {
+  //       throw new Error(err);
+  //     });
+
+  // }
+
+  useEffect(() => {
+    handleProduct();
+  }, [])
+
+  const handleSort = (option) => {
+    console.log("handle sort" + option);
+  }
 
   return (
     <div className="bg-white">
@@ -143,6 +241,7 @@ export default function ProductPage() {
                     ))}
                   </ul>
 
+                  {/* FILTER MOBILE */}
                   {filters && filters.map((section) => (
                     <Filter section={section} key={section.id} />
                   ))}
@@ -154,56 +253,13 @@ export default function ProductPage() {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10 flex items-baseline justify-between pt-10 pb-6 border-b border-gray-200">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">New Arrivals</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">Tất cả sản phẩm</h1>
+
 
             <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
-                    <ChevronDownIcon
-                      className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                  </Menu.Button>
-                </div>
 
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      {sortOptions.map((option) => (
-                        <Menu.Item key={option.name}>
-                          {({ active }) => (
-                            <a
-                              href={option.href}
-                              className={classNames(
-                                option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}
-                            >
-                              {option.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+              <Sort options={sortOptions} handleSort={handleSort}></Sort>
 
-              <button type="button" className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
-                <span className="sr-only">View grid</span>
-                <ViewGridIcon className="w-5 h-5" aria-hidden="true" />
-              </button>
               <button
                 type="button"
                 className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden"
@@ -224,7 +280,7 @@ export default function ProductPage() {
               {/* Filters */}
               <form className="hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
+                <ul role="list" className="mx-3 font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
                   {subCategories.map((category) => (
                     <li key={category.name}>
                       <a href={category.href}>{category.name}</a>
@@ -232,50 +288,23 @@ export default function ProductPage() {
                   ))}
                 </ul>
 
+                {/* FILTER */}
                 {filters && filters.map((section) => (
-                  <Filter section={section} key={section.id} />
+                  <Filter section={section} key={section.id} 
+                          handleAddFilter={handleAddParameter} 
+                          handleRemoveFilter={handleRemoveParameter}/>
                 ))}
               </form>
 
-              {/* Product grid */}
               <div className="lg:col-span-3">
-                {/* Replace with your content */}
 
-                {/* PRODUCT LIST */}
-                <div className="bg-white">
-                  <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                    <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                      {products.map((product) => (
-                        <div key={product.id} className="group relative">
-                          <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                            <img
-                              src={product.imageSrc}
-                              alt={product.imageAlt}
-                              className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                            />
-                          </div>
-                          <div className="mt-4 flex justify-between">
-                            <div>
-                              <h3 className="text-sm text-gray-700">
-                                <a href={product.href}>
-                                  <span aria-hidden="true" className="absolute inset-0" />
-                                  {product.name}
-                                </a>
-                              </h3>
-                              <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                            </div>
-                            <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                {/* PRODUCT LIST (3 items each row) */}
+                <ProducList products={products.products} columns={3}></ProducList>
 
-                {/* PAGING */}
-                <Paging totalItem={100} numOfShowingPerPage={10} />
+                {/* PAGING (total product and 9 products each page) */}
+                <Paging totalItem={products.info.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE} 
+                        handleChangePage={handleAddParameter}/>
 
-                {/* /End replace */}
               </div>
             </div>
           </section>

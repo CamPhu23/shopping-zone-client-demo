@@ -2,9 +2,23 @@ import React from 'react'
 import { Disclosure } from '@headlessui/react'
 import { MinusSmIcon, PlusSmIcon } from '@heroicons/react/solid'
 
-export const Filter = ({ section }) => {
-  return (
+export const Filter = ({ 
+  section,
+  handleAddFilter,
+  handleRemoveFilter
+ }) => {
+  const filterProduct = (filter, status) => {
+    let name = filter.split('-')[0];
+    let value = filter.split('-')[1];
 
+    if (status === 'add') {
+      handleAddFilter(name, value);
+    } else {
+      handleRemoveFilter(name, value);
+    }
+  }
+
+  return (
     <Disclosure as="div" className="border-b border-gray-200 py-6">
       {({ open }) => (
         <>
@@ -27,11 +41,11 @@ export const Filter = ({ section }) => {
                   <input
                     id={`filter-${section.id}-${optionIdx}`}
                     name={`${section.id}[]`}
-                    defaultValue={option.value}
+                    defaultValue={section.id + '-' + option.value}
                     type="checkbox"
                     defaultChecked={option.checked}
                     className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                    onClick={(e) => {e.target.checked ? console.log(e.target.defaultValue) : console.log("clear value") }}
+                    onClick={(e) => {e.target.checked ? filterProduct(e.target.defaultValue, 'add') : filterProduct(e.target.defaultValue, 'remove') }}
                   />
                   <label
                     htmlFor={`filter-${section.id}-${optionIdx}`}
