@@ -10,7 +10,6 @@ export const Sort = ({ options, handleSort }) => {
 
   const changeSorter = ({ option }) => {
     handleSort(option);
-    console.log(option);
   }
 
   return (

@@ -1,5 +1,6 @@
 import React from 'react'
 import { BASE_URL } from '../../constants/http'
+import { Star } from '../star/star'
 
 export const Product = ({ product }) => {
   return (
@@ -12,13 +13,16 @@ export const Product = ({ product }) => {
             className="w-full h-full lg:w-full lg:h-full object-cover object-center"
           />
         </div>
-        <div className="px-5 py-3 flex justify-between">
-          <div className='truncate flex space-x-5'>
-            <h3 className="text-gray-700 truncate">
-              <a href={`${BASE_URL}/product/${product.id}`}>
+        <div className="px-5 py-3 flex justify-between w-full">
+          <div className='truncate flex space-x-5 w-full'>
+            <h3 className="text-gray-700 truncate text-xl w-full">
+              <a href={`${BASE_URL}/product/${product.id}`} className='space-y-3'>
                 <span aria-hidden="true" className="absolute inset-0" />
                 {product.name}
-                <p className="font-medium text-gray-900 mt-3">{product.price.toLocaleString('it-IT')} đ</p>
+                <div className='flex items-center justify-between'>
+                  <Star rate={product.rating}></Star>
+                  <p className="font-medium text-gray-900">{product.price.toLocaleString('it-IT')} đ</p>
+                </div>
               </a>
             </h3>
           </div>

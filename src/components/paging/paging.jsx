@@ -23,9 +23,11 @@ export const Paging = ({
     if (!_.isEmpty(tranPage)) {
       tranPage === "next" ? setTransiPage(transiPage + 1) : setTransiPage(transiPage - 1)
     }
-
-    handleChangePage('p', currentPage);
   })
+  
+  useEffect(() => {
+    handleChangePage('p', currentPage);
+  }, [currentPage])
 
   return (
     <div className="bg-white mt-10 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">

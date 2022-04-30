@@ -14,23 +14,24 @@ import {
 }
   from '../../../constants/default-axios-product'
 import _ from 'lodash'
+import { ChevronRightIcon } from '@heroicons/react/solid'
 
 const intialSortOptions = [
-  { name: 'Bán chạy', value: 'most-popular', current: false },
-  { name: 'Đánh giá cao', value: 'most-rating', current: true },
-  { name: 'Mới nhất', value: 'newest', current: false },
+  { name: 'Tên: A đến Z', value: 'name-asc', current: true },
+  { name: 'Tên: Z đến A', value: 'name-desc', current: false },
   { name: 'Giá: Thấp tới cao', value: 'price-asc', current: false },
   { name: 'Giá: Cao tới Thấp', value: 'price-desc', current: false },
 ]
 
-const subCategories = [
-  { name: 'Áo thun nam', href: '#' },
-  { name: 'Áo thun nữ', href: '#' },
-  { name: 'Áo sơ mi nam', href: '#' },
-  { name: 'Áo sơ mi nữ', href: '#' },
-  { name: 'Áo khoác nam', href: '#' },
-  { name: 'Áo khoác nữ', href: '#' },
+const intialSubCategories = [
+  { name: 'Áo thun nam', value: 'ao-thun-nam', current: false },
+  { name: 'Áo thun nữ', value: 'ao-thun-nu', current: false },
+  { name: 'Áo sơ mi nam', value: 'ao-so-mi-nam', current: false },
+  { name: 'Áo sơ mi nữ', value: 'ao-so-mi-nu', current: false },
+  { name: 'Áo khoác nam', value: 'ao-khoac-nam', current: false },
+  { name: 'Áo khoác nữ', value: 'ao-khoac-nu', current: false },
 ]
+
 const filters = [
   {
     id: 'color',
@@ -73,14 +74,60 @@ const initialProducts = {
         name: 'Basic Tee Image 1',
         url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
       },
-      price: '$35',
+      price: 35000,
+      rating: 4,
+      color: 'Black',
+    },
+    {
+      id: 2,
+      name: 'Basic',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 20000,
+      rating: 3,
+      color: 'Black',
+    },
+    {
+      id: 3,
+      name: 'Basic Tee 2',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 35000,
+      rating: 4,
+      color: 'Black',
+    },
+    {
+      id: 4,
+      name: 'Basic Tee 3',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 10000,
+      rating: 3,
+      color: 'Black',
+    },
+    {
+      id: 5,
+      name: 'Basic Tee',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 10000,
+      rating: 5,
       color: 'Black',
     }
   ],
   info: {
     currentIndex: DEFAULT_PAGE,
     numberOfIndex: DEFAULT_PAGE_SIZE,
-    total: 1
+    total: 4,
+    page: 1
   }
 }
 
@@ -94,14 +141,30 @@ let parameters = [
 ];
 
 export default function ProductPage() {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [sortOptions, setSortOptions] = useState(intialSortOptions)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  // sort and product state
+  const [sortOptions, setSortOptions] = useState(intialSortOptions);
   const [products, setProducts] = useState(initialProducts);
+  const [subCategories, setSubCategories] = useState(intialSubCategories);
 
+  // Subcategory funtions 
+  const changeSubCategories = (sub) => {
+    const newSubCategories = [...subCategories];
+
+    subCategories.forEach(o => {
+      o.value === sub ? o.current = true : o.current = false;
+    })
+
+    setSubCategories(newSubCategories);
+  }
+
+  // Filter functions
+  // add parameter to a string and call api
   const handleProduct = () => {
     let apiProduct = `${BASE_URL}/products?`;
-    apiProduct += parameters[0].name + '=' + parameters[0].value; 
+    
+    apiProduct += parameters[0].name + '=' + parameters[0].value;
     parameters.slice(1).map(p => {
       !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
     })
@@ -116,13 +179,17 @@ export default function ProductPage() {
       });
   }
 
+  // add filter to parameters array
   const handleAddParameter = (name, value) => {
     var parameter = parameters.find(x => x.name == name);
-    
-    if (name !== 'p' && name !== 's') {
-      if (!_.isEmpty(parameter) && !parameter.value.includes(value))  parameter.value.push(value);
+
+    if (name !== 'p' && name !== 's' && name !== 'category') {
+      parameters.find(x => x.name == 'p').value = '1';
+      if (!_.isEmpty(parameter) && !parameter.value.includes(value)) parameter.value.push(value);
     } else {
       parameter.value = value;
+
+      if (name === 'category') changeSubCategories(value);
     }
 
     console.log(parameters);
@@ -130,62 +197,74 @@ export default function ProductPage() {
     handleProduct();
   }
 
+  // remove filter out of parameters array
   const handleRemoveParameter = (name, value) => {
     var parameter = parameters.find(x => x.name == name);
 
-    if(parameter.value.includes(value)) parameter.value = parameter.value.filter(item => value != item)
+    if (parameter.value.includes(value)) {
+      parameters.find(x => x.name == 'p').value = '1';
+      parameter.value = parameter.value.filter(item => value != item);
+    }
     console.log(parameter);
-    
+
     handleProduct();
   }
 
-  // const handleAddParameter = (name, value) => {
-  //   const parameter = name + '='
-
-  //   if (apiProduct.includes(parameter)) {
-  //     apiProduct = apiProduct.substring(0, apiProduct.indexOf(parameter) + parameter.length) 
-  //                 + value 
-  //                 + apiProduct.substring(apiProduct.indexOf(parameter) + parameter.length + value.length + 1);
-  //   } else {
-  //     apiProduct = apiProduct + '&' + parameter + value;
-  //   }
-  //   console.log(apiProduct);
-
-  // }
-
-  // const handleProduct = ({
-  //   category = DEFAULT_CATERGORY,
-  //   color = DEFAULT_COLOR,
-  //   size = DEFAULT_SIZE,
-  //   feature = DEFAULT_FEATURE,
-  //   p = DEFAULT_PAGE,
-  //   s = DEFAULT_PAGE_SIZE,
-  // }) => {
-  //   apiProduct += '?p=' + p + '&s=' + s;
-  //   if (!_.isEmpty(category)) apiProduct += '&category=' + category;
-  //   if (!_.isEmpty(color)) apiProduct += '&color=' + color;
-  //   if (!_.isEmpty(size)) apiProduct += '&size=' + size;
-  //   if (!_.isEmpty(feature)) apiProduct += '&feature=' + feature;
-
-  //   console.log(apiProduct);
-  //   axiosRequest
-  //     .get(apiProduct)
-  //     .then((data) => {
-  //       setProducts(data.products)
-  //       console.log(data.products)
-  //     })
-  //     .catch((err) => {
-  //       throw new Error(err);
-  //     });
-
-  // }
-
+  // call the first time render to fetch product from api
   useEffect(() => {
     handleProduct();
   }, [])
 
+  // Sort functions
+  // the func used to sort an array (in this case is product array)
+  const sortFunction = (property) => {
+    var sortOrder = 1;
+    if (property[0] === "-") {
+      sortOrder = -1;
+      property = property.substr(1);
+    }
+    return function (a, b) {
+      var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+      return result * sortOrder;
+    }
+  }
+
+  const changeOption = (option) => {
+    const newOptions = [...sortOptions];
+
+    newOptions.forEach(o => {
+      o.value === option ? o.current = true : o.current = false;
+    })
+
+    setSortOptions(newOptions);
+  }
+
+  // handle sort order by...
   const handleSort = (option) => {
-    console.log("handle sort" + option);
+    let productsList = products.products;
+
+    // change the checked in sortOptions
+    changeOption(option);
+
+    switch (option) {
+      case 'name-asc':
+        productsList.sort(sortFunction('name'));
+        break
+      case 'name-desc':
+        productsList.sort(sortFunction('-name'));
+        break
+      case 'price-asc':
+        productsList.sort(sortFunction('price'));
+        break
+      case 'price-desc':
+        productsList.sort(sortFunction('-price'));
+        break
+    }
+
+    setProducts({
+      ...products,
+      products: productsList
+    })
   }
 
   return (
@@ -253,8 +332,24 @@ export default function ProductPage() {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10 flex items-baseline justify-between pt-10 pb-6 border-b border-gray-200">
-            <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">Tất cả sản phẩm</h1>
+            <div className='flex space-x-3 items-center'>
+              <button
+                onClick={() => handleAddParameter('category', '')}
+              >
+                <h1 className="text-xl font-bold tracking-tight text-gray-900">Tất cả sản phẩm</h1>
+              </button>
 
+              {subCategories.map((category) => (
+                category.current === true &&
+                (<div className='flex space-x-3 items-center' key={category.name}> 
+                  <ChevronRightIcon
+                    className="flex-shrink-0 -mr-1 ml-1 h-5 w-5"
+                    aria-hidden="true"
+                  > </ChevronRightIcon>
+                  <div>{category.name}</div>
+                </div>)
+              ))}
+            </div>
 
             <div className="flex items-center">
 
@@ -278,23 +373,28 @@ export default function ProductPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
               {/* Filters */}
-              <form className="hidden lg:block">
+              <div className="hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="mx-3 font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
+                <div role="list" className="mx-3 font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
                   {subCategories.map((category) => (
-                    <li key={category.name}>
-                      <a href={category.href}>{category.name}</a>
-                    </li>
+                    <div key={category.name}>
+                      <button
+                        className={category.current ? "font-medium" : ""}
+                        category={category.value}
+                        onClick={(e) => handleAddParameter('category', e.target.getAttribute('category'))}>
+                        {category.name}
+                      </button>
+                    </div>
                   ))}
-                </ul>
+                </div>
 
                 {/* FILTER */}
                 {filters && filters.map((section) => (
-                  <Filter section={section} key={section.id} 
-                          handleAddFilter={handleAddParameter} 
-                          handleRemoveFilter={handleRemoveParameter}/>
+                  <Filter section={section} key={section.id}
+                    handleAddFilter={handleAddParameter}
+                    handleRemoveFilter={handleRemoveParameter} />
                 ))}
-              </form>
+              </div>
 
               <div className="lg:col-span-3">
 
@@ -302,8 +402,8 @@ export default function ProductPage() {
                 <ProducList products={products.products} columns={3}></ProducList>
 
                 {/* PAGING (total product and 9 products each page) */}
-                <Paging totalItem={products.info.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE} 
-                        handleChangePage={handleAddParameter}/>
+                <Paging totalItem={products.info.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+                  handleChangePage={handleAddParameter} />
 
               </div>
             </div>
