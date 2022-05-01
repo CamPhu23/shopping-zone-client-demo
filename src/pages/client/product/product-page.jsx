@@ -1,7 +1,7 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
-import { FilterIcon } from '@heroicons/react/solid'
+import { ChevronRightIcon, FilterIcon } from '@heroicons/react/solid'
 import { Paging } from '../../../components/paging/paging'
 import { Filter } from '../../../components/filter/filter'
 import { ProducList } from '../../../components/product/product-list'
@@ -14,7 +14,7 @@ import {
 }
   from '../../../constants/default-axios-product'
 import _ from 'lodash'
-import { ChevronRightIcon } from '@heroicons/react/solid'
+import { Search } from '../../../components/search/search'
 
 const intialSortOptions = [
   { name: 'Tên: A đến Z', value: 'name-asc', current: true },
@@ -37,10 +37,10 @@ const filters = [
     id: 'color',
     name: 'Màu sắc',
     options: [
-      { value: 'white', label: 'Trắng', checked: false },
-      { value: 'black', label: 'Đen', checked: false },
-      { value: 'blue', label: 'Xanh', checked: false },
-      { value: 'gray', label: 'Xám', checked: false },
+      { value: 'trang', label: 'Trắng', checked: false },
+      { value: 'den', label: 'Đen', checked: false },
+      { value: 'xanh', label: 'Xanh', checked: false },
+      { value: 'xam', label: 'Xám', checked: false },
     ],
   },
   {
@@ -58,9 +58,9 @@ const filters = [
     id: 'feature',
     name: 'Dịch vụ & Khuyến mãi',
     options: [
-      { value: 'new-arrivals', label: 'Sản phẩm mới', checked: false },
-      { value: 'flash-sales', label: 'Sản phẩm khuyến mãi', checked: false },
-      { value: 'best-seller', label: 'Sản phẩm bán chạy', checked: false },
+      { value: 'san-pham-moi', label: 'Sản phẩm mới', checked: false },
+      { value: 'san-pham-khuyen-mai', label: 'Sản phẩm khuyến mãi', checked: false },
+      { value: 'san-pham-ban-chay', label: 'Sản phẩm bán chạy', checked: false },
     ],
   },
 ]
@@ -138,10 +138,12 @@ let parameters = [
   { name: 'color', value: [] },
   { name: 'size', value: [] },
   { name: 'feature', value: [] },
+  { name: 'search', value: "" },
 ];
 
 export default function ProductPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const page = useRef(null);
 
   // sort and product state
   const [sortOptions, setSortOptions] = useState(intialSortOptions);
@@ -163,7 +165,7 @@ export default function ProductPage() {
   // add parameter to a string and call api
   const handleProduct = () => {
     let apiProduct = `${BASE_URL}/products?`;
-    
+
     apiProduct += parameters[0].name + '=' + parameters[0].value;
     parameters.slice(1).map(p => {
       !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
@@ -173,6 +175,9 @@ export default function ProductPage() {
       .get(apiProduct)
       .then((data) => {
         setProducts(data);
+
+        // reset the current page to 1 after filtering
+        page.current.changeCurrentPage({ indexPage: parseInt(parameters[0].value) });
       })
       .catch((err) => {
         throw new Error(err);
@@ -183,16 +188,18 @@ export default function ProductPage() {
   const handleAddParameter = (name, value) => {
     var parameter = parameters.find(x => x.name == name);
 
-    if (name !== 'p' && name !== 's' && name !== 'category') {
+    if (name !== 'p' && name !== 's' && name !== 'category' && name !== 'search') {
       parameters.find(x => x.name == 'p').value = '1';
       if (!_.isEmpty(parameter) && !parameter.value.includes(value)) parameter.value.push(value);
     } else {
       parameter.value = value;
+      
+      if (name !== 'p') parameters.find(x => x.name == 'p').value = '1';
 
       if (name === 'category') changeSubCategories(value);
     }
 
-    console.log(parameters);
+    // console.log(parameters);
 
     handleProduct();
   }
@@ -205,7 +212,7 @@ export default function ProductPage() {
       parameters.find(x => x.name == 'p').value = '1';
       parameter.value = parameter.value.filter(item => value != item);
     }
-    console.log(parameter);
+    // console.log(parameter);
 
     handleProduct();
   }
@@ -272,7 +279,7 @@ export default function ProductPage() {
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
-          <Dialog as="div" className="z-50 fixed top-10 inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
+          <Dialog as="div" className="z-50 fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -308,23 +315,30 @@ export default function ProductPage() {
                 </div>
 
                 {/* Filters */}
-                <form className="mt-4 border-t border-gray-200">
+                <div className="mt-4 border-t border-gray-200 pt-3">
+
+                  <Search handleSearch={handleAddParameter} ></Search>
                   <h3 className="sr-only">Categories</h3>
                   <ul role="list" className="font-medium text-gray-900 px-2 py-3">
                     {subCategories.map((category) => (
-                      <li key={category.name}>
-                        <a href={category.href} className="block px-2 py-3">
+                      <div key={category.name} className="block px-1 py-3">
+                        <button
+                          className={(category.current ? "font-medium" : "")}
+                          category={category.value}
+                          onClick={(e) => handleAddParameter('category', e.target.getAttribute('category'))}>
                           {category.name}
-                        </a>
-                      </li>
+                        </button>
+                      </div>
                     ))}
                   </ul>
 
                   {/* FILTER MOBILE */}
                   {filters && filters.map((section) => (
-                    <Filter section={section} key={section.id} />
+                    <Filter section={section} key={section.id}
+                      handleAddFilter={handleAddParameter}
+                      handleRemoveFilter={handleRemoveParameter} />
                   ))}
-                </form>
+                </div>
               </div>
             </Transition.Child>
           </Dialog>
@@ -334,14 +348,16 @@ export default function ProductPage() {
           <div className="relative z-10 flex items-baseline justify-between pt-10 pb-6 border-b border-gray-200">
             <div className='flex space-x-3 items-center'>
               <button
-                onClick={() => handleAddParameter('category', '')}
+                onClick={() => {
+                  handleAddParameter('category', '');
+                }}
               >
                 <h1 className="text-xl font-bold tracking-tight text-gray-900">Tất cả sản phẩm</h1>
               </button>
 
               {subCategories.map((category) => (
                 category.current === true &&
-                (<div className='flex space-x-3 items-center' key={category.name}> 
+                (<div className='flex space-x-3 items-center hidden sm:flex' key={category.name}>
                   <ChevronRightIcon
                     className="flex-shrink-0 -mr-1 ml-1 h-5 w-5"
                     aria-hidden="true"
@@ -374,6 +390,8 @@ export default function ProductPage() {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
               {/* Filters */}
               <div className="hidden lg:block">
+                <Search handleSearch={handleAddParameter}></Search>
+
                 <h3 className="sr-only">Categories</h3>
                 <div role="list" className="mx-3 font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
                   {subCategories.map((category) => (
@@ -403,7 +421,7 @@ export default function ProductPage() {
 
                 {/* PAGING (total product and 9 products each page) */}
                 <Paging totalItem={products.info.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
-                  handleChangePage={handleAddParameter} />
+                  handleChangePage={handleAddParameter} ref={page} />
 
               </div>
             </div>

@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
 import _, { round } from 'lodash'
 
-export const Paging = ({
+export const Paging = forwardRef(({
   totalItem,
   numOfShowingPerPage,
-  handleChangePage
-}) => {
+  handleChangePage,
+}, ref) => {
+  useImperativeHandle(ref, () => ({
+    changeCurrentPage: handlePageTransition
+  }));
+
   const LIMIT_PAGES = 4;
 
   let totalPage = 1;
@@ -112,3 +116,4 @@ export const Paging = ({
 
   )
 }
+)

@@ -249,9 +249,6 @@ export const Header = ({ handleLogout, user }) => {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <p className="bg-teal-600 h-10 flex items-center justify-center text-sm font-medium text-white px-4 sm:px-6 lg:px-8">
-          Giao hàng miễn phí toàn quốc với hóa đơn trên 200.000 đồng
-        </p>
 
         <nav aria-label="Top" className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-200">
           <div className="">
@@ -413,14 +410,6 @@ export const Header = ({ handleLogout, user }) => {
                     </button>
                   </div>)
                 }
-
-                {/* Search */}
-                <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Search</span>
-                    <SearchIcon className="w-6 h-6" aria-hidden="true" />
-                  </a>
-                </div>
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">

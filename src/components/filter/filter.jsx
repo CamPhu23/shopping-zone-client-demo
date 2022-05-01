@@ -9,7 +9,10 @@ export const Filter = ({
  }) => {
   const filterProduct = (filter, status) => {
     let name = filter.split('-')[0];
-    let value = filter.split('-')[1];
+    let value;
+
+    // feature value (i.e: ao-thun-moi) != another filters value
+    name != 'feature' ? value = filter.split('-')[1] : value = filter.split('-').splice(1).join('-');
 
     if (status === 'add') {
       handleAddFilter(name, value);
