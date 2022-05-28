@@ -1,9 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, SearchIcon, ShoppingCartIcon, XIcon } from '@heroicons/react/outline'
-import { useDispatch, useSelector } from 'react-redux'
 import _ from 'lodash'
-import { logoutRequest } from '../../services/actions/auth-action'
 
 const navigation = {
   categories: [
@@ -18,7 +16,7 @@ const navigation = {
           imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
         },
         {
-          name: 'New Arrivals',
+          name: 'New Arrivals 2',
           href: '#',
           imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
           imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
@@ -66,7 +64,7 @@ const navigation = {
             'Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.',
         },
         {
-          name: 'Artwork Tees',
+          name: 'Artwork Tees 2',
           href: '#',
           imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg',
           imageAlt:
@@ -96,7 +94,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const Header = ({handleLogout, user}) => {
+export const Header = ({ handleLogout, user }) => {
   const originURL = window.location.origin
   const [open, setOpen] = useState(false)
 
@@ -251,9 +249,6 @@ export const Header = ({handleLogout, user}) => {
       </Transition.Root>
 
       <header className="relative bg-white">
-        <p className="bg-teal-600 h-10 flex items-center justify-center text-sm font-medium text-white px-4 sm:px-6 lg:px-8">
-          Giao hàng miễn phí toàn quốc với hóa đơn trên 200.000 đồng
-        </p>
 
         <nav aria-label="Top" className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 border-b border-gray-200">
           <div className="">
@@ -415,14 +410,6 @@ export const Header = ({handleLogout, user}) => {
                     </button>
                   </div>)
                 }
-
-                {/* Search */}
-                <div className="flex lg:ml-6">
-                  <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Search</span>
-                    <SearchIcon className="w-6 h-6" aria-hidden="true" />
-                  </a>
-                </div>
 
                 {/* Cart */}
                 <div className="ml-4 flow-root lg:ml-6">

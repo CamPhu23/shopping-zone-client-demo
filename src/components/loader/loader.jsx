@@ -1,4 +1,4 @@
-const Loader = () => {
+export const Loader = () => {
   let circleCommonClasses = "h-2.5 w-2.5 bg-teal-500 rounded-full";
 
   return (
@@ -9,5 +9,3 @@ const Loader = () => {
     </div>
   );
 };
-
-export default Loader;

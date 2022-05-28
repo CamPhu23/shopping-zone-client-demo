@@ -1,105 +1,285 @@
-import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
-import { ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon } from '@heroicons/react/solid'
+import { ChevronRightIcon, FilterIcon } from '@heroicons/react/solid'
+import { Paging } from '../../../components/paging/paging'
+import { Filter } from '../../../components/filter/filter'
+import { ProducList } from '../../../components/product/product-list'
+import { Sort } from '../../../components/sort/sort'
+import axiosRequest from '../../../config/http-request'
+import { BASE_URL } from '../../../constants/http'
+import {
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE
+}
+  from '../../../constants/default-axios-product'
+import _ from 'lodash'
+import { Search } from '../../../components/search/search'
 
-// PAGING
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/solid'
+const intialSortOptions = [
+  { name: 'Tên: A đến Z', value: 'name-asc', current: true },
+  { name: 'Tên: Z đến A', value: 'name-desc', current: false },
+  { name: 'Giá: Thấp tới cao', value: 'price-asc', current: false },
+  { name: 'Giá: Cao tới Thấp', value: 'price-desc', current: false },
+]
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
+const intialSubCategories = [
+  { name: 'Áo thun nam', value: 'ao-thun-nam', current: false },
+  { name: 'Áo thun nữ', value: 'ao-thun-nu', current: false },
+  { name: 'Áo sơ mi nam', value: 'ao-so-mi-nam', current: false },
+  { name: 'Áo sơ mi nữ', value: 'ao-so-mi-nu', current: false },
+  { name: 'Áo khoác nam', value: 'ao-khoac-nam', current: false },
+  { name: 'Áo khoác nữ', value: 'ao-khoac-nu', current: false },
 ]
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
-]
+
 const filters = [
   {
     id: 'color',
-    name: 'Color',
+    name: 'Màu sắc',
     options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
+      { value: 'trang', label: 'Trắng', checked: false },
+      { value: 'den', label: 'Đen', checked: false },
+      { value: 'xanh', label: 'Xanh', checked: false },
+      { value: 'xam', label: 'Xám', checked: false },
     ],
   },
   {
     id: 'size',
     name: 'Size',
     options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
+      { value: 'S', label: 'S', checked: false },
+      { value: 'M', label: 'M', checked: false },
+      { value: 'L', label: 'L', checked: false },
+      { value: 'XL', label: 'XL', checked: false },
+      { value: 'XXL', label: 'XXL', checked: false },
+    ],
+  },
+  {
+    id: 'feature',
+    name: 'Dịch vụ & Khuyến mãi',
+    options: [
+      { value: 'san-pham-moi', label: 'Sản phẩm mới', checked: false },
+      { value: 'san-pham-khuyen-mai', label: 'Sản phẩm khuyến mãi', checked: false },
+      { value: 'san-pham-ban-chay', label: 'Sản phẩm bán chạy', checked: false },
     ],
   },
 ]
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-  },
-  {
-    id: 3,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-  },
-]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+const initialProducts = {
+  products: [
+    {
+      id: 1,
+      name: 'Basic Tee',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 35000,
+      rating: 4,
+      color: 'Black',
+    },
+    {
+      id: 2,
+      name: 'Basic',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 20000,
+      rating: 3,
+      color: 'Black',
+    },
+    {
+      id: 3,
+      name: 'Basic Tee 2',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 35000,
+      rating: 4,
+      color: 'Black',
+    },
+    {
+      id: 4,
+      name: 'Basic Tee 3',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 10000,
+      rating: 3,
+      color: 'Black',
+    },
+    {
+      id: 5,
+      name: 'Basic Tee',
+      image: {
+        name: 'Basic Tee Image 1',
+        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
+      },
+      price: 10000,
+      rating: 5,
+      color: 'Black',
+    }
+  ],
+  info: {
+    currentIndex: DEFAULT_PAGE,
+    numberOfIndex: DEFAULT_PAGE_SIZE,
+    total: 4,
+    page: 1
+  }
 }
 
+let parameters = [
+  { name: 'p', value: DEFAULT_PAGE },
+  { name: 's', value: DEFAULT_PAGE_SIZE },
+  { name: 'category', value: [] },
+  { name: 'color', value: [] },
+  { name: 'size', value: [] },
+  { name: 'feature', value: [] },
+  { name: 'search', value: "" },
+];
+
 export default function ProductPage() {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const page = useRef(null);
+
+  // sort and product state
+  const [sortOptions, setSortOptions] = useState(intialSortOptions);
+  const [products, setProducts] = useState(initialProducts);
+  const [subCategories, setSubCategories] = useState(intialSubCategories);
+
+  // Subcategory funtions 
+  const changeSubCategories = (sub) => {
+    const newSubCategories = [...subCategories];
+
+    subCategories.forEach(o => {
+      o.value === sub ? o.current = true : o.current = false;
+    })
+
+    setSubCategories(newSubCategories);
+  }
+
+  // Filter functions
+  // add parameter to a string and call api
+  const handleProduct = () => {
+    let apiProduct = `${BASE_URL}/products?`;
+
+    apiProduct += parameters[0].name + '=' + parameters[0].value;
+    parameters.slice(1).map(p => {
+      !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
+    })
+    console.log(apiProduct);
+    axiosRequest
+      .get(apiProduct)
+      .then((data) => {
+        setProducts(data);
+
+        // reset the current page to 1 after filtering
+        page.current.changeCurrentPage({ indexPage: parseInt(parameters[0].value) });
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  }
+
+  // add filter to parameters array
+  const handleAddParameter = (name, value) => {
+    var parameter = parameters.find(x => x.name == name);
+
+    if (name !== 'p' && name !== 's' && name !== 'category' && name !== 'search') {
+      parameters.find(x => x.name == 'p').value = '1';
+      if (!_.isEmpty(parameter) && !parameter.value.includes(value)) parameter.value.push(value);
+    } else {
+      parameter.value = value;
+      
+      if (name !== 'p') parameters.find(x => x.name == 'p').value = '1';
+
+      if (name === 'category') changeSubCategories(value);
+    }
+
+    // console.log(parameters);
+
+    handleProduct();
+  }
+
+  // remove filter out of parameters array
+  const handleRemoveParameter = (name, value) => {
+    var parameter = parameters.find(x => x.name == name);
+
+    if (parameter.value.includes(value)) {
+      parameters.find(x => x.name == 'p').value = '1';
+      parameter.value = parameter.value.filter(item => value != item);
+    }
+    // console.log(parameter);
+
+    handleProduct();
+  }
+
+  // call the first time render to fetch product from api
+  useEffect(() => {
+    handleProduct();
+  }, [])
+
+  // Sort functions
+  // the func used to sort an array (in this case is product array)
+  const sortFunction = (property) => {
+    var sortOrder = 1;
+    if (property[0] === "-") {
+      sortOrder = -1;
+      property = property.substr(1);
+    }
+    return function (a, b) {
+      var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+      return result * sortOrder;
+    }
+  }
+
+  const changeOption = (option) => {
+    const newOptions = [...sortOptions];
+
+    newOptions.forEach(o => {
+      o.value === option ? o.current = true : o.current = false;
+    })
+
+    setSortOptions(newOptions);
+  }
+
+  // handle sort order by...
+  const handleSort = (option) => {
+    let productsList = products.products;
+
+    // change the checked in sortOptions
+    changeOption(option);
+
+    switch (option) {
+      case 'name-asc':
+        productsList.sort(sortFunction('name'));
+        break
+      case 'name-desc':
+        productsList.sort(sortFunction('-name'));
+        break
+      case 'price-asc':
+        productsList.sort(sortFunction('price'));
+        break
+      case 'price-desc':
+        productsList.sort(sortFunction('-price'));
+        break
+    }
+
+    setProducts({
+      ...products,
+      products: productsList
+    })
+  }
 
   return (
     <div className="bg-white">
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
-          <Dialog as="div" className="z-50 fixed top-10 inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
+          <Dialog as="div" className="z-50 fixed inset-0 flex z-40 lg:hidden" onClose={setMobileFiltersOpen}>
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -123,7 +303,7 @@ export default function ProductPage() {
             >
               <div className="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
                 <div className="px-4 flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                  <h2 className="text-lg font-medium text-gray-900">Bộ lọc</h2>
                   <button
                     type="button"
                     className="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
@@ -135,61 +315,30 @@ export default function ProductPage() {
                 </div>
 
                 {/* Filters */}
-                <form className="mt-4 border-t border-gray-200">
+                <div className="mt-4 border-t border-gray-200 pt-3">
+
+                  <Search handleSearch={handleAddParameter} ></Search>
                   <h3 className="sr-only">Categories</h3>
                   <ul role="list" className="font-medium text-gray-900 px-2 py-3">
                     {subCategories.map((category) => (
-                      <li key={category.name}>
-                        <a href={category.href} className="block px-2 py-3">
+                      <div key={category.name} className="block px-1 py-3">
+                        <button
+                          className={(category.current ? "font-medium" : "")}
+                          category={category.value}
+                          onClick={(e) => handleAddParameter('category', e.target.getAttribute('category'))}>
                           {category.name}
-                        </a>
-                      </li>
+                        </button>
+                      </div>
                     ))}
                   </ul>
 
-                  {filters.map((section) => (
-                    <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
-                      {({ open }) => (
-                        <>
-                          <h3 className="-mx-2 -my-3 flow-root">
-                            <Disclosure.Button className="px-2 py-3 bg-white w-full flex items-center justify-between text-gray-400 hover:text-gray-500">
-                              <span className="font-medium text-gray-900">{section.name}</span>
-                              <span className="ml-6 flex items-center">
-                                {open ? (
-                                  <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
-                                ) : (
-                                  <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
-                                )}
-                              </span>
-                            </Disclosure.Button>
-                          </h3>
-                          <Disclosure.Panel className="pt-6">
-                            <div className="space-y-6">
-                              {section.options.map((option, optionIdx) => (
-                                <div key={option.value} className="flex items-center">
-                                  <input
-                                    id={`filter-mobile-${section.id}-${optionIdx}`}
-                                    name={`${section.id}[]`}
-                                    defaultValue={option.value}
-                                    type="checkbox"
-                                    defaultChecked={option.checked}
-                                    className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                  />
-                                  <label
-                                    htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                    className="ml-3 min-w-0 flex-1 text-gray-500"
-                                  >
-                                    {option.label}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
+                  {/* FILTER MOBILE */}
+                  {filters && filters.map((section) => (
+                    <Filter section={section} key={section.id}
+                      handleAddFilter={handleAddParameter}
+                      handleRemoveFilter={handleRemoveParameter} />
                   ))}
-                </form>
+                </div>
               </div>
             </Transition.Child>
           </Dialog>
@@ -197,56 +346,31 @@ export default function ProductPage() {
 
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative z-10 flex items-baseline justify-between pt-10 pb-6 border-b border-gray-200">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">New Arrivals</h1>
+            <div className='flex space-x-3 items-center'>
+              <button
+                onClick={() => {
+                  handleAddParameter('category', '');
+                }}
+              >
+                <h1 className="text-xl font-bold tracking-tight text-gray-900">Tất cả sản phẩm</h1>
+              </button>
+
+              {subCategories.map((category) => (
+                category.current === true &&
+                (<div className='flex space-x-3 items-center hidden sm:flex' key={category.name}>
+                  <ChevronRightIcon
+                    className="flex-shrink-0 -mr-1 ml-1 h-5 w-5"
+                    aria-hidden="true"
+                  > </ChevronRightIcon>
+                  <div>{category.name}</div>
+                </div>)
+              ))}
+            </div>
 
             <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
-                    <ChevronDownIcon
-                      className="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                  </Menu.Button>
-                </div>
 
-                <Transition
-                  as={Fragment}
-                  enter="transition ease-out duration-100"
-                  enterFrom="transform opacity-0 scale-95"
-                  enterTo="transform opacity-100 scale-100"
-                  leave="transition ease-in duration-75"
-                  leaveFrom="transform opacity-100 scale-100"
-                  leaveTo="transform opacity-0 scale-95"
-                >
-                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="py-1">
-                      {sortOptions.map((option) => (
-                        <Menu.Item key={option.name}>
-                          {({ active }) => (
-                            <a
-                              href={option.href}
-                              className={classNames(
-                                option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}
-                            >
-                              {option.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
+              <Sort options={sortOptions} handleSort={handleSort}></Sort>
 
-              <button type="button" className="p-2 -m-2 ml-5 sm:ml-7 text-gray-400 hover:text-gray-500">
-                <span className="sr-only">View grid</span>
-                <ViewGridIcon className="w-5 h-5" aria-hidden="true" />
-              </button>
               <button
                 type="button"
                 className="p-2 -m-2 ml-4 sm:ml-6 text-gray-400 hover:text-gray-500 lg:hidden"
@@ -265,180 +389,40 @@ export default function ProductPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
               {/* Filters */}
-              <form className="hidden lg:block">
+              <div className="hidden lg:block">
+                <Search handleSearch={handleAddParameter}></Search>
+
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="text-sm font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
+                <div role="list" className="mx-3 font-medium text-gray-900 space-y-4 pb-6 border-b border-gray-200">
                   {subCategories.map((category) => (
-                    <li key={category.name}>
-                      <a href={category.href}>{category.name}</a>
-                    </li>
+                    <div key={category.name}>
+                      <button
+                        className={category.current ? "font-medium" : ""}
+                        category={category.value}
+                        onClick={(e) => handleAddParameter('category', e.target.getAttribute('category'))}>
+                        {category.name}
+                      </button>
+                    </div>
                   ))}
-                </ul>
+                </div>
 
-                {filters.map((section) => (
-                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
-                    {({ open }) => (
-                      <>
-                        <h3 className="-my-3 flow-root">
-                          <Disclosure.Button className="py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">{section.name}</span>
-                            <span className="ml-6 flex items-center">
-                              {open ? (
-                                <MinusSmIcon className="h-5 w-5" aria-hidden="true" />
-                              ) : (
-                                <PlusSmIcon className="h-5 w-5" aria-hidden="true" />
-                              )}
-                            </span>
-                          </Disclosure.Button>
-                        </h3>
-                        <Disclosure.Panel className="pt-6">
-                          <div className="space-y-4">
-                            {section.options.map((option, optionIdx) => (
-                              <div key={option.value} className="flex items-center">
-                                <input
-                                  id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  defaultValue={option.value}
-                                  type="checkbox"
-                                  defaultChecked={option.checked}
-                                  className="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"
-                                />
-                                <label
-                                  htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 text-sm text-gray-600"
-                                >
-                                  {option.label}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </Disclosure.Panel>
-                      </>
-                    )}
-                  </Disclosure>
+                {/* FILTER */}
+                {filters && filters.map((section) => (
+                  <Filter section={section} key={section.id}
+                    handleAddFilter={handleAddParameter}
+                    handleRemoveFilter={handleRemoveParameter} />
                 ))}
-              </form>
+              </div>
 
-              {/* Product grid */}
               <div className="lg:col-span-3">
-                {/* Replace with your content */}
 
-                {/* PRODUCT LIST */}
-                <div className="bg-white">
-                  <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-                    <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-                      {products.map((product) => (
-                        <div key={product.id} className="group relative">
-                          <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                            <img
-                              src={product.imageSrc}
-                              alt={product.imageAlt}
-                              className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                            />
-                          </div>
-                          <div className="mt-4 flex justify-between">
-                            <div>
-                              <h3 className="text-sm text-gray-700">
-                                <a href={product.href}>
-                                  <span aria-hidden="true" className="absolute inset-0" />
-                                  {product.name}
-                                </a>
-                              </h3>
-                              <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                            </div>
-                            <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                {/* PRODUCT LIST (3 items each row) */}
+                <ProducList products={products.products} columns={3}></ProducList>
 
-                {/* PAGING */}
-                <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                  <div className="flex-1 flex justify-between sm:hidden">
-                    <a
-                      href="#"
-                      className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Previous
-                    </a>
-                    <a
-                      href="#"
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Next
-                    </a>
-                  </div>
-                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">1</span> to <span className="font-medium">10</span> of{' '}
-                        <span className="font-medium">97</span> results
-                      </p>
-                    </div>
-                    <div>
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        <a
-                          href="#"
-                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                          <span className="sr-only">Previous</span>
-                          <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-                        </a>
-                        {/* Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
-                        <a
-                          href="#"
-                          aria-current="page"
-                          className="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          1
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          2
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          3
-                        </a>
-                        <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                          ...
-                        </span>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 hidden md:inline-flex relative items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          8
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          9
-                        </a>
-                        <a
-                          href="#"
-                          className="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
-                        >
-                          10
-                        </a>
-                        <a
-                          href="#"
-                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                          <span className="sr-only">Next</span>
-                          <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-                        </a>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
-                {/* /End replace */}
+                {/* PAGING (total product and 9 products each page) */}
+                <Paging totalItem={products.info.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+                  handleChangePage={handleAddParameter} ref={page} />
+
               </div>
             </div>
           </section>
