@@ -2,9 +2,8 @@ import _ from 'lodash';
 import React from 'react'
 
 export const Star = ({
-  rate
+  rate = 0
 }) => {
-  if (_.isEmpty(rate)) rate = 0
   rate = Math.round(rate);
   if (rate > 5) rate = 5;
   if (rate < 0) rate = 0;

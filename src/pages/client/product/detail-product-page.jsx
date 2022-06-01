@@ -1,14 +1,15 @@
 import { RadioGroup } from "@headlessui/react";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import Comments from "../../../components/comment/comments";
-import { BASE_URL } from "../../../constants/http";
 import Icon1 from '../../../assets/Icon1.png';
 import Icon2 from '../../../assets/Icon2.png';
 import Icon3 from '../../../assets/Icon3.png';
-
+import { useDispatch } from "react-redux";
+import { addToCartRequest } from '../../../services/actions/product-action'
+import { productService } from '../../../services/modules'
+import { Star } from '../../../components/star/star'
 
 const dummyProduct = {
   id: "624570fbee34ac4d28c4b979",
@@ -52,36 +53,49 @@ const dummyProduct = {
 };
 
 const COLOR_CODES = {
-  White: {
+  trang: {
     displayName: "Trắng",
     class: "bg-white",
     selectedClass: "ring-gray-400",
   },
-  Black: {
+  den: {
     displayName: "Đen",
     class: "bg-gray-900",
     selectedClass: "ring-gray-900",
   },
-  Gray: {
+  xam: {
     displayName: "Xám",
     class: "bg-gray-200",
     selectedClass: "ring-gray-400",
   },
+  xanh: {
+    displayName: "Xám",
+    class: "bg-blue-200",
+    selectedClass: "ring-blue-400",
+  },
 };
 
 export default function DetailProductPage() {
-  const [product, setProduct] = useState({});
+  const id = window.location.pathname.split("/").pop();
+
+  const [product, setProduct] = useState({})
   const [selectedColor, setSelectedColor] = useState();
   const [selectedSize, setSelectedSize] = useState();
   const [sizes, setSizes] = useState([]);
   const [qty, setQty] = useState(0);
 
+  const dispatch = useDispatch();
+
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
   useEffect(() => {
-    setProduct(dummyProduct); //just for test (building UI)
+    // setProduct(dummyProduct); //just for test (building UI)
 
     //call product service to get product detail here
+    productService.getProductById(id)
+    .then(product => {
+      setProduct(product);
+    })
   }, []);
 
   useEffect(() => {
@@ -96,7 +110,13 @@ export default function DetailProductPage() {
   }, [selectedColor]);
 
   const onAddToCartClicked = () => {
-    console.log("clicked");
+    dispatch(addToCartRequest({
+      productId: product.id,
+      images: product.images[0].url,
+      color: selectedColor,
+      size: selectedSize,
+      quantity: qty
+    }));
   };
 
   const renderProductImage = (images) => {
@@ -122,32 +142,7 @@ export default function DetailProductPage() {
     return (
       <div className="flex mb-4">
         <span className="flex items-center">
-          {Array.from(Array(stars)).map(() => (
-            <svg
-              fill="currentColor"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-4 h-4 text-indigo-500"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-          ))}
-          {Array.from(Array(5 - stars)).map(() => (
-            <svg
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="w-4 h-4 text-indigo-500"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-          ))}
+          <Star rate={stars}/>
           <span className="text-gray-600 mx-3">{totalRatings} đánh giá</span>|
           <span className="text-gray-600 ml-3">
             {totalSold} sản phẩm đã bán
@@ -177,15 +172,15 @@ export default function DetailProductPage() {
           {getCurrency(finalPrices)}
         </span>
 
-        {discount && (
+        {discount && discount > 0 ? (
           <>
             <span className="mx-6 font-medium text-xl text-gray-300 line-through">
               {getCurrency(price)}
             </span>
 
-            <span className="font-medium text-xl text-rose-600">10%</span>
+            <span className="font-medium text-xl text-rose-600">{discount}%</span>
           </>
-        )}
+        ) : <></>}
       </div>
     );
   };
@@ -308,6 +303,7 @@ export default function DetailProductPage() {
               type="number"
               className="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md flex items-center text-gray-600  outline-none"
               value={qty}
+              readOnly
             ></input>
             <button
               className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer"
@@ -325,7 +321,7 @@ export default function DetailProductPage() {
   const renderAddToCartButton = () => {
     return (
       <button
-        className="flex text-white bg-indigo-600 border-0 py-2 px-10 focus:outline-none hover:bg-indigo-700 rounded mt-12 mb-16"
+        className="flex text-white bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-12 mb-10"
         onClick={onAddToCartClicked}
       >
         <svg
