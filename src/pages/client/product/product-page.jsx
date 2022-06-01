@@ -170,7 +170,7 @@ export default function ProductPage() {
     parameters.slice(1).map(p => {
       !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
     })
-    
+
     axiosRequest
       .get(apiProduct)
       .then((data) => {
