@@ -170,7 +170,7 @@ export default function ProductPage() {
     parameters.slice(1).map(p => {
       !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
     })
-    console.log(apiProduct);
+
     axiosRequest
       .get(apiProduct)
       .then((data) => {
@@ -199,8 +199,6 @@ export default function ProductPage() {
       if (name === 'category') changeSubCategories(value);
     }
 
-    // console.log(parameters);
-
     handleProduct();
   }
 
@@ -212,7 +210,6 @@ export default function ProductPage() {
       parameters.find(x => x.name == 'p').value = '1';
       parameter.value = parameter.value.filter(item => value != item);
     }
-    // console.log(parameter);
 
     handleProduct();
   }
