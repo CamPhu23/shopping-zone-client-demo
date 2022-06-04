@@ -6,3 +6,10 @@ export const addToCartRequest = (formData) => {
     payload: formData
   };
 };
+
+export const removeOfOutCartRequest = (formData) => {
+  return {
+    type: actionTypes.REMOVE_PRODUCT_OUT_OF_CART,
+    payload: formData
+  };
+};

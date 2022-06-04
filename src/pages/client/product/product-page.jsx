@@ -66,67 +66,11 @@ const filters = [
 ]
 
 const initialProducts = {
-  products: [
-    {
-      id: 1,
-      name: 'Basic Tee',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 35000,
-      rating: 4,
-      color: 'Black',
-    },
-    {
-      id: 2,
-      name: 'Basic',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 20000,
-      rating: 3,
-      color: 'Black',
-    },
-    {
-      id: 3,
-      name: 'Basic Tee 2',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 35000,
-      rating: 4,
-      color: 'Black',
-    },
-    {
-      id: 4,
-      name: 'Basic Tee 3',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 10000,
-      rating: 3,
-      color: 'Black',
-    },
-    {
-      id: 5,
-      name: 'Basic Tee',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 10000,
-      rating: 5,
-      color: 'Black',
-    }
-  ],
+  products: [],
   info: {
     currentIndex: DEFAULT_PAGE,
     numberOfIndex: DEFAULT_PAGE_SIZE,
-    total: 4,
+    total: 0,
     page: 1
   }
 }
