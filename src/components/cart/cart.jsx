@@ -1,79 +1,31 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { Fragment, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon, ShoppingCartIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom';
-import { removeOfOutCartRequest } from '../../services/actions/product-action';
+import { ProductsCart } from '../product/product-list-cart';
+import { currencyFomatter } from '../../utils/currency-fomatter';
 
 export const Cart = () => {
   const products = useSelector(state => state.product.products);
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
-
-  const handleRemove = (e) => {
-    dispatch(removeOfOutCartRequest({
-      id: e.target.getAttribute('product-id'),
-      color: e.target.getAttribute('product-color'),
-      size: e.target.getAttribute('product-size')
-    }));
-  }
-
-  const renderProducts = () => {
-    return products.map((product, index) => (
-      <li key={product.id + index.toString()} className="flex py-6">
-        <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-          <img
-            src={product.image}
-            alt={product.imageAlt}
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
-
-        <div className="ml-4 flex flex-1 flex-col">
-          <div>
-            <div className="flex justify-between text-base font-medium text-gray-900">
-              <h3>
-                <Link to={`/product/${product.id}` || ''}> {product.name} </Link>
-              </h3>
-              <p className="ml-4">{(product.price * product.quantity).toLocaleString('it-IT')}đ</p>
-            </div>
-            <p className="mt-1 text-sm text-gray-500">{colorConverter(product.color)} | {product.size}</p>
-          </div>
-          <div className="flex flex-1 items-end justify-between text-sm">
-            <p className="text-gray-500">Số lượng {product.quantity}</p>
-
-            <div className="flex">
-              <button
-                type="button"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-                product-color={product.color}
-                product-size={product.size}
-                product-id={product.id}
-                onClick={(e) => handleRemove(e)}
-              >
-                Xóa
-              </button>
-            </div>
-          </div>
-        </div>
-      </li>
-    ))
-  }
 
   const renderPaymentButton = () => {
+    let totalPay = (products.map(p => (p.price - p.discountPrice) * p.quantity)
+              .reduce((a, b) => a + b, 0));
+
     return (
       <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
         <div className="flex justify-between text-base font-medium text-gray-900">
           <p>Tổng tiền</p>
-          <p>{(products.map(p => p.price * p.quantity)
-            .reduce((a, b) => a + b, 0)).toLocaleString('it-IT')} đ</p>
+          <p>{currencyFomatter(totalPay)}</p>
         </div>
         <p className="mt-0.5 text-sm text-gray-500">Chưa bao gồm chi phí vận chuyển.</p>
         <div className="mt-6">
           <Link
             to='/payment'
-            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+            className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
           >
             Thanh toán
           </Link>
@@ -85,7 +37,7 @@ export const Cart = () => {
             <Link to='/product' >
               <button
                 type="button"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
+                className="font-medium text-teal-600 hover:text-teal-500"
                 onClick={() => setOpen(false)}
               >
                 Tiếp tục mua sắm<span aria-hidden="true"> &rarr;</span>
@@ -111,19 +63,6 @@ export const Cart = () => {
         </button>
       </div>
     )
-  }
-
-  const colorConverter = (colorCode) => {
-    if (colorCode == "trang") {
-      return "trắng";
-    }
-    if (colorCode == "xam") {
-      return "xám";
-    }
-    if (colorCode == "den") {
-      return "đen";
-    }
-    return colorCode;
   }
 
   return (
@@ -175,14 +114,14 @@ export const Cart = () => {
                           </div>
                         </div>
 
-                        <div className="mt-8 flex justify-center">
+                        <div className="mt-8">
                           <div className="flow-root">
                             <ul role="list" className="-my-6 divide-y divide-gray-200">
                               {products && products.length != 0
                                 ?
-                                renderProducts()
+                                <ProductsCart products={products}/>
                                 :
-                                <div className='text-sm text-gray-400 my-8'>Chưa có sản phẩm được thêm vào giỏ hàng</div>
+                                <div className='text-sm text-gray-400 my-8 flex justify-center'>Chưa có sản phẩm được thêm vào giỏ hàng</div>
                               }
                             </ul>
                           </div>

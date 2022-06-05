@@ -70,6 +70,7 @@ export default function DetailProductPage() {
       id: product.id,
       name: product.name,
       price: product.price,
+      discountPrice: product.price * (product.discount / 100),
       image: product.images[0].url,
       color: selectedColor,
       size: selectedSize,
