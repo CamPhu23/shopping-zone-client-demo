@@ -1,20 +1,18 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronRightIcon, FilterIcon } from '@heroicons/react/solid'
-import { Paging } from '../../../components/paging/paging'
+import _ from 'lodash'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Filter } from '../../../components/filter/filter'
+import { Paging } from '../../../components/paging/paging'
 import { ProducList } from '../../../components/product/product-list'
+import { Search } from '../../../components/search/search'
 import { Sort } from '../../../components/sort/sort'
-import axiosRequest from '../../../config/http-request'
-import { BASE_URL } from '../../../constants/http'
 import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE
-}
-  from '../../../constants/default-axios-product'
-import _ from 'lodash'
-import { Search } from '../../../components/search/search'
+} from '../../../constants/default-axios-product'
+import { productService } from '../../../services/modules'
 
 const intialSortOptions = [
   { name: 'Tên: A đến Z', value: 'name-asc', current: true },
@@ -66,67 +64,11 @@ const filters = [
 ]
 
 const initialProducts = {
-  products: [
-    {
-      id: 1,
-      name: 'Basic Tee',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 35000,
-      rating: 4,
-      color: 'Black',
-    },
-    {
-      id: 2,
-      name: 'Basic',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 20000,
-      rating: 3,
-      color: 'Black',
-    },
-    {
-      id: 3,
-      name: 'Basic Tee 2',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 35000,
-      rating: 4,
-      color: 'Black',
-    },
-    {
-      id: 4,
-      name: 'Basic Tee 3',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 10000,
-      rating: 3,
-      color: 'Black',
-    },
-    {
-      id: 5,
-      name: 'Basic Tee',
-      image: {
-        name: 'Basic Tee Image 1',
-        url: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-      },
-      price: 10000,
-      rating: 5,
-      color: 'Black',
-    }
-  ],
+  products: [],
   info: {
     currentIndex: DEFAULT_PAGE,
     numberOfIndex: DEFAULT_PAGE_SIZE,
-    total: 4,
+    total: 0,
     page: 1
   }
 }
@@ -164,15 +106,15 @@ export default function ProductPage() {
   // Filter functions
   // add parameter to a string and call api
   const handleProduct = () => {
-    let apiProduct = `${BASE_URL}/products?`;
+    let apiProduct = "";
 
     apiProduct += parameters[0].name + '=' + parameters[0].value;
     parameters.slice(1).map(p => {
       !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
     })
 
-    axiosRequest
-      .get(apiProduct)
+    productService
+      .getAllProduct(apiProduct)
       .then((data) => {
         setProducts(data);
 
@@ -193,7 +135,7 @@ export default function ProductPage() {
       if (!_.isEmpty(parameter) && !parameter.value.includes(value)) parameter.value.push(value);
     } else {
       parameter.value = value;
-      
+
       if (name !== 'p') parameters.find(x => x.name == 'p').value = '1';
 
       if (name === 'category') changeSubCategories(value);

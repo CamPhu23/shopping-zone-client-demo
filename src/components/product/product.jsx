@@ -22,7 +22,7 @@ export const Product = ({ product }) => {
                 {product.name}
                 <div className='flex items-center justify-between'>
                   <Star rate={product.rating}></Star>
-                  <p className="font-medium text-gray-900">{product.price.toLocaleString('it-IT')} đ</p>
+                  <p className="font-medium text-gray-900">{product.price.toLocaleString('it-IT')}đ</p>
                 </div>
               </Link>
             </h3>

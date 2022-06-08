@@ -10,6 +10,16 @@ const getProductById = (id) => {
     });
 };
 
+const getAllProduct = (url) => {
+  return axiosRequest
+    .get(`${BASE_URL}/products?${url}`)
+    .then((products) => products)
+    .catch((err) => {
+      throw new Error(err);
+    })
+}
+
 export default {
-  getProductById
+  getProductById,
+  getAllProduct,
 };

@@ -1,56 +1,15 @@
 import { RadioGroup } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import Comments from "../../../components/comment/comments";
 import Icon1 from '../../../assets/Icon1.png';
 import Icon2 from '../../../assets/Icon2.png';
 import Icon3 from '../../../assets/Icon3.png';
-import { useDispatch } from "react-redux";
-import { addToCartRequest } from '../../../services/actions/product-action'
-import { productService } from '../../../services/modules'
-import { Star } from '../../../components/star/star'
-
-const dummyProduct = {
-  id: "624570fbee34ac4d28c4b979",
-  name: "product product product 1",
-  description: "description 1",
-  price: 120000,
-  discount: 10,
-  category: "ao-thun-nu",
-  tags: ["san-pham-moi"],
-  images: [
-    {
-      id: "624571b4ee34ac4d28c4b97c",
-      name: "image 1",
-      url: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    },
-    {
-      id: "624571b4ee34ac4d28c4b97b",
-      name: "image 2",
-      url: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    },
-  ],
-  warehouses: {
-    info: [
-      {
-        color: "White",
-        sizes: ["M", "L", "S"],
-      },
-      {
-        color: "Black",
-        sizes: ["M"],
-      },
-    ],
-    sold: 50,
-  },
-  comments: [],
-  ratings: {
-    stars: 4,
-    totalRatings: 10,
-  },
-  isDelete: false,
-};
+import { Star } from '../../../components/star/star';
+import { addToCartRequest } from '../../../services/actions/product-action';
+import { productService } from '../../../services/modules';
+import { useParams } from 'react-router-dom'
 
 const COLOR_CODES = {
   trang: {
@@ -76,27 +35,24 @@ const COLOR_CODES = {
 };
 
 export default function DetailProductPage() {
-  const id = window.location.pathname.split("/").pop();
+  const { id } = useParams();
 
   const [product, setProduct] = useState({})
   const [selectedColor, setSelectedColor] = useState();
   const [selectedSize, setSelectedSize] = useState();
   const [sizes, setSizes] = useState([]);
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
 
   const dispatch = useDispatch();
 
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
   useEffect(() => {
-    // setProduct(dummyProduct); //just for test (building UI)
-
-    //call product service to get product detail here
     productService.getProductById(id)
     .then(product => {
       setProduct(product);
     })
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (product && product.warehouses) {
@@ -111,11 +67,14 @@ export default function DetailProductPage() {
 
   const onAddToCartClicked = () => {
     dispatch(addToCartRequest({
-      productId: product.id,
-      images: product.images[0].url,
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      discountPrice: product.price * (product.discount / 100),
+      image: product.images[0].url,
       color: selectedColor,
       size: selectedSize,
-      quantity: qty
+      quantity: qty,
     }));
   };
 
@@ -161,21 +120,18 @@ export default function DetailProductPage() {
     }
 
     const getCurrency = (prices) =>
-      prices.toLocaleString("it-IT", {
-        style: "currency",
-        currency: "VND",
-      });
+      prices.toLocaleString("it-IT");
 
     return (
       <div className="flex mt-6 mb-8">
         <span className="font-medium text-xl text-gray-700">
-          {getCurrency(finalPrices)}
+          {getCurrency(finalPrices)}đ
         </span>
 
         {discount && discount > 0 ? (
           <>
             <span className="mx-6 font-medium text-xl text-gray-300 line-through">
-              {getCurrency(price)}
+              {getCurrency(price)}đ
             </span>
 
             <span className="font-medium text-xl text-rose-600">{discount}%</span>
@@ -319,10 +275,12 @@ export default function DetailProductPage() {
   };
 
   const renderAddToCartButton = () => {
+    
     return (
       <button
         className="flex text-white bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-12 mb-10"
         onClick={onAddToCartClicked}
+        disabled={qty == 0 || !selectedColor || !selectedSize}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
