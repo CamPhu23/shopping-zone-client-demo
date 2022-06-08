@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
 import { ICON } from "../../../assets/svg-icon";
-import { Paging } from "../../../components/paging/paging";
 import Toast from "../../../components/toast/toast";
-import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
-import { accountService } from "../../../services/modules";
 
 //JUST FOR TEST => WILL REMOVE LATER
 const dummyUserInfo = {

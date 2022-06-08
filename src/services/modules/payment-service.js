@@ -6,10 +6,10 @@ const postPayment = (formData) => {
     .post(`${BASE_URL}/payment`, formData)
     .then((product) => product)
     .catch((err) => {
-      let errObject = JSON.parse(err);
-      let errProduct = JSON.stringify(errObject.data);
+      let errObject = JSON.parse(err).data;
+      console.log(errObject);
 
-      throw new Error(errProduct);
+      throw new Error(errObject);
     });
 };
 

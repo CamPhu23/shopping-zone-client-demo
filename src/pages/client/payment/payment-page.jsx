@@ -6,18 +6,24 @@ import { totalPay, totalDiscount, totalBill, shippingCost } from '../../../utils
 import { useForm } from "react-hook-form";
 import { paymentService } from '../../../services/modules'
 import { clearCartRequest } from '../../../services/actions/product-action';
+import Toast from "../../../components/toast/toast";
+import { ICON } from '../../../assets/svg-icon';
 
 export default function PaymentPage() {
+  const [toastShow, setToastShow] = useState(false);
+  const [toastMessages, setToastMessages] = useState("");
+  const [toastIcon, setToastIcon] = useState(null);
+
   const products = useSelector(state => state.product.products);
   const [isCODPayment, setCODPayment] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
-  
+
   const handlePayment = (data) => {
-    const newProducts = products.map(({image, ...product}) => product)
+    const newProducts = products.map(({ image, ...product }) => product)
     data["paymentMethod"] = isCODPayment ? "COD" : "Card";
 
-    // if method === cod => not submit card info to server
+    // if method === COD => not submit card info to server
     if (data.paymentMethod === "COD") {
       delete data.cardNumber;
       delete data.cardEnddate;
@@ -34,15 +40,15 @@ export default function PaymentPage() {
     };
 
     paymentService.postPayment(paymentData)
-    .then(result => {
-      console.log(result)
-      dispatch(clearCartRequest());
-    })
-    .catch(error => {
-
-      // handle error => toast
-      console.log(error);
-    });
+      .then(result => {
+        console.log(result)
+        dispatch(clearCartRequest());
+      })
+      .catch(error => {
+        setToastShow(true);
+        setToastMessages(error?.message);
+        setToastIcon(ICON.Fail);
+      });
   };
 
   const renderTotalPayment = () => {
@@ -385,6 +391,15 @@ export default function PaymentPage() {
           {renderPaymentForm()}
         </div>
       </div>
+
+      <Toast
+        show={toastShow}
+        messages={toastMessages}
+        icon={toastIcon}
+        mode={"light"}
+        onClose={() => setToastShow(false)}
+        autoClose={5000}
+      />
     </div>
   )
 }
