@@ -5,6 +5,7 @@ const RegisterPage = lazy(() => import('./client/login-register/register-page.js
 const ProductPage = lazy(() => import('./client/product/product-page.jsx'));
 const DetailProductPage = lazy(() => import('./client/product/detail-product-page.jsx'));
 const PaymentPage = lazy(() => import('./client/payment/payment-page.jsx'));
+const AccountInfoPage = lazy(() => import('./client/account/account-info-page.jsx'));
 const UnAuthorizationPage = lazy(() => import('./errors/unauthorization-page.jsx'));
 
 export {
@@ -14,5 +15,6 @@ export {
   PaymentPage,
   ProductPage,
   DetailProductPage,
+  AccountInfoPage,
   UnAuthorizationPage,
 };
