@@ -362,7 +362,7 @@ const AccountInfoPage = () => {
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr onClick={() => onTableRowClick(order.id)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+                <tr key={order.id} onClick={() => onTableRowClick(order.id)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
