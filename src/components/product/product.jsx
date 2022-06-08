@@ -1,6 +1,7 @@
 import React from 'react'
-import { BASE_URL } from '../../constants/http'
+import { BASE_URL } from '../../constants/client-url'
 import { Star } from '../star/star'
+import { Link } from 'react-router-dom'
 
 export const Product = ({ product }) => {
   return (
@@ -16,14 +17,14 @@ export const Product = ({ product }) => {
         <div className="px-5 py-3 flex justify-between w-full">
           <div className='truncate flex space-x-5 w-full'>
             <h3 className="text-gray-700 truncate text-xl w-full">
-              <a href={`${BASE_URL}/product/${product.id}`} className='space-y-3'>
+              <Link to={`/product/${product.id}`} className='space-y-3'>
                 <span aria-hidden="true" className="absolute inset-0" />
                 {product.name}
                 <div className='flex items-center justify-between'>
                   <Star rate={product.rating}></Star>
-                  <p className="font-medium text-gray-900">{product.price.toLocaleString('it-IT')} đ</p>
+                  <p className="font-medium text-gray-900">{product.price.toLocaleString('it-IT')}đ</p>
                 </div>
-              </a>
+              </Link>
             </h3>
           </div>
         </div>

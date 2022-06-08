@@ -1,4 +1,5 @@
-import {CLIENT_PERMISSION} from '../../constants/authentication';
+import { CLIENT_PERMISSION } from '../../constants/authentication';
+import { PaymentPage } from '../../pages';
 
 const PRIVATE_CLIENT_ROUTE = {
   private: true,
@@ -14,7 +15,14 @@ const PRIVATE_CLIENT_ROUTE = {
     permission: 'admin' | 'client',
   }
 */
+const CLIENT_PAYMENT_ROUTE = {
+  path: '/payment',
+  component: <PaymentPage />,
+  exact: true,
+  ...PRIVATE_CLIENT_ROUTE
+};
 
 
 export default [
+  CLIENT_PAYMENT_ROUTE
 ];
