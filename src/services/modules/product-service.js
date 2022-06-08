@@ -11,5 +11,5 @@ const getProductById = (id) => {
 };
 
 export default {
-  getProductById
+  getProductById,
 };

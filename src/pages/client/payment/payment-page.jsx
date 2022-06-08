@@ -1,15 +1,49 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ProductsCart } from '../../../components/product/product-list-cart';
 import { currencyFomatter } from '../../../utils/currency-fomatter.js'
 import { totalPay, totalDiscount, totalBill, shippingCost } from '../../../utils/calculate-payment'
 import { useForm } from "react-hook-form";
+import { paymentService } from '../../../services/modules'
+import { clearCartRequest } from '../../../services/actions/product-action';
 
 export default function PaymentPage() {
   const products = useSelector(state => state.product.products);
   const [isCODPayment, setCODPayment] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const dispatch = useDispatch();
+  
+  const handlePayment = (data) => {
+    const newProducts = products.map(({image, ...product}) => product)
+    data["paymentMethod"] = isCODPayment ? "COD" : "Card";
+
+    // if method === cod => not submit card info to server
+    if (data.paymentMethod === "COD") {
+      delete data.cardNumber;
+      delete data.cardEnddate;
+      delete data.cardCVV;
+    }
+
+    let paymentData = {
+      ...data,
+      products: newProducts,
+      totalPay: totalPay(products),
+      shippingCost: shippingCost,
+      totalDiscount: totalDiscount(products),
+      totalBill: totalBill(products),
+    };
+
+    paymentService.postPayment(paymentData)
+    .then(result => {
+      console.log(result)
+      dispatch(clearCartRequest());
+    })
+    .catch(error => {
+
+      // handle error => toast
+      console.log(error);
+    });
+  };
 
   const renderTotalPayment = () => {
     return (
@@ -17,11 +51,11 @@ export default function PaymentPage() {
         <div className='space-y-3'>
           <div className="flex justify-between text-gray-700">
             <p>Tổng tiền hàng:</p>
-            <p>{totalPay(products)}</p>
+            <p>{currencyFomatter(totalPay(products))}</p>
           </div>
           <div className="flex justify-between text-gray-700">
             <p>Tổng tiền đã giảm:</p>
-            <p>{totalDiscount(products)}</p>
+            <p>{currencyFomatter(totalDiscount(products))}</p>
           </div>
           <div className="flex justify-between text-gray-700">
             <p>Chi phí vận chuyển:</p>
@@ -31,7 +65,7 @@ export default function PaymentPage() {
 
         <div className="flex justify-between font-medium text-gray-900 pt-3">
           <p>Tổng tiền hàng:</p>
-          <p>{totalBill(products)}</p>
+          <p>{currencyFomatter(totalBill(products))}</p>
         </div>
       </div>
     )
@@ -152,7 +186,7 @@ export default function PaymentPage() {
   const renderPaymentForm = () => {
     return (
       <div>
-        <form onSubmit={handleSubmit(onSubmit)} className="border-gray-200 border-2 shadow overflow-hidden sm:rounded-md">
+        <form onSubmit={handleSubmit(handlePayment)} className="border-gray-200 border-2 shadow overflow-hidden sm:rounded-md">
           <div className="px-4 py-5 bg-white sm:p-6">
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-9 sm:col-span-4">
