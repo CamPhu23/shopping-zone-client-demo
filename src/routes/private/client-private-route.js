@@ -1,9 +1,18 @@
 import {CLIENT_PERMISSION} from '../../constants/authentication';
+import { AccountInfoPage } from '../../pages';
 
 const PRIVATE_CLIENT_ROUTE = {
   private: true,
   permission: CLIENT_PERMISSION,
 };
+
+const USER_INFO_ROUTE = {
+  path: '/user-info',
+  component: <AccountInfoPage />,
+  exact: true,
+  // => UNCOMMENT WHEN INTERGATE INTO MAIN
+  // ...PRIVATE_CLIENT_ROUTE
+}
 
 /*
   OBJECTT look like: {
@@ -17,4 +26,5 @@ const PRIVATE_CLIENT_ROUTE = {
 
 
 export default [
+  USER_INFO_ROUTE,
 ];
