@@ -2,6 +2,7 @@ import React from 'react'
 
 export default function Comment({comment, replies}) {
   return (
+    <div className="mt-5 antialiased w-full"> 
         <div className="space-y-4">
             <div className="flex">
                 <div className="flex-shrink-0 mr-3">
@@ -10,20 +11,21 @@ export default function Comment({comment, replies}) {
                 <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
                     <strong>{comment.name}</strong> <span className="text-xs text-gray-400">3:34 PM</span>
                     <p className="text-sm md:text-base">{comment.content}</p>
-                    {/* <h4 className="my-5 uppercase tracking-wide text-gray-400 font-bold text-xs">Replies</h4> */}
                 </div>
             </div>
-            <div className=''>
-                {replies.length > 0 && (
-                    <div>
-                        {replies.map(reply => (
-                            <Comment key={reply.id} comment={reply} replies={[]}/>
-                        ))
-                        }
-                    </div>
-                )}
+        </div>   
+            
+        {replies.map(reply => (
+            <div className="space-y-4 ml-14" >
+                <div className="flex">
+                    <Comment key={reply.id} comment={reply} replies={[]}/>
+                </div> 
             </div>
-        </div>     
+        ))
+        }
+
+         
+    </div>   
   )
 }
 

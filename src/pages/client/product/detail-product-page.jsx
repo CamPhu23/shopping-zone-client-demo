@@ -8,49 +8,93 @@ import Icon2 from '../../../assets/Icon2.png';
 import Icon3 from '../../../assets/Icon3.png';
 import { useDispatch } from "react-redux";
 import { addToCartRequest } from '../../../services/actions/product-action'
-import { productService } from '../../../services/modules'
+import { productService, commentService } from '../../../services/modules'
 import { Star } from '../../../components/star/star'
+import { useForm } from 'react-hook-form'
 
 const dummyProduct = {
-  id: "624570fbee34ac4d28c4b979",
-  name: "product product product 1",
-  description: "description 1",
-  price: 120000,
-  discount: 10,
-  category: "ao-thun-nu",
-  tags: ["san-pham-moi"],
-  images: [
-    {
-      id: "624571b4ee34ac4d28c4b97c",
-      name: "image 1",
-      url: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    },
-    {
-      id: "624571b4ee34ac4d28c4b97b",
-      name: "image 2",
-      url: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    },
+  "id": "624570fbee34ac4d28c4b979",
+  "name": "Áo thun ngắn tay",
+  "description": "Dòng sản phẩm công nghệ Excool sử dụng sợi Sorona ưu việt và bền vững của Dupont. Nhóm sợi này có cấu trúc Zigzac luôn co giãn theo hướng vận động và nhanh chóng đàn hồi trở lại hình dạng ban đầu. Bởi vậy, chiếc áo Polo Excool của Coolmate sở hữu tính năng co giãn, đàn hồi và giữ form tốt gấp x3 lần dòng áo polo thông thường. Polo Excool của Coolmate sẽ mang đe cho bạn cảm giác tự tin, thoải mái, năng động với mọi hoạt động ngày dài từ thể thao tới nơi làm việc hay gặp gỡ bạn bè và người thân.",
+  "price": 120000,
+  "discount": 0,
+  "category": "ao-thun-nu",
+  "tags": [
+    "san-pham-moi"
   ],
-  warehouses: {
-    info: [
+  "images": [
+    {
+      "id": "624571b4ee34ac4d28c4b97c",
+      "name": "image 1",
+      "url": "https://mcdn.nhanh.vn/store/25618/artCT/87003/ao_thun_dep_1.jpg",
+      "publicId": "",
+      "product": null
+    },
+    {
+      "id": "629d7509fde0728866990617",
+      "name": "image 2",
+      "url": "https://mcdn.nhanh.vn/store/25618/artCT/87003/ao_thun_dep_1.jpg",
+      "publicId": "",
+      "product": null
+    },
+    {
+      "id": "629d74fbfde0728866990616",
+      "name": "image 2",
+      "url": "https://mcdn.nhanh.vn/store/25618/artCT/87003/ao_thun_dep_1.jpg",
+      "publicId": "",
+      "product": null
+    }
+  ],
+  "warehouses": {
+    "sold": 0,
+    "info": [
       {
-        color: "White",
-        sizes: ["M", "L", "S"],
+        "color": "trang",
+        "sizes": [
+          "S",
+          "L"
+        ]
       },
       {
-        color: "Black",
-        sizes: ["M"],
+        "color": "den",
+        "sizes": [
+          "L"
+        ]
       },
-    ],
-    sold: 50,
+      {
+        "color": "xam",
+        "sizes": [
+          "XL"
+        ]
+      }
+    ]
   },
-  comments: [],
-  ratings: {
-    stars: 4,
-    totalRatings: 10,
+  "comments": [
+    {
+      "id": "629bab12e7a0335390fea44f",
+      "name": "Văn B",
+      "content": "Áo cutephoomai queeeee",
+      "replyTo": null
+    },
+    {
+      "id": "629bab3ee7a0335390fea456",
+      "name": "Admin",
+      "content": "Cảm ơn Văn B",
+      "replyTo": "629bab12e7a0335390fea44f"
+    },
+    {
+      "id": "62a0973ba5bed60944facbb5",
+      "name": "s",
+      "content": "a",
+      "replyTo": null
+    }
+  ],
+  "ratings": {
+    "stars": 4,
+    "totalRatings": 1
   },
-  isDelete: false,
-};
+  "isDelete": false
+}
 
 const COLOR_CODES = {
   trang: {
@@ -69,7 +113,7 @@ const COLOR_CODES = {
     selectedClass: "ring-gray-400",
   },
   xanh: {
-    displayName: "Xám",
+    displayName: "Xanh",
     class: "bg-blue-200",
     selectedClass: "ring-blue-400",
   },
@@ -83,6 +127,10 @@ export default function DetailProductPage() {
   const [selectedSize, setSelectedSize] = useState();
   const [sizes, setSizes] = useState([]);
   const [qty, setQty] = useState(0);
+
+  const { register, handleSubmit, formState: { errors }, watch, reset, setFocus } = useForm();
+  // const [nameofCustomer, setNameofCustomer] = useState('');
+  // const [content, setContent] = useState('');
 
   const dispatch = useDispatch();
 
@@ -122,8 +170,8 @@ export default function DetailProductPage() {
   const renderProductImage = (images) => {
     return (
       images && (
-        <div className="text-center object-cover object-center rounded md:w-5/12">
-          <Carousel showStatus={false} showArrows={false}>
+        <div className="text-center object-cover object-center rounded w-full md:w-1/2 md:mr-3">
+          <Carousel showStatus={false} showArrows={false} autoPlay={true} thumbWidth={60} >
             {images.map((img) => (
               <div key={img.id}>
                 <img src={img.url} className="rounded-lg" alt={img.name} />
@@ -142,11 +190,12 @@ export default function DetailProductPage() {
     return (
       <div className="flex mb-4">
         <span className="flex items-center">
-          <Star rate={stars}/>
-          <span className="text-gray-600 mx-3">{totalRatings} đánh giá</span>|
-          <span className="text-gray-600 ml-3">
+          <Star rate={stars}/> 
+          <span className="ml-3">|</span>
+          <span className="text-gray-600 mx-3">{totalRatings} đánh giá</span>
+          {/* <span className="text-gray-600 ml-3">
             {totalSold} sản phẩm đã bán
-          </span>
+          </span> */}
         </span>
       </div>
     );
@@ -167,7 +216,7 @@ export default function DetailProductPage() {
       });
 
     return (
-      <div className="flex mt-6 mb-8">
+      <div className="flex my-4 lg:mt-6 lg:mb-8">
         <span className="font-medium text-xl text-gray-700">
           {getCurrency(finalPrices)}
         </span>
@@ -191,7 +240,7 @@ export default function DetailProductPage() {
 
     return (
       colors && (
-        <div className="flex items-center mt-5 mb-4">
+        <div className="flex items-center my-4 lg:mt-5 lg:mb-4">
           <span className="mr-8">Màu sắc:</span>
           <RadioGroup value={selectedColor} onChange={setSelectedColor}>
             <RadioGroup.Label className="sr-only">
@@ -292,7 +341,7 @@ export default function DetailProductPage() {
     return (
       <div className="my-4">
         <div className="flex items-center h-10">
-          <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1 w-40">
+          <div className="flex flex-row h-10 rounded-lg relative bg-transparent mt-1 w-40">
             <button
               className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
               onClick={decreaseStep}
@@ -321,7 +370,7 @@ export default function DetailProductPage() {
   const renderAddToCartButton = () => {
     return (
       <button
-        className="flex text-white bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-12 mb-10"
+        className="flex text-white justify-center bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-6 mb-4 w-full lg:mt-12 lg:mb-10"
         onClick={onAddToCartClicked}
       >
         <svg
@@ -345,7 +394,7 @@ export default function DetailProductPage() {
 
   const renderCommitment = () => {
     return (
-      <div className="mt-16">
+      <div className="mt-6">
         <hr />
         <div className="flex">
           <div className="flex-1 border mt-2 p-2 transition ease-in-out hover:-translate-y-1 hover:shadow-lg">
@@ -375,10 +424,11 @@ export default function DetailProductPage() {
     );
   };
 
+  
   const renderProductInfo = (product) => {
     return (
       product && (
-        <div className="flex-1 lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-2 pt-24 lg:mt-0">
+        <div className="flex-1 w-full sm:pt-7 md:py-0 md:ml-3 lg:py-0 lg:w-1/2 lg:pl-10 lg:mt-0">
           <h2 className="text-sm title-font text-gray-500 tracking-widest">
             {product.category}
           </h2>
@@ -401,8 +451,8 @@ export default function DetailProductPage() {
   const renderProductDescription = (description) => {
     return (
       description && (
-        <div className="bg-white">
-          <div className="max-w-2xl mx-auto py-2 px-4 grid grid-cols-1 text-justify sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 ">
+        <div className="max-w-full lg:w-4/5 mx-auto ">
+          <div className="max-w-2xl grid grid-cols-1 text-justify mx-6 mt-6 lg:max-w-7xl lg:px-6 ">
             <div>
               <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                 Mô tả sản phẩm
@@ -414,10 +464,92 @@ export default function DetailProductPage() {
       )
     );
   };
+  const handleAddComment = ({nameOfCustomer, content}) => {
+    console.log(nameOfCustomer, content, id);
+    commentService.addComment({nameOfCustomer, content, productID: id});
+  }
+  const renderComment = () =>{
+    return(
+      <div className="mx-6 mt-2 lg:w-4/5 flex flex-wrap lg:mx-auto ">
+        <div className="bg-grey w-full ">
+          <div className="max-w-5xl mx-auto mt-2 lg:px-6 ">
+            <div className="bg-white modal__content rounded">
+              <div className="modal__body my-1">
+                <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                  Bình luận
+                </h2>
+                
+              </div>
+              <div className="modal__footer mt-3">
+                <div className="text-right">
+                  <form onSubmit={handleSubmit(handleAddComment)}>
+                    <div className="mt-4 border border-grey w-full border-1 rounded-lg p-2 relative focus:border-red">
+                      <input type="text" placeholder="Nhập tên" className="w-full p-2 mb-4 focus:outline-1 focus:outline-blue-500 font-normal border-[0.1px] resize-none border-[#9EA5B1] rounded-md"
+                      {...register("nameOfCustomer")}
+                      />
+
+                      <textarea
+                        placeholder="Nhập bình luận hoặc câu hỏi"
+                        className="w-full p-2 focus:outline-1 focus:outline-blue-500 font-normal border-[0.1px] resize-none h-[120px] border-[#9EA5B1] rounded-md"
+                        name="content"
+                        {...register("content")}
+                      ></textarea>
+                      <button 
+                        className="w-20 bg-purple bg-teal-600 border-0 border-purple p-3 rounded-md text-sm font-semibold hover:bg-teal-700 hover:border-purple-dark text-white"
+                        type="submit"
+                        >
+                        Gửi 
+                      </button>
+                    </div>
+
+                  </form>
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Comment component */}
+        {/* <Comments id={id}/> */}
+        
+        
+        
+        
+        {/* <div className="antialiased mx-auto max-w-full px-2">
+          <div className="space-y-4">
+            <div className="flex">
+              <div className="flex-shrink-0 mr-3">
+                <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
+              </div>
+              <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+                <strong>tên</strong> <span className="text-xs text-gray-400">3:34 PM</span>
+                <p className="text-sm md:text-base">nội dung cmt</p>
+              </div>
+            </div>
+
+            <div className="space-y-4 ml-14" >
+              <div className="flex">
+                <div className="flex-shrink-0 mr-3">
+                  <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
+                </div>
+                <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+                  <strong>tên</strong> <span className="text-xs text-gray-400">3:34 PM</span>
+                  <p className="text-sm md:text-base">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                      magna aliquyam erat, sed diam voluptua.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>    
+        </div>  */}
+      </div>
+    );
+  }
 
   return (
-    <section className="text-gray-600 body-font overflow-hidden">
-      <div className="container px-16 m-5 mx-auto">
+    <section className="text-gray-600 body-font overflow-hidden ">
+      <div className="container px-6 mt-5 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           {renderProductImage(product.images)}
           {renderProductInfo(product)}
@@ -425,66 +557,7 @@ export default function DetailProductPage() {
       </div>
 
       {renderProductDescription(product.description)}
-
-      {/* Q&A */}
-      {/* <div className="bg-grey px-2 w-full max-w-5xl mx-auto">
-        <div className="max-w-5xl mx-auto mt-10">
-          <div className="bg-white p-1 modal__content rounded">
-            <div className="modal__body my-1">
-              <h2 className="text-gray-900 font-bold mb-1 text-lg">
-                {" "}
-                Leave a Comment
-              </h2>
-              <div className="mt-2 border border-grey w-full border-1 rounded-lg p-2 relative focus:border-red">
-                <textarea
-                  placeholder="Add your comment..."
-                  className="w-full p-2 focus:outline-1 focus:outline-blue-500 font-bold border-[0.1px] resize-none h-[120px] border-[#9EA5B1] rounded-md"
-                ></textarea>
-              </div>
-            </div>
-            <div className="modal__footer mt-3">
-              <div className="text-right">
-                <button className="bg-purple text-black border-2 border-purple p-3 rounded-md text-xs font-semibold hover:bg-sky-700 hover:border-purple-dark hover:text-white">
-                  Gửi đánh giá
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <!-- component --> */}
-      {/* <Comments /> */}
-      {/* <div className="antialiased mx-auto max-w-5xl px-2">
-    <h2 className="mb-4 text-lg font-bold text-gray-900">Comments</h2>
-      <div className="space-y-4">
-        <div className="flex">
-          <div className="flex-shrink-0 mr-3">
-            <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
-          </div>
-          <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-            <strong>tên</strong> <span className="text-xs text-gray-400">3:34 PM</span>
-            <p className="text-sm md:text-base">nội dung cmt</p>
-            <h4 className="my-5 uppercase tracking-wide text-gray-400 font-bold text-xs">Replies</h4>
-            <div className="space-y-4" >
-              <div className="flex">
-                <div className="flex-shrink-0 mr-3">
-                  <img className="mt-3 rounded-full w-6 h-6 sm:w-8 sm:h-8" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
-                </div>
-                <div className="flex-1 bg-gray-100 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-                  <strong >tên ai</strong> <span className="text-xs text-gray-400">3:34 PM</span>
-                  <p className="text-sm md:text-base">
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                    magna aliquyam erat, sed diam voluptua.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>    
-  </div> */}
+      {renderComment()}
     </section>
   );
 }
