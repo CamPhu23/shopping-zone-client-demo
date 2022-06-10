@@ -1,100 +1,15 @@
 import { RadioGroup } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import Comments from "../../../components/comment/comments";
 import Icon1 from '../../../assets/Icon1.png';
 import Icon2 from '../../../assets/Icon2.png';
 import Icon3 from '../../../assets/Icon3.png';
-import { useDispatch } from "react-redux";
-import { addToCartRequest } from '../../../services/actions/product-action'
-import { productService, commentService } from '../../../services/modules'
-import { Star } from '../../../components/star/star'
-import { useForm } from 'react-hook-form'
-
-const dummyProduct = {
-  "id": "624570fbee34ac4d28c4b979",
-  "name": "Áo thun ngắn tay",
-  "description": "Dòng sản phẩm công nghệ Excool sử dụng sợi Sorona ưu việt và bền vững của Dupont. Nhóm sợi này có cấu trúc Zigzac luôn co giãn theo hướng vận động và nhanh chóng đàn hồi trở lại hình dạng ban đầu. Bởi vậy, chiếc áo Polo Excool của Coolmate sở hữu tính năng co giãn, đàn hồi và giữ form tốt gấp x3 lần dòng áo polo thông thường. Polo Excool của Coolmate sẽ mang đe cho bạn cảm giác tự tin, thoải mái, năng động với mọi hoạt động ngày dài từ thể thao tới nơi làm việc hay gặp gỡ bạn bè và người thân.",
-  "price": 120000,
-  "discount": 0,
-  "category": "ao-thun-nu",
-  "tags": [
-    "san-pham-moi"
-  ],
-  "images": [
-    {
-      "id": "624571b4ee34ac4d28c4b97c",
-      "name": "image 1",
-      "url": "https://mcdn.nhanh.vn/store/25618/artCT/87003/ao_thun_dep_1.jpg",
-      "publicId": "",
-      "product": null
-    },
-    {
-      "id": "629d7509fde0728866990617",
-      "name": "image 2",
-      "url": "https://mcdn.nhanh.vn/store/25618/artCT/87003/ao_thun_dep_1.jpg",
-      "publicId": "",
-      "product": null
-    },
-    {
-      "id": "629d74fbfde0728866990616",
-      "name": "image 2",
-      "url": "https://mcdn.nhanh.vn/store/25618/artCT/87003/ao_thun_dep_1.jpg",
-      "publicId": "",
-      "product": null
-    }
-  ],
-  "warehouses": {
-    "sold": 0,
-    "info": [
-      {
-        "color": "trang",
-        "sizes": [
-          "S",
-          "L"
-        ]
-      },
-      {
-        "color": "den",
-        "sizes": [
-          "L"
-        ]
-      },
-      {
-        "color": "xam",
-        "sizes": [
-          "XL"
-        ]
-      }
-    ]
-  },
-  "comments": [
-    {
-      "id": "629bab12e7a0335390fea44f",
-      "name": "Văn B",
-      "content": "Áo cutephoomai queeeee",
-      "replyTo": null
-    },
-    {
-      "id": "629bab3ee7a0335390fea456",
-      "name": "Admin",
-      "content": "Cảm ơn Văn B",
-      "replyTo": "629bab12e7a0335390fea44f"
-    },
-    {
-      "id": "62a0973ba5bed60944facbb5",
-      "name": "s",
-      "content": "a",
-      "replyTo": null
-    }
-  ],
-  "ratings": {
-    "stars": 4,
-    "totalRatings": 1
-  },
-  "isDelete": false
-}
+import { Star } from '../../../components/star/star';
+import { addToCartRequest } from '../../../services/actions/product-action';
+import { productService } from '../../../services/modules';
+import { useParams } from 'react-router-dom'
 
 const COLOR_CODES = {
   trang: {
@@ -120,13 +35,13 @@ const COLOR_CODES = {
 };
 
 export default function DetailProductPage() {
-  const id = window.location.pathname.split("/").pop();
+  const { id } = useParams();
 
   const [product, setProduct] = useState({})
   const [selectedColor, setSelectedColor] = useState();
   const [selectedSize, setSelectedSize] = useState();
   const [sizes, setSizes] = useState([]);
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
 
   const { register, handleSubmit, formState: { errors }, watch, reset, setFocus } = useForm();
   // const [nameofCustomer, setNameofCustomer] = useState('');
@@ -137,14 +52,11 @@ export default function DetailProductPage() {
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
   useEffect(() => {
-    // setProduct(dummyProduct); //just for test (building UI)
-
-    //call product service to get product detail here
     productService.getProductById(id)
     .then(product => {
       setProduct(product);
     })
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (product && product.warehouses) {
@@ -159,11 +71,14 @@ export default function DetailProductPage() {
 
   const onAddToCartClicked = () => {
     dispatch(addToCartRequest({
-      productId: product.id,
-      images: product.images[0].url,
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      discountPrice: product.price * (product.discount / 100),
+      image: product.images[0].url,
       color: selectedColor,
       size: selectedSize,
-      quantity: qty
+      quantity: qty,
     }));
   };
 
@@ -210,21 +125,18 @@ export default function DetailProductPage() {
     }
 
     const getCurrency = (prices) =>
-      prices.toLocaleString("it-IT", {
-        style: "currency",
-        currency: "VND",
-      });
+      prices.toLocaleString("it-IT");
 
     return (
       <div className="flex my-4 lg:mt-6 lg:mb-8">
         <span className="font-medium text-xl text-gray-700">
-          {getCurrency(finalPrices)}
+          {getCurrency(finalPrices)}đ
         </span>
 
         {discount && discount > 0 ? (
           <>
             <span className="mx-6 font-medium text-xl text-gray-300 line-through">
-              {getCurrency(price)}
+              {getCurrency(price)}đ
             </span>
 
             <span className="font-medium text-xl text-rose-600">{discount}%</span>
@@ -368,10 +280,12 @@ export default function DetailProductPage() {
   };
 
   const renderAddToCartButton = () => {
+    
     return (
       <button
         className="flex text-white justify-center bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-6 mb-4 w-full lg:mt-12 lg:mb-10"
         onClick={onAddToCartClicked}
+        disabled={qty == 0 || !selectedColor || !selectedSize}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
