@@ -8,8 +8,11 @@ import Icon2 from '../../../assets/Icon2.png';
 import Icon3 from '../../../assets/Icon3.png';
 import { Star } from '../../../components/star/star';
 import { addToCartRequest } from '../../../services/actions/product-action';
-import { productService } from '../../../services/modules';
+import { productService, commentService } from '../../../services/modules';
 import { useParams } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import Comments from "../../../components/comment/comments";
+import { commentValidator, renderError } from '../../../validators/comment-validation.js'
 
 const COLOR_CODES = {
   trang: {
@@ -43,9 +46,16 @@ export default function DetailProductPage() {
   const [sizes, setSizes] = useState([]);
   const [qty, setQty] = useState(1);
 
-  const { register, handleSubmit, formState: { errors }, watch, reset, setFocus } = useForm();
-  // const [nameofCustomer, setNameofCustomer] = useState('');
-  // const [content, setContent] = useState('');
+  const [comments, setComments] = useState();
+  const handleAddComment = ({ nameOfCustomer, content }) => {
+    commentService
+      .addComment({ nameOfCustomer, content, productID: id })
+      .then(comment =>
+        setComments([comment, ...comments])
+      );
+  }
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
   const dispatch = useDispatch();
 
@@ -53,9 +63,10 @@ export default function DetailProductPage() {
 
   useEffect(() => {
     productService.getProductById(id)
-    .then(product => {
-      setProduct(product);
-    })
+      .then(product => {
+        setProduct(product);
+        setComments(product.comments.reverse());
+      })
   }, [id]);
 
   useEffect(() => {
@@ -105,12 +116,12 @@ export default function DetailProductPage() {
     return (
       <div className="flex mb-4">
         <span className="flex items-center">
-          <Star rate={stars}/> 
+          <Star rate={stars} />
           <span className="ml-3">|</span>
           <span className="text-gray-600 mx-3">{totalRatings} đánh giá</span>
-          {/* <span className="text-gray-600 ml-3">
+          <span className="text-gray-600 ml-3">
             {totalSold} sản phẩm đã bán
-          </span> */}
+          </span>
         </span>
       </div>
     );
@@ -280,7 +291,7 @@ export default function DetailProductPage() {
   };
 
   const renderAddToCartButton = () => {
-    
+
     return (
       <button
         className="flex text-white justify-center bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-6 mb-4 w-full lg:mt-12 lg:mb-10"
@@ -338,7 +349,7 @@ export default function DetailProductPage() {
     );
   };
 
-  
+
   const renderProductInfo = (product) => {
     return (
       product && (
@@ -365,7 +376,7 @@ export default function DetailProductPage() {
   const renderProductDescription = (description) => {
     return (
       description && (
-        <div className="max-w-full lg:w-4/5 mx-auto ">
+        <div className="max-w-full lg:w-4/5 mx-auto">
           <div className="max-w-2xl grid grid-cols-1 text-justify mx-6 mt-6 lg:max-w-7xl lg:px-6 ">
             <div>
               <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
@@ -378,85 +389,56 @@ export default function DetailProductPage() {
       )
     );
   };
-  const handleAddComment = ({nameOfCustomer, content}) => {
-    console.log(nameOfCustomer, content, id);
-    commentService.addComment({nameOfCustomer, content, productID: id});
-  }
-  const renderComment = () =>{
-    return(
-      <div className="mx-6 mt-2 lg:w-4/5 flex flex-wrap lg:mx-auto ">
-        <div className="bg-grey w-full ">
-          <div className="max-w-5xl mx-auto mt-2 lg:px-6 ">
+
+  const renderComment = () => {
+    return (
+      <div className="mx-6 mt-20 lg:w-4/5 flex flex-wrap lg:mx-auto ">
+        <div className="bg-grey w-full">
+          <div className="max-w-5xl mx-auto mt-2 lg:px-6">
             <div className="bg-white modal__content rounded">
               <div className="modal__body my-1">
                 <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                   Bình luận
                 </h2>
-                
               </div>
               <div className="modal__footer mt-3">
                 <div className="text-right">
                   <form onSubmit={handleSubmit(handleAddComment)}>
                     <div className="mt-4 border border-grey w-full border-1 rounded-lg p-2 relative focus:border-red">
-                      <input type="text" placeholder="Nhập tên" className="w-full p-2 mb-4 focus:outline-1 focus:outline-blue-500 font-normal border-[0.1px] resize-none border-[#9EA5B1] rounded-md"
-                      {...register("nameOfCustomer")}
-                      />
+                      <div className="my-3">
+                        <input type="text" placeholder="Nhập tên"
+                          className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                          {...register("nameOfCustomer", commentValidator.nameOfCustomer)}
+                        />
+                        {renderError(errors.nameOfCustomer)}
+                      </div>
 
-                      <textarea
-                        placeholder="Nhập bình luận hoặc câu hỏi"
-                        className="w-full p-2 focus:outline-1 focus:outline-blue-500 font-normal border-[0.1px] resize-none h-[120px] border-[#9EA5B1] rounded-md"
-                        name="content"
-                        {...register("content")}
-                      ></textarea>
-                      <button 
-                        className="w-20 bg-purple bg-teal-600 border-0 border-purple p-3 rounded-md text-sm font-semibold hover:bg-teal-700 hover:border-purple-dark text-white"
+                      <div className="my-3">
+                        <textarea
+                          placeholder="Nhập bình luận"
+                          className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                          name="content"
+                          rows={3}
+                          {...register("content", commentValidator.content)}
+                        ></textarea>
+                        {renderError(errors.content)}
+                      </div>
+
+                      <button
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
                         type="submit"
-                        >
-                        Gửi 
+                      >
+                        Bình luận
                       </button>
                     </div>
-
                   </form>
-                
                 </div>
               </div>
             </div>
           </div>
         </div>
-        {/* Comment component */}
-        {/* <Comments id={id}/> */}
-        
-        
-        
-        
-        {/* <div className="antialiased mx-auto max-w-full px-2">
-          <div className="space-y-4">
-            <div className="flex">
-              <div className="flex-shrink-0 mr-3">
-                <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
-              </div>
-              <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-                <strong>tên</strong> <span className="text-xs text-gray-400">3:34 PM</span>
-                <p className="text-sm md:text-base">nội dung cmt</p>
-              </div>
-            </div>
 
-            <div className="space-y-4 ml-14" >
-              <div className="flex">
-                <div className="flex-shrink-0 mr-3">
-                  <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
-                </div>
-                <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-                  <strong>tên</strong> <span className="text-xs text-gray-400">3:34 PM</span>
-                  <p className="text-sm md:text-base">Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                      sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                      magna aliquyam erat, sed diam voluptua.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>    
-        </div>  */}
+        <Comments commentsList={comments} />
       </div>
     );
   }
