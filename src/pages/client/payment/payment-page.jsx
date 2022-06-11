@@ -193,6 +193,7 @@ export default function PaymentPage() {
     return (
       <div>
         <form onSubmit={handleSubmit(handlePayment)} className="border-gray-200 border-2 shadow overflow-hidden sm:rounded-md">
+
           <div className="px-4 py-5 bg-white sm:p-6">
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-9 sm:col-span-4">

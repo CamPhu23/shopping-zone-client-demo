@@ -1,20 +1,18 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { ChevronRightIcon, FilterIcon } from '@heroicons/react/solid'
-import { Paging } from '../../../components/paging/paging'
+import _ from 'lodash'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Filter } from '../../../components/filter/filter'
+import { Paging } from '../../../components/paging/paging'
 import { ProducList } from '../../../components/product/product-list'
+import { Search } from '../../../components/search/search'
 import { Sort } from '../../../components/sort/sort'
-import axiosRequest from '../../../config/http-request'
-import { BASE_URL } from '../../../constants/http'
 import {
   DEFAULT_PAGE,
   DEFAULT_PAGE_SIZE
-}
-  from '../../../constants/default-axios-product'
-import _ from 'lodash'
-import { Search } from '../../../components/search/search'
+} from '../../../constants/default-axios-product'
+import { productService } from '../../../services/modules'
 
 const intialSortOptions = [
   { name: 'Tên: A đến Z', value: 'name-asc', current: true },
@@ -108,15 +106,15 @@ export default function ProductPage() {
   // Filter functions
   // add parameter to a string and call api
   const handleProduct = () => {
-    let apiProduct = `${BASE_URL}/products?`;
+    let apiProduct = "";
 
     apiProduct += parameters[0].name + '=' + parameters[0].value;
     parameters.slice(1).map(p => {
       !_.isEmpty(p.value) ? apiProduct += '&' + p.name + '=' + p.value.toString() : apiProduct = apiProduct;
     })
 
-    axiosRequest
-      .get(apiProduct)
+    productService
+      .getAllProduct(apiProduct)
       .then((data) => {
         setProducts(data);
 
@@ -137,7 +135,7 @@ export default function ProductPage() {
       if (!_.isEmpty(parameter) && !parameter.value.includes(value)) parameter.value.push(value);
     } else {
       parameter.value = value;
-      
+
       if (name !== 'p') parameters.find(x => x.name == 'p').value = '1';
 
       if (name === 'category') changeSubCategories(value);

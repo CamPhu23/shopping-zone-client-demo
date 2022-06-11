@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { Cart } from "../../components/cart/cart"
 import { Link } from "react-router-dom";
 
+
 const navigation = {
   categories: [
     {

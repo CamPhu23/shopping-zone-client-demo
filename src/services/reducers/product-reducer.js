@@ -10,7 +10,6 @@ export const productReducer = (state = initialState, action) => {
       return {
         ...state,
         products: saveOrUpdate(action.payload, state.products),
-      };
     case actionTypes.REMOVE_PRODUCT_OUT_OF_CART:
       return {
         ...state,
@@ -21,6 +20,11 @@ export const productReducer = (state = initialState, action) => {
         ...state,
         products: [],
       };
+      case actionTypes.REMOVE_PRODUCT_OUT_OF_CART:
+        return {
+          ...state,
+          products: remove(action.payload, state.products),
+        };
     default:
       return state;
   }

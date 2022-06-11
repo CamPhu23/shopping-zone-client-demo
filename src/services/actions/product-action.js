@@ -12,8 +12,7 @@ export const removeOfOutCartRequest = (formData) => {
     type: actionTypes.REMOVE_PRODUCT_OUT_OF_CART,
     payload: formData
   };
-};
-
+  
 export const clearCartRequest = () => {
   return {
     type: actionTypes.CLEAR_CART,
