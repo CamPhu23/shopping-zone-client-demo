@@ -34,6 +34,7 @@ const DETAIL_PRODUCT_ROUTE = {
   exact: true,
   private: false
 }
+
 export default [
   HOME_ROUTE,
   CLIENT_LOGIN_ROUTE,
