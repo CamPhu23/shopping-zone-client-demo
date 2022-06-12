@@ -6,6 +6,8 @@ const ProductPage = lazy(() => import('./client/product/product-page.jsx'));
 const DetailProductPage = lazy(() => import('./client/product/detail-product-page.jsx'));
 const PaymentPage = lazy(() => import('./client/payment/payment-page.jsx'));
 const UnAuthorizationPage = lazy(() => import('./errors/unauthorization-page.jsx'));
+const AdminLogInPage = lazy(() => import('./admin/admin-login-page.jsx'));
+const AdminDashboardPage = lazy(() => import('./admin/admin-dashboard-page.jsx'));
 
 export {
   HomePage,
@@ -15,4 +17,6 @@ export {
   ProductPage,
   DetailProductPage,
   UnAuthorizationPage,
+  AdminLogInPage,
+  AdminDashboardPage,
 };

@@ -3,6 +3,7 @@ import _ from "lodash";
 import { LoginForm } from "../../../components/form/login-form";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequest } from "../../../services/actions/auth-action";
+import { CLIENT_PERMISSION } from "../../../constants/authentication";
 
 export default function LoginPage() {
   const user = useSelector((state) => state.auth.user);
@@ -11,8 +12,7 @@ export default function LoginPage() {
   const onSubmitLoginForm = (data) => {
     dispatch(loginRequest(data));
   };
-
-  return !_.isEmpty(user) ? (
+  return (!_.isEmpty(user) && user.permission === CLIENT_PERMISSION) ? (
     <Navigate to="/" replace />
   ) : (
     <>

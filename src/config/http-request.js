@@ -29,8 +29,12 @@ axiosRequest.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    const {status, statusText, data} = error.response;
-    return Promise.reject(JSON.stringify({status, statusText, data}));
+    if (error.toJSON().message === 'Network Error') {
+      return Promise.reject(JSON.stringify(error));
+    }
+
+    const { status, statusText, data } = error.response;
+    return Promise.reject(JSON.stringify({ status, statusText, data }));
   }
 );
 

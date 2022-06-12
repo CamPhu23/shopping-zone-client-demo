@@ -3,6 +3,7 @@ import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import _ from 'lodash'
 import { Cart } from "../../components/cart/cart"
+import { ADMIN_PERMISSION, CLIENT_PERMISSION } from '../../constants/authentication'
 
 const navigation = {
   categories: [
@@ -217,7 +218,7 @@ export const Header = ({ handleLogout, user }) => {
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
 
 
-                {_.isEmpty(user) ?
+                {(_.isEmpty(user) || user.permission === ADMIN_PERMISSION)?
 
                   (<>
                     <div className="flow-root">
@@ -382,7 +383,7 @@ export const Header = ({ handleLogout, user }) => {
 
               <div className="ml-auto flex items-center">
 
-                {_.isEmpty(user) ?
+                {(_.isEmpty(user) || user.permission === ADMIN_PERMISSION) ?
 
                   (<div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <a href={originURL + "/sign-in"} className="text-sm font-medium text-gray-700 hover:text-gray-800">

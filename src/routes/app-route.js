@@ -1,11 +1,8 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { AdminPrivateRoutes, ClientPrivateRoutes } from "./private";
-import {
-  ADMIN_PERMISSION,
-  CLIENT_PERMISSION,
-} from "../constants/authentication";
-import { PublicRoutes } from "./public";
+import { ADMIN_PERMISSION, CLIENT_PERMISSION } from "../constants/authentication";
+import { AdminPublicRoutes, ClientPublicRoutes } from "./public";
 
 const AppRoute = ({ routes }) => {
   return (
@@ -19,6 +16,7 @@ const AppRoute = ({ routes }) => {
                 path={route.path}
                 element={
                   <AdminPrivateRoutes
+                    breadcrumbs={route.breadcrumbs}
                     requirePermission={ADMIN_PERMISSION}
                     component={route.component}
                   />
@@ -40,13 +38,24 @@ const AppRoute = ({ routes }) => {
             );
           }
         } else {
-          return (
-            <Route
-              key={route.path}
-              path={route.path}
-              element={<PublicRoutes component={route.component} />}
-            />
-          );
+          if (route.permission === ADMIN_PERMISSION) {
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<AdminPublicRoutes component={route.component} />}
+              />
+            );
+          }
+          else {
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={<ClientPublicRoutes component={route.component} />}
+              />
+            );
+          }
         }
       })}
     </Routes>

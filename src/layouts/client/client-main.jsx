@@ -15,9 +15,9 @@ export const ClientLayout = ({ component }) => {
   };
 
   return (
-    isLoading ? (
-      <LoadingPage />
-    ) : (
+    // isLoading ? (
+    //   <LoadingPage />
+    // ) : (
       <div className="flex flex-col min-h-screen">
         <div className="h-30 z-40 sticky top-0">
           <Header handleLogout={() => onLogout()} user={user} />
@@ -29,6 +29,6 @@ export const ClientLayout = ({ component }) => {
           <Footer />
         </div>
       </div>
-    )
+    // )
   );
 };
