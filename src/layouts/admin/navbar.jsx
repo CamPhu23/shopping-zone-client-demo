@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const Navbar = ({ onSignOut, userInfo }) => {
+export const Navbar = ({ onSignOut, userInfo }) => {
   const { pathname } = useLocation();
 
   return (
@@ -122,5 +122,3 @@ const Navbar = ({ onSignOut, userInfo }) => {
     </div>
   );
 };
-
-export default Navbar;
