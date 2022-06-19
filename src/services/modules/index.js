@@ -6,14 +6,18 @@ import adminAccountService from './admin/admin-account-service';
 import adminStatisticsService from './admin/admin-statistics-service';
 import adminProductService from './admin/admin-product-service';
 import adminCloudinaryService from './admin/admin-cloudinary-service'
+import paymentService from './payment-service'
+import accountService from './account-service';
 
 export {
   authService,
   productService,
+  paymentService,
   systemService,
   adminAuthService,
   adminAccountService,
   adminStatisticsService,
   adminProductService,
   adminCloudinaryService,
+  accountService,
 };
