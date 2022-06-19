@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { currencyFomatter } from "../../utils/currency-fomatter.js"
+import { currencyFomatter } from "../../converter/currency-fomatter.js"
 
 export const Table = ({ columns, data, onRowClick = null }) => {
   if (!columns || columns.length <= 0 || !data || data.length <= 0) {
@@ -20,13 +20,13 @@ export const Table = ({ columns, data, onRowClick = null }) => {
           })}
         </tr>
       </thead>
-      <tbody>
+      <tbody className="cursor-pointer">
         {data.map((item, index) => {
           const values = Object.values(item);
           return (
             <tr
               key={index}
-              onClick={() => onRowClick && onRowClick(item.id)}
+              onClick={() => onRowClick && onRowClick(item._id)}
               className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
               {values.map((ele, index) => {

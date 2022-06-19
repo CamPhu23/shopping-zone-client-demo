@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import ProductForm from "../../components/form/product-form";
-import { CLOUDINARY_CONFIG } from "../../config/cloudinary";
-import { NAVIGATE_URL } from "../../constants/navigate-url";
-import { EDIT_FORM_TYPE } from "../../constants/variables";
-import { cloudinaryService, productService } from "../../services/modules";
-import LoadingPage from "../loaders/loading-page";
+import ProductForm from "../../../components/form/product-form";
+import { CLOUDINARY_CONFIG } from "../../../config/cloudinary";
+import { NAVIGATE_URL } from "../../../constants/navigate-url";
+import { EDIT_FORM_TYPE } from "../../../constants/variables";
+import { adminCloudinaryService, adminProductService } from "../../../services/modules";
+import LoadingPage from "../../loaders/loading-page";
 
 const EditProductPage = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const EditProductPage = () => {
     }
   }, []);
 
-  const onSubmitForm = async (data, images) => {
+  const onSubmitForm = async (data, images, selectedCategory, selectedTags) => {
     setIsLoading(true);
 
     let imagesInfo = [];
@@ -28,16 +28,21 @@ const EditProductPage = () => {
       const image = images[i];
       const config = CLOUDINARY_CONFIG(image);
 
-      const resonse = await cloudinaryService.uploadImage(config);
+      const resonse = await adminCloudinaryService.uploadImage(config);
       imagesInfo.push(resonse);
     }
 
     const formData = { ...data };
     formData.images = imagesInfo;
+    formData.tags = selectedTags;
+    formData.category = selectedCategory;
 
-    productService
+    adminProductService
       .updateProduct(formData)
-      .then(() => navigate(NAVIGATE_URL.PRODUCT_LIST));
+      .then((data) => {
+        console.log(data);
+        navigate(NAVIGATE_URL.PRODUCT_LIST)
+      });
   };
 
   return isLoading ? (

@@ -1,5 +1,7 @@
 import CheckboxConfirm from "../../../components/common/checkbox-confirm";
 import ImageSlider from "../../../components/common/image-slider";
+import { currencyFomatter } from "../../../converter/currency-fomatter";
+import { dateFomatter } from "../../../converter/date-formatter";
 
 export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
   return (
@@ -42,10 +44,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">Giá bán</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.prices
-                  .toString()
-                  .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
-                đ
+                {currencyFomatter(item.price)}
               </dd>
             </div>
           </div>
@@ -53,10 +52,10 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
           <div className="px-4 pt-5 pb-2 sm:px-6 flex flex-row">
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">
-                Thuộc sản phẩm đặc trưng
+                Khuyến mãi
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.isFeatured ? "Có" : "Không"}
+                {item.discount ? item.discount : "0"}%
               </dd>
             </div>
             <div className="flex-1">
@@ -64,7 +63,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
                 Đánh giá trung bình
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {Math.floor(item.averageRate)}
+                {item.ratings.stars !== 0 ? Math.floor(item.ratings.stars) : "Hiện chưa có đánh giá nào"}
               </dd>
             </div>
           </div>
@@ -73,7 +72,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">Ngày tạo</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.createdAt}
+                {dateFomatter(item.createdAt)}
               </dd>
             </div>
             <div className="flex-1">
@@ -81,7 +80,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
                 Chỉnh sửa gần nhất
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.updatedAt}
+                {dateFomatter(item.updatedAt)}
               </dd>
             </div>
           </div>

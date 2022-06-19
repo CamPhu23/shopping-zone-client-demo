@@ -44,7 +44,7 @@ const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
             isFocus ? "text-rose-600" : "text-rose-500"
           } `}
         >
-          Tôi xác nhận xoá thể loại này
+          Xác nhận xoá
         </label>
       </div>
     );

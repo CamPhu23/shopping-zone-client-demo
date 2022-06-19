@@ -3,13 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 
 export const Navbar = ({ onSignOut, userInfo }) => {
   const { pathname } = useLocation();
+  let adminAvt = "https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600";
 
   return (
     <div className="flex h-full">
       <div className="p-3 space-y-2 w-60 bg-gray-800 text-slate-100">
         <div className="flex items-center p-2 space-x-4">
           <img
-            src="https://source.unsplash.com/100x100/?portrait"
+            src={adminAvt}
             alt=""
             className="w-12 h-12 rounded-full dark:bg-coolGray-500"
           />

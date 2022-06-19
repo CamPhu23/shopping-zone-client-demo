@@ -27,7 +27,7 @@ const uploadImage = async (configuration) => {
       return {
         name: data.original_filename || "",
         format: data.format || "jpg",
-        uri: data.secure_url,
+        url: data.secure_url,
         width: data.width,
         height: data.height,
         size: data.bytes,

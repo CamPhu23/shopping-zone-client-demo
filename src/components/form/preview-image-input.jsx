@@ -38,7 +38,7 @@ const PreviewImageInput = ({ images, onImageDelete }) => {
                   src={
                     image instanceof File
                       ? URL.createObjectURL(image)
-                      : image.uri
+                      : image.url
                   }
                   alt="upload preview"
                   className="img-preview w-full h-full sticky object-cover rounded-md bg-fixed"

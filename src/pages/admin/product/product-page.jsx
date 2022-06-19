@@ -36,9 +36,12 @@ const ProductPage = () => {
   };
 
   const onTableRowClick = (id) => {
-    // productService.getProductDetail(id).then((data) => {
-    //   setDialogParam(data);
-    // });
+    adminProductService
+      .getProductById(id)
+      .then((data) => {
+        console.log(data);
+        setDialogParam(data);
+      });
   };
 
   const onPageNumberClick = (pageNumber) => {
@@ -54,13 +57,15 @@ const ProductPage = () => {
   };
 
   const onDeleteClick = (id) => {
-    // productService.deleteProduct(id).then((result) => {
-    //   if (result) {
-    //     const newProducts = data.products.filter((product) => product.id !== id);
-    //     setData({...data, products: newProducts});
-    //     setOpenDialog(false);
-    //   }
-    // });
+    adminProductService
+      .deleteProductById(id)
+      .then((result) => {
+        if (result) {
+          const newProducts = data.products.filter((product) => product._id !== id);
+          setData({ ...data, products: newProducts });
+          setOpenDialog(false);
+        }
+      });
   };
 
   return (
@@ -78,8 +83,8 @@ const ProductPage = () => {
               "Tên sản phẩm",
               "Giá tiền",
               "Giảm giá (%)",
-              "Đặc trưng",
               "Thể loại",
+              "Đặc trưng",
             ]}
             data={data.products}
             onRowClick={onTableRowClick}

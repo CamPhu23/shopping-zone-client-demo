@@ -26,8 +26,8 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
   const [deletedImages, setDeletedImages] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0])
+  const [selectedTags, setSelectedTags] = useState(item ? item.tags : []);
+  const [selectedCategory, setSelectedCategory] = useState(item ? item.category : categories[0])
 
   // Image input logic
   const onInputImageChange = (e) => {
@@ -201,11 +201,11 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
   // Catogories select options input
   const renderCategorieSelection = () => {
     return (
-      <div className="w-full">
+      <div className="">
         <Listbox value={selectedCategory} onChange={setSelectedCategory}>
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-              <span className="block truncate">{selectedCategory.name}</span>
+              <span className="block truncate">{selectedCategory}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <SelectorIcon
                   className="h-5 w-5 text-gray-400"
@@ -235,7 +235,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
                           className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                             }`}
                         >
-                          {category.name}
+                          {category}
                         </span>
                         {selected ? (
                           <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-teal-600">
@@ -318,31 +318,54 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
       </div>
 
       <div className="flex flex-row mb-4">
-        <div className="w-full sm:w-1/3">
+        <div className="w-full sm:w-1/2 pr-5">
           <div className="relative z-0 w-full mb-6 group">
             <input
               type="number"
-              name="prices"
+              name="price"
               placeholder=" "
-              defaultValue={item ? item.prices : ""}
+              defaultValue={item ? item.price : ""}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              {...register("prices", ProductValidator.prices)}
+              {...register("price", ProductValidator.price)}
             />
             <label
-              htmlFor="prices"
+              htmlFor="price"
               className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Giá tiền
             </label>
-            {ProductValidatorError(errors.prices)}
+            {ProductValidatorError(errors.price)}
           </div>
         </div>
 
+        <div className="w-full sm:w-1/2">
+          <div className="relative z-0 w-full mb-6 group">
+            <input
+              type="number"
+              name="discount"
+              placeholder=" "
+              defaultValue={item ? (item.discount ? item.discount : "0") : ""}
+              className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              {...register("discount", ProductValidator.discount)}
+            />
+            <label
+              htmlFor="discount"
+              className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+            >
+              Khuyến mãi
+            </label>
+            {ProductValidatorError(errors.discount)}
+          </div>
+        </div>
+
+      </div>
+
+      <div className="flex flex-row mb-4">
         {categories && categories.length > 0 && (
-          <div className="pl-10 flex flex-row w-full sm:w-1/3 mb-6 group items-center">
+          <div className="flex flex-row sm:w-1/2 mb-6 group items-center space-x-5">
             <label
               htmlFor="category"
-              className="w-full text-sm text-gray-500 dark:text-gray-400 flex items-center"
+              className="text-sm text-gray-500 dark:text-gray-400 flex items-center"
             >
               Thể loại sản phẩm:
             </label>
@@ -351,10 +374,10 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
           </div>
         )}
 
-        <div className="pl-10 flex flex-row w-full sm:w-1/3 mb-6 group items-center">
+        <div className="flex flex-row w-full sm:w-1/2 mb-6 group items-center space-x-5">
           <label
             htmlFor="tags"
-            className="w-full text-sm text-gray-500 dark:text-gray-400 flex items-center"
+            className="text-sm text-gray-500 dark:text-gray-400 flex items-center"
           >
             Đặc trưng sản phẩm:
           </label>
@@ -364,7 +387,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
 
       <UploadImageInput
         {...register("images")}
-        errors={errors}
+        errors={errors.images}
         onInputChange={onInputImageChange}
       />
 

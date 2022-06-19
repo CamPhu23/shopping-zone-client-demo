@@ -28,7 +28,7 @@ const ImageSlider = ({ images, startIndex = 0 }) => {
           <div className="duration-700 ease-in-out">
             <img
               // @ts-ignore
-              src={image.uri}
+              src={image.url}
               className="block absolute top-1/2 left-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2"
               // @ts-ignore
               alt={image.name}
@@ -50,9 +50,9 @@ const ImageSlider = ({ images, startIndex = 0 }) => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M15 19l-7-7 7-7"
               ></path>
             </svg>
@@ -73,9 +73,9 @@ const ImageSlider = ({ images, startIndex = 0 }) => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M9 5l7 7-7 7"
               ></path>
             </svg>

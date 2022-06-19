@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { ProductsCart } from '../../../components/product/product-list-cart';
-import { currencyFomatter } from '../../../utils/currency-fomatter.js'
-import { totalPay, totalDiscount, totalBill, shippingCost } from '../../../utils/calculate-payment'
+import { currencyFomatter } from '../../../converter/currency-fomatter.js'
+import { totalPay, totalDiscount, totalBill, shippingCost } from '../../../converter/calculate-payment'
 import { useForm } from "react-hook-form";
 import { paymentService } from '../../../services/modules'
 import { clearCartRequest } from '../../../services/actions/product-action';

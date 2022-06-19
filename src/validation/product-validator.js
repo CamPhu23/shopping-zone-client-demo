@@ -19,7 +19,7 @@ export const ProductValidator = {
       message: "Mô tả phải có tối thiểu 50 ký tự",
     },
   },
-  prices: {
+  price: {
     required: {
       value: true,
       message: "Giá tiền không được để trống",
@@ -27,6 +27,17 @@ export const ProductValidator = {
     min: {
       value: 1,
       message: "Giá tiền không hợp lệ",
+    },
+    valueAsNumber: true,
+  },
+  discount: {
+    min: {
+      value: 1,
+      message: "Khuyến mãi hợp lệ trong khoảng 1-99%",
+    },
+    max: {
+      value: 99,
+      message: "Khuyến mãi hợp lệ trong khoảng 1-99%",
     },
     valueAsNumber: true,
   },

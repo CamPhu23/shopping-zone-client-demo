@@ -9,7 +9,7 @@ import { UnAuthorizationPage } from '../../pages';
 const ClientPrivateRoutes = ({ component, requirePermission }) => {
   const user = useSelector(state => state.auth.user);
 
-  if (_.isEmpty(user) || user.permission === ADMIN_PERMISSION) {
+  if (_.isEmpty(user)) {
     return <Navigate to="/sign-in" />;
   }
 
@@ -23,7 +23,7 @@ const ClientPrivateRoutes = ({ component, requirePermission }) => {
 const AdminPrivateRoutes = ({ component, breadcrumbs, requirePermission }) => {
   const user = useSelector(state => state.auth.user);
 
-  if (_.isEmpty(user) || user.permission === CLIENT_PERMISSION) {
+  if (_.isEmpty(user)) {
     return <Navigate to="/admin/sign-in" />;
   }
 

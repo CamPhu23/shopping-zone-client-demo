@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductForm from "../../../components/form/product-form";
 import { CLOUDINARY_CONFIG } from "../../../config/cloudinary";
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
 import { CREATE_FORM_TYPE } from "../../../constants/variables";
-import { adminCloudinaryService, productService } from "../../../services/modules";
+import { adminCloudinaryService, adminProductService } from "../../../services/modules";
 import LoadingPage from "../../loaders/loading-page";
+import _ from "lodash"
 
 const CreateProductPage = () => {
   const navigate = useNavigate();
@@ -30,13 +31,20 @@ const CreateProductPage = () => {
     }
 
     const formData = { ...data };
+    if (_.isEmpty(formData.discount)) {
+      formData.discount = 0;
+    }
     formData.images = imagesInfo;
+    formData.tags = selectedTags;
+    formData.category = selectedCategory;
 
-    setIsLoading(false);
     console.log(formData);
-    // productService
-    //   .createProduct(formData)
-    //   .then(() => navigate(NAVIGATE_URL.PRODUCT_LIST));
+    adminProductService
+      .createProduct(formData)
+      .then((data) => {
+        console.log(data);
+        navigate(NAVIGATE_URL.PRODUCT_LIST)
+      });
   };
 
   return isLoading ? (
