@@ -1,12 +1,21 @@
+import _ from 'lodash';
 import { call, put, takeEvery, takeLatest, delay } from 'redux-saga/effects';
 import { loginFail, loginSuccess, logoutSuccess, refreshTokenSuccess, registerFail, registerSuccess } from '../../actions/auth-action';
 import { type as actionTypes } from '../../constants/auth-constant';
-import { authService, systemService } from '../../modules'
+import { authService, adminAuthService, systemService } from '../../modules'
 
 // worker Saga: will be fired on AUTH_LOGIN_REQUEST actions
 function* loginWorker(action) {
   try {
-    const response = yield call(authService.handleLogin, action.payload);
+    let response;
+    let payload = action.payload
+    if (!_.isEmpty(payload.isClient) || payload.isClient === false) {
+      response = yield call(adminAuthService.handleLogin, payload);
+    }
+    else {
+      response = yield call(authService.handleLogin, payload);
+    }
+
     const { accessToken, refreshToken, user } = response;
     yield put(loginSuccess({ accessToken, user }));
     systemService.saveRefreshToken(refreshToken);
@@ -17,13 +26,18 @@ function* loginWorker(action) {
       : "Lỗi đăng nhập, vui lòng thử lại";
 
     yield put(loginFail({ status, message }))
-    console.log(e.message); //something like that: {"status":404,"statusText":"Not Found"}
   }
 }
 
 function* refreshTokenWorker(action) {
   try {
-    const response = yield call(authService.handleRefreshToken, action.payload);
+    let response;
+    let payload = action.payload
+    if (!_.isEmpty(payload.isClient) || payload.isClient === false) {
+      response = yield call(adminAuthService.handleRefreshToken, payload);
+    } else {
+      response = yield call(authService.handleRefreshToken, payload);
+    }
     const { accessToken, refreshToken, user } = response;
     yield put(refreshTokenSuccess({ newAccessToken: accessToken, newUser: user }));
     systemService.saveRefreshToken(refreshToken);
@@ -36,7 +50,7 @@ function* registerWorker(action) {
   try {
     const response = yield call(authService.handleRegister, action.payload);
     const { accessToken, refreshToken, user } = response;
-    yield put(registerSuccess({registerAccessToken: accessToken, registerUser: user}));
+    yield put(registerSuccess({ registerAccessToken: accessToken, registerUser: user }));
     systemService.saveRefreshToken(refreshToken);
   } catch (error) {
     const { status } = JSON.parse(error.message);

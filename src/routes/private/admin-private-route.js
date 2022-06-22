@@ -23,6 +23,45 @@ const PRIVATE_ADMIN_ROUTE = {
   }
 */
 
+const ADMIN_DASHBOARD_ROUTE = {
+  path: '/admin/dashboard',
+  component: <AdminDashboardPage />,
+  exact: true,
+  breadcrumbs: [{ name: "Dashboard", path: "/admin/dashboard" }],
+  ...PRIVATE_ADMIN_ROUTE
+};
+
+const PRIVATE_PRODUCT_LIST_ROUTE = {
+  path: NAVIGATE_URL.PRODUCT_LIST,
+  component: <AdminProductPage />,
+  breadcrumbs: [
+    { name: "Dashboard", path: NAVIGATE_URL.DASHBORAD },
+    { name: "Quản lý sản phẩm" },
+  ],
+  ...PRIVATE_ADMIN_ROUTE,
+};
+
+const PRIVATE_PRODUCT_CREATE_ROUTE = {
+  path: NAVIGATE_URL.PRODUCT_CREATE,
+  component: <AdminCreateProductPage />,
+  breadcrumbs: [
+    { name: "Dashboard", path: NAVIGATE_URL.DASHBORAD },
+    { name: "Quản lý sản phẩm", path: NAVIGATE_URL.PRODUCT_LIST },
+    { name: "Tạo mới sản phẩm" },
+  ],
+  ...PRIVATE_ADMIN_ROUTE
+};
+
+const PRIVATE_PRODUCT_EDIT_ROUTE = {
+  path: NAVIGATE_URL.PRODUCT_EDIT,
+  component: <AdminEditProductPage />,
+  breadcrumbs: [
+    { name: "Dashboard", path: NAVIGATE_URL.DASHBORAD },
+    { name: "Quản lý sản phẩm", path: NAVIGATE_URL.PRODUCT_LIST },
+    { name: "Chỉnh sửa sản phẩm" },
+  ],
+  ...PRIVATE_ADMIN_ROUTE
+};
 
 const PRIVATE_RECEIPT_LIST_ROUTE = {
   path: NAVIGATE_URL.RECEIPTS_LIST,

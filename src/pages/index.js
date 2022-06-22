@@ -14,6 +14,7 @@ const AdminCreateProductPage = lazy(() => import('./admin/product/create-product
 const AdminEditProductPage = lazy(() => import('./admin/product/edit-product-page'))
 const AdminReceiptPage = lazy(() => import('./admin/receipt/receipt-page'))
 
+
 export {
   HomePage,
   LoginPage,

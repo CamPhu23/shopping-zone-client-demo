@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form'
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetAuthError } from '../../services/actions/auth-action';
+import { Link } from 'react-router-dom';
 
 export const RegisterForm = ({handleSubmitForm}) => {
-  const originURL = window.location.origin
   const { register, handleSubmit, formState: { errors }, watch, reset, setFocus } = useForm();
 
   const authError = useSelector((state) => state.auth.error);
@@ -45,9 +45,9 @@ export const RegisterForm = ({handleSubmitForm}) => {
           <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">Đăng ký tài khoản của bạn</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Bạn đã có tài khoản?{' '}
-            <a href={originURL + '/sign-in'} className="font-medium text-teal-600 hover:text-teal-500">
+            <Link to={'/sign-in'} className="font-medium text-teal-600 hover:text-teal-500">
               Đăng nhập
-            </a>
+            </Link>
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleRegister)}>

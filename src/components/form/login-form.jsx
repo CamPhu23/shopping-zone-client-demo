@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form'
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetAuthError } from '../../services/actions/auth-action';
+import { Link } from 'react-router-dom';
 
 export const LoginForm = ({handleSubmitForm}) => {
-  const originURL = window.location.origin;
   const { register, handleSubmit, formState: { errors }, setFocus, reset } = useForm();
   
   const dispatch = useDispatch();
@@ -45,9 +45,9 @@ export const LoginForm = ({handleSubmitForm}) => {
           <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">Đăng nhập tài khoản của bạn</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             hoặc{' '}
-            <a href={originURL + '/sign-up'} className="font-medium text-teal-600 hover:text-teal-500">
+            <Link to={'/sign-up'} className="font-medium text-teal-600 hover:text-teal-500">
               Tạo tài khoản mới
-            </a>
+            </Link>
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(handleLogin)}>
@@ -63,7 +63,6 @@ export const LoginForm = ({handleSubmitForm}) => {
                 type="text"
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Tên tài khoản"
-                onChangeCapture={handleOnChange}
                 {...register("username", {
                   required: {
                     value: true,
@@ -134,9 +133,9 @@ export const LoginForm = ({handleSubmitForm}) => {
           </button>
 
           <div className="text-sm mt-3 pt-3 flex items-center justify-center">
-            <a href={originURL + '/forgot-password'} className="font-medium text-teal-600 hover:text-teal-500">
+            <Link to={'/forgot-password'} className="font-medium text-teal-600 hover:text-teal-500">
               Bạn quên mật khẩu?
-            </a>
+            </Link>
           </div>
         </form>
       </div>
