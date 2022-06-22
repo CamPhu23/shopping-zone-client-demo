@@ -6,7 +6,7 @@ import { Modal } from "../common/modal";
 import PreviewImageInput from "./preview-image-input";
 import UploadImageInput from "./upload-image-input";
 import _ from "lodash";
-import { PRODUCT } from "../../constants/product";
+import { PRODUCT_CONSTANT } from "../../constants/product";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 import { ProductValidator, ProductValidatorError } from "../../validation/product-validator";
@@ -19,8 +19,8 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
     formState: { errors },
   } = useForm();
 
-  const categories = PRODUCT.CATEGORIES;
-  const tags = PRODUCT.TAGS;
+  const categories = PRODUCT_CONSTANT.CATEGORIES;
+  const tags = PRODUCT_CONSTANT.TAGS;
   const [images, setImages] = useState([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [deletedImages, setDeletedImages] = useState([]);
@@ -169,7 +169,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
                                 className={`${active
                                   ? "text-teal-900"
                                   : "text-gray-900"
-                                  } cursor-default select-none relative py-2 pl-10 pr-4`}
+                                  } cursor-pointer select-none relative py-2 pl-10 pr-4`}
                               >
                                 <span
                                   className={`${selected ? 'font-medium' : 'font-normal'
@@ -224,7 +224,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
                   <Listbox.Option
                     key={categoryIdx}
                     className={({ active }) =>
-                      `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? 'text-teal-900' : 'text-gray-900'
+                      `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'text-teal-900' : 'text-gray-900'
                       }`
                     }
                     value={category}

@@ -1,8 +1,7 @@
 const DASHBORAD = "/admin/dashboard"
 
-const CATEGORIES_LIST = "/admin/categories";
-const CATEGORIES_CREATE = "/admin/categories/create";
-const CATEGORIES_EDIT = "/admin/categories/edit";
+const RECEIPTS_LIST = "/admin/receipts";
+const RECEIPTS_EDIT = "/admin/receipts/edit";
 
 const PRODUCT_LIST = "/admin/products";
 const PRODUCT_CREATE = "/admin/products/create";
@@ -14,9 +13,8 @@ const AUTHENTICATION_SIGN_IN = "/admin/sign-in";
 
 export const NAVIGATE_URL = {
   DASHBORAD,
-  CATEGORIES_LIST,
-  CATEGORIES_CREATE,
-  CATEGORIES_EDIT,
+  RECEIPTS_LIST,
+  RECEIPTS_EDIT,
   PRODUCT_LIST,
   PRODUCT_CREATE,
   PRODUCT_EDIT,

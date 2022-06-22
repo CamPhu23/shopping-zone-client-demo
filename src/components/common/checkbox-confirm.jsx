@@ -24,9 +24,8 @@ const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
   const renderDeleteConfirmMessage = (isVisible, isFocus) => {
     return (
       <div
-        className={`flex items-center ${
-          isFocus && "animate-pulse"
-        } align-center ${isVisible ? "visible" : "invisible"}`}
+        className={`flex items-center ${isFocus && "animate-pulse"
+          } align-center ${isVisible ? "visible" : "invisible"}`}
       >
         <div className="flex items-center h-5">
           <input
@@ -40,9 +39,8 @@ const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
         </div>
         <label
           htmlFor="remember"
-          className={`ml-2 text-sm font-medium ${
-            isFocus ? "text-rose-600" : "text-rose-500"
-          } `}
+          className={`ml-2 text-sm font-medium ${isFocus ? "text-rose-600" : "text-rose-500"
+            } `}
         >
           Xác nhận xoá
         </label>
@@ -61,13 +59,15 @@ const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
           Chỉnh sửa
         </button>
 
-        <button
-          type="button"
-          onClick={() => onDeleteClicked(item.id)}
-          className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-0 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 my-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-        >
-          Xoá
-        </button>
+        {onDelete && (
+          <button
+            type="button"
+            onClick={() => onDeleteClicked(item.id)}
+            className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-0 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 my-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+          >
+            Xoá
+          </button>
+        )}
       </div>
     );
   };

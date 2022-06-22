@@ -3,7 +3,8 @@ import {
   AdminDashboardPage,
   AdminProductPage,
   AdminCreateProductPage,
-  AdminEditProductPage
+  AdminEditProductPage,
+  AdminReceiptPage
 } from '../../pages';
 import { NAVIGATE_URL } from '../../constants/navigate-url'
 
@@ -62,9 +63,20 @@ const PRIVATE_PRODUCT_EDIT_ROUTE = {
   ...PRIVATE_ADMIN_ROUTE
 };
 
+const PRIVATE_RECEIPT_LIST_ROUTE = {
+  path: NAVIGATE_URL.RECEIPTS_LIST,
+  component: <AdminReceiptPage />,
+  breadcrumbs: [
+    { name: "Dashboard", path: NAVIGATE_URL.DASHBORAD },
+    { name: "Quản lý hóa đơn" },
+  ],
+  ...PRIVATE_ADMIN_ROUTE,
+};
+
 export default [
   ADMIN_DASHBOARD_ROUTE,
   PRIVATE_PRODUCT_LIST_ROUTE,
   PRIVATE_PRODUCT_CREATE_ROUTE,
   PRIVATE_PRODUCT_EDIT_ROUTE,
+  PRIVATE_RECEIPT_LIST_ROUTE,
 ];
