@@ -2,8 +2,8 @@ import React from 'react'
 import { removeOfOutCartRequest } from '../../services/actions/product-action';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { currencyFomatter } from '../../utils/currency-fomatter';
-import { colorConverter } from '../../utils/color-converter';
+import { currencyFomatter } from '../../converter/currency-fomatter';
+import { colorConverter } from '../../converter/color-converter';
 
 export const ProductsCart = ({products}) => {
   const dispatch = useDispatch();

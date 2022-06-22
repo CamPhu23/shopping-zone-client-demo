@@ -3,6 +3,7 @@ import { BASE_URL } from "../../constants/http";
 import axiosRequest from "../../config/http-request";
 import { refreshTokenRequest } from "../../services/actions/auth-action";
 import { systemService } from "../../services/modules";
+import { CLIENT_PERMISSION } from "../../constants/authentication";
 
 const handleLogin = (formInput) => {
   return axiosRequest
@@ -15,13 +16,14 @@ const handleLogin = (formInput) => {
 
 const getAcessToken = () => {
   const state = store.getState();
-  const { accessToken, expiredTime } = state.auth;
+  const { accessToken, expiredTime, user } = state.auth;
+  const isClient = user.permission === CLIENT_PERMISSION;
 
   if (Date.parse(expiredTime) < Date.now()) {
     const refreshToken = systemService.getRefreshToken();
 
     if (refreshToken) {
-      store.dispatch(refreshTokenRequest({ token: refreshToken }));
+      store.dispatch(refreshTokenRequest({ token: refreshToken, isClient }));
     }
 
     return refreshToken ? state.auth.accessToken : null;
