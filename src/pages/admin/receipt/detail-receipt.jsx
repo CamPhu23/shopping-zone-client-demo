@@ -7,17 +7,14 @@ import { Table } from "../../../components/common/table";
 import { RECEIPT_CONSTANT } from "../../../constants/receipt";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
+import { numberToStringConverter } from "../../../converter/data-type";
 
 export const DetailReceipt = ({ item, onEditClick }) => {
   // convert products quantity to string
   // because table display number as currency
-  const convertQuantityToStr = (quantity) => {
-    return quantity + "";
-  }
-
   item.products &&
     item.products.map(element => {
-      return element.quantity = convertQuantityToStr(element.quantity);
+      return element.quantity = numberToStringConverter(element.quantity);
     });
 
   // update status logic

@@ -19,8 +19,6 @@ const ReceiptPage = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
 
-  const navigate = useNavigate();
-
   const updateUI = () => {
     adminReceiptSevice
       .getAllReceipts()
@@ -56,7 +54,6 @@ const ReceiptPage = () => {
   };
 
   const onEditClick = (item) => {
-    console.log(item);
     adminReceiptSevice.
       postReceiptStatus(item)
       .then((data) => {

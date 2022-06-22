@@ -41,8 +41,7 @@ export const Table = ({ columns, data, onRowClick = null, theme = "dark" }) => {
                     key={index}
                     className="px-6 py-4 whitespace-normal text-center"
                   >
-                    {typeof ele === "number" ? currencyFomatter(ele) : ele}
-                    //{Array.isArray(ele) ? ele.join(", ") : (index === 2 ? currencyFomatter(ele) : ele)}
+                    {Array.isArray(ele) ? ele.join(", ") : (typeof ele === "number" ? currencyFomatter(ele) : ele)}
                   </td>
                 );
               })}

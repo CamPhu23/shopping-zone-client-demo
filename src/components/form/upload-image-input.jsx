@@ -1,5 +1,5 @@
 import React from "react";
-import { ProductValidatorError } from "../../validation/product-validator";
+import { ProductValidatorError } from "../../validators/product-validator";
 
 const UploadImageInput = ({errors, onInputChange}) => {
   return (

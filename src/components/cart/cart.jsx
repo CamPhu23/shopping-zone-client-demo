@@ -7,30 +7,40 @@ import { Link } from 'react-router-dom';
 import { ProductsCart } from '../product/product-list-cart';
 import { totalPay } from '../../converter/calculate-payment';
 import { currencyFomatter } from '../../converter/currency-fomatter';
+import _ from 'lodash';
+import { CLIENT_PERMISSION } from '../../constants/authentication';
 
 export const Cart = () => {
   const products = useSelector(state => state.product.products);
   const [open, setOpen] = useState(false);
+  const user = useSelector(state => state.auth.user);
 
-  const renderPaymentButton = () => {
+  const renderPaymentPart = () => {
     return (
       <div className="border-t border-gray-200 py-6 px-4 sm:px-6">
-        <div className="flex justify-between text-base font-medium text-gray-900">
-          <p>Tổng tiền</p>
-          <p>{currencyFomatter(totalPay(products))}</p>
-        </div>
-        <p className="mt-0.5 text-sm text-gray-500">Chưa bao gồm chi phí vận chuyển.</p>
-        <div className="mt-6">
-          <Link
-            to='/payment'
-            className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
-          >
-            Thanh toán
-          </Link>
-        </div>
+        {(products && products.length != 0) ?
+          (
+            <>
+              <div className="flex justify-between text-base font-medium text-gray-900">
+                <p>Tổng tiền</p>
+                <p>{currencyFomatter(totalPay(products))}</p>
+              </div>
+              <p className="mt-0.5 text-sm text-gray-500">Chưa bao gồm chi phí vận chuyển.</p>
+              <div className="mt-6">
+
+                {(!_.isEmpty(user) && user.permission === CLIENT_PERMISSION)
+                  ?
+                  renderPaymentButton()
+                  :
+                  renderSignInButton()
+                }
+              </div>
+            </>
+          ) : (<></>)
+        }
         <div className="mt-3 flex justify-center text-center text-sm text-gray-500">
           <p>
-            hoặc{' '}
+            {(products && products.length != 0) && "hoặc "}
 
             <Link to='/product' >
               <button
@@ -44,6 +54,34 @@ export const Cart = () => {
           </p>
         </div>
       </div>
+    )
+  }
+
+  const renderPaymentButton = () => {
+    return (
+      <Link
+        to='/payment'
+        className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
+      >
+        Thanh toán
+      </Link>
+    )
+  }
+
+  const renderSignInButton = () => {
+    return (
+      <Link
+        to='/sign-in'
+        className="flex items-center justify-center rounded-md border border-transparent bg-teal-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-teal-700"
+      >
+        <button
+          className="w-full"
+          type="button"
+          onClick={() => setOpen(false)}
+        >
+          Đăng nhập
+        </button>
+      </Link>
     )
   }
 
@@ -117,7 +155,7 @@ export const Cart = () => {
                             <ul role="list" className="-my-6 divide-y divide-gray-200">
                               {products && products.length != 0
                                 ?
-                                <ProductsCart products={products}/>
+                                <ProductsCart products={products} />
                                 :
                                 <div className='text-sm text-gray-400 my-8 flex justify-center'>Chưa có sản phẩm được thêm vào giỏ hàng</div>
                               }
@@ -126,7 +164,7 @@ export const Cart = () => {
                         </div>
                       </div>
 
-                      {(products && products.length != 0) && renderPaymentButton()}
+                      {renderPaymentPart()}
                     </div>
                   </Dialog.Panel>
                 </Transition.Child>

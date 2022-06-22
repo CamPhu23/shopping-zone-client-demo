@@ -9,7 +9,7 @@ import _ from "lodash";
 import { PRODUCT_CONSTANT } from "../../constants/product";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import { ProductValidator, ProductValidatorError } from "../../validation/product-validator";
+import { ProductValidator, ProductValidatorError } from "../../validators/product-validator";
 
 const ProductForm = ({ type, handleSubmitForm, item = null }) => {
   const {
