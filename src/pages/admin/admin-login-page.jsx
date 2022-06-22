@@ -8,7 +8,6 @@ import { loginRequest, resetAuthError } from '../../services/actions/auth-action
 export default function LoginPage() {
   const { register, handleSubmit, formState: { errors }, setFocus, reset } = useForm();
   const user = useSelector((state) => state.auth.user);
-  
   const dispatch = useDispatch();
   const authError = useSelector(state => state.auth.error);
   const [serverError, setServerError] = useState("");

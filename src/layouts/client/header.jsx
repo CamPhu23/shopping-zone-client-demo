@@ -6,7 +6,6 @@ import { Cart } from "../../components/cart/cart"
 import { ADMIN_PERMISSION, CLIENT_PERMISSION } from '../../constants/authentication'
 import { Link } from "react-router-dom";
 
-
 const navigation = {
   categories: [
     {
