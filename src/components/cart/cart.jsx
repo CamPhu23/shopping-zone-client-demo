@@ -5,8 +5,8 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XIcon, ShoppingCartIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom';
 import { ProductsCart } from '../product/product-list-cart';
-import { currencyFomatter } from '../../utils/currency-fomatter';
-import { totalPay } from '../../utils/calculate-payment';
+import { totalPay } from '../../converter/calculate-payment';
+import { currencyFomatter } from '../../converter/currency-fomatter';
 
 export const Cart = () => {
   const products = useSelector(state => state.product.products);
