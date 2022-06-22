@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { logoutRequest } from "../../services/actions/auth-action";
-import Navbar from "./navbar";
-import Breadscrum from "../../components/common/breadcrumb";
+import { Navbar } from "./navbar";
+import { Breadscrum } from "../../components/common/breadcrumb";
 import { adminAccountService } from "../../services/modules";
 import _ from "lodash"
 
 export const AdminLayout = ({ component, breadcrumbs, ...rest }) => {
-  const [userInfo, setUserInfo] = useState({username: ""});
+  const [userInfo, setUserInfo] = useState({ username: "" });
   const dispatch = useDispatch();
 
   const onLogout = () => {
@@ -17,7 +17,7 @@ export const AdminLayout = ({ component, breadcrumbs, ...rest }) => {
   useEffect(() => {
     adminAccountService
       .getUserInfo()
-      .then(info => setUserInfo({username: info}));
+      .then(info => setUserInfo({ username: info }));
   }, []);
 
   return (

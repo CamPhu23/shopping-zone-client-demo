@@ -11,11 +11,21 @@ export const productReducer = (state = initialState, action) => {
         ...state,
         products: saveOrUpdate(action.payload, state.products),
       };
-      case actionTypes.REMOVE_PRODUCT_OUT_OF_CART:
-        return {
-          ...state,
-          products: remove(action.payload, state.products),
-        };
+    case actionTypes.REMOVE_PRODUCT_OUT_OF_CART:
+      return {
+        ...state,
+        products: remove(action.payload, state.products),
+      };
+    case actionTypes.CLEAR_CART:
+      return {
+        ...state,
+        products: [],
+      };
+    case actionTypes.REMOVE_PRODUCT_OUT_OF_CART:
+      return {
+        ...state,
+        products: remove(action.payload, state.products),
+      };
     default:
       return state;
   }
@@ -38,6 +48,6 @@ const saveOrUpdate = (newProduct, products) => {
 
 const remove = (removeProduct, products) => {
   return products.filter(p => p.id !== removeProduct.id ||
-                              p.color !== removeProduct.color || 
-                              p.size !== removeProduct.size);
+    p.color !== removeProduct.color ||
+    p.size !== removeProduct.size);
 }

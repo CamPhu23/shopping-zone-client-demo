@@ -26,7 +26,7 @@ const HomeIcon = () => (
   </svg>
 );
 
-const Breadscrum = ({ breadcrumbs }) => {
+export const Breadscrum = ({ breadcrumbs }) => {
   if (!breadcrumbs || breadcrumbs.length < 0) {
     return <div>empty breadcrumb</div>;
   }
@@ -66,5 +66,3 @@ const Breadscrum = ({ breadcrumbs }) => {
     </nav>
   );
 };
-
-export default Breadscrum;
