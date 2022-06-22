@@ -8,6 +8,9 @@ import { paymentService } from '../../../services/modules'
 import { clearCartRequest } from '../../../services/actions/product-action';
 import Toast from "../../../components/toast/toast";
 import { ICON } from '../../../assets/svg-icon';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import _ from 'lodash';
 
 export default function PaymentPage() {
   const [toastShow, setToastShow] = useState(false);
@@ -18,6 +21,14 @@ export default function PaymentPage() {
   const [isCODPayment, setCODPayment] = useState(true);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
+
+  const navigator = useNavigate();
+
+  useEffect(() => {
+    if(_.isEmpty(products)) {
+      navigator("/product");
+    }
+  }, [products])
 
   const handlePayment = (data) => {
     const newProducts = products.map(({ image, ...product }) => product)

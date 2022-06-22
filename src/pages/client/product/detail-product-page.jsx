@@ -12,7 +12,7 @@ import { productService, commentService } from '../../../services/modules';
 import { useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Comments from "../../../components/comment/comments";
-import { commentValidator, renderError } from '../../../validators/comment-validation.js'
+import { commentValidator, renderError } from '../../../validators/comment-validator.js'
 
 const COLOR_CODES = {
   trang: {

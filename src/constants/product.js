@@ -14,7 +14,7 @@ const TAGS = [
   "san-pham-khuyen-mai"
 ];
 
-export const PRODUCT = {
+export const PRODUCT_CONSTANT = {
   CATEGORIES,
   TAGS,
 }

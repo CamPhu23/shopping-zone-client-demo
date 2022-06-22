@@ -8,6 +8,7 @@ import { DetailDialog } from "../../../components/common/dialog";
 import { DetailProduct } from "./detail-product";
 import { useNavigate } from "react-router-dom";
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
+import { numberToStringConverter } from "../../../converter/data-type.js"
 import _ from "lodash";
 
 const ProductPage = () => {
@@ -21,6 +22,8 @@ const ProductPage = () => {
     adminProductService
       .getAllProducts()
       .then((response) => {
+        response
+          && response.map(ele => ele.discount = numberToStringConverter(ele.discount));
         setData({ ...data, products: response });
       });
   }, []);
@@ -39,7 +42,6 @@ const ProductPage = () => {
     adminProductService
       .getProductById(id)
       .then((data) => {
-        console.log(data);
         setDialogParam(data);
       });
   };

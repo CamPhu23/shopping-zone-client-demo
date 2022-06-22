@@ -72,7 +72,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">Ngày tạo</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {dateFomatter(item.createdAt)}
+                {item.createdAt ? dateFomatter(item.createdAt) : "Không có dữ liệu"}
               </dd>
             </div>
             <div className="flex-1">
@@ -80,7 +80,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
                 Chỉnh sửa gần nhất
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {dateFomatter(item.updatedAt)}
+                {item.updatedAt ? dateFomatter(item.updatedAt) : "Không có dữ liệu"}
               </dd>
             </div>
           </div>

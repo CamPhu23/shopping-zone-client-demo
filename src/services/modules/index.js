@@ -9,6 +9,7 @@ import adminProductService from './admin/admin-product-service';
 import adminCloudinaryService from './admin/admin-cloudinary-service'
 import paymentService from './payment-service'
 import accountService from './account-service';
+import adminReceiptSevice from './admin/admin-receipt-service';
 
 export {
   authService,
@@ -21,5 +22,6 @@ export {
   adminStatisticsService,
   adminProductService,
   adminCloudinaryService,
+  adminReceiptSevice,
   accountService,
 };

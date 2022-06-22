@@ -23,7 +23,7 @@ const TopSection = ({
   return (
     <div className="p-6 flex justify-between">
       <div className="text-xl text-slate-100 font-bold text-">{titleText}</div>
-      {renderButton(buttonEnable, buttonText, onButtonClick)}
+      {buttonText && renderButton(buttonEnable, buttonText, onButtonClick)}
     </div>
   );
 };

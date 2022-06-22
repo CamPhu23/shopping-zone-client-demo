@@ -12,6 +12,8 @@ const AdminDashboardPage = lazy(() => import('./admin/admin-dashboard-page.jsx')
 const AdminProductPage = lazy(() => import('./admin/product/product-page'));
 const AdminCreateProductPage = lazy(() => import('./admin/product/create-product-page'));
 const AdminEditProductPage = lazy(() => import('./admin/product/edit-product-page'))
+const AdminReceiptPage = lazy(() => import('./admin/receipt/receipt-page'))
+
 
 export {
   HomePage,
@@ -27,4 +29,5 @@ export {
   AdminProductPage,
   AdminCreateProductPage,
   AdminEditProductPage,
+  AdminReceiptPage,
 };
