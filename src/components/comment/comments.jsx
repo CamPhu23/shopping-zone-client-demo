@@ -1,42 +1,51 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import Comment from './comment'
-import { BASE_URL } from '../../constants/http'
+import _ from 'lodash';
+import React, { useState } from 'react';
+import { dateFomatter } from '../../utils/date-formatter';
 
-let apiDetailProduct = `${BASE_URL}/products/624570fbee34ac4d28c4b979`;
+export default function Comments({ commentsList }) {
+  let replies = commentsList?.filter(c => !_.isEmpty(c.replyTo));
+  let clientAvt = "https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80";
+  let adminAvt = "https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600";
 
-export default function Comments() {
-    const [comments, setComments] = useState([]);
-
-
-    const parentComments = comments.filter((cmt) => cmt.replyTo === null);
-    const childComments = parentCommentID => {
-        return comments.filter(cmt => cmt.replyTo === parentCommentID)
-    }
-    console.log('parent', parentComments)
-    
-    useEffect(() => {
-        axios.get(apiDetailProduct)
-        .then(res => {
-            let comm = res.data.comments
-            setComments(comm)
-
-        })
-        .catch(error => console.log(error))
-    }, [])
+  const renderComment = (comment) => {
     return (
-        <div className="antialiased mx-auto max-w-5xl px-2">
-            <h2 className="mb-4 text-lg font-bold text-gray-900">Comments</h2>
-            {parentComments.map(comt => (
-                <Comment 
-                    key={comt.id} 
-                    comment={comt} 
-                    replies={childComments(comt.id)}
-                />
-                
-            ))
-
-            }
+      <div>
+        <div className="mt-5 antialiased w-full">
+          <div className="space-y-4">
+            <div className="flex">
+              <div className="flex-shrink-0 mr-3">
+                <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src={_.isEmpty(comment.replyTo) ? clientAvt : adminAvt} alt="" />
+              </div>
+              <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+                <strong>{comment.name}</strong> <span className="text-xs text-gray-400">{dateFomatter(comment.updatedAt)}</span>
+                <p className="text-sm md:text-base">{comment.content}</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {replies.map(c => {
+          return (
+            <div key={c.id} className="ml-10">
+              {c.replyTo === comment.id && renderComment(c)}
+            </div>
+          )
+        })}
+      </div>
     )
+  }
+
+  return (
+    <div className='w-full max-w-5xl mx-auto lg:px-6 my-10'>
+      {commentsList && commentsList.map(comment => {
+        if (_.isEmpty(comment.replyTo)) {
+          return (
+            <div key={comment.id}>
+              {(renderComment(comment))}
+            </div>
+          )
+        }
+      })}
+    </div>
+  )
 }

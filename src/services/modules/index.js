@@ -1,6 +1,7 @@
 import authService from './auth-service';
 import productService from './product-service';
 import systemService from './system-service';
+import commentService from './comment-service';
 import adminAuthService from './admin/admin-auth-service';
 import adminAccountService from './admin/admin-account-service';
 import adminStatisticsService from './admin/admin-statistics-service';
@@ -20,6 +21,7 @@ export {
   productService,
   paymentService,
   systemService,
+  commentService
   adminAuthService,
   adminAccountService,
   adminStatisticsService,
