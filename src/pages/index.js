@@ -7,6 +7,12 @@ const DetailProductPage = lazy(() => import('./client/product/detail-product-pag
 const PaymentPage = lazy(() => import('./client/payment/payment-page.jsx'));
 const AccountInfoPage = lazy(() => import('./client/account/account-info-page.jsx'));
 const UnAuthorizationPage = lazy(() => import('./errors/unauthorization-page.jsx'));
+const AdminLogInPage = lazy(() => import('./admin/admin-login-page.jsx'));
+const AdminDashboardPage = lazy(() => import('./admin/admin-dashboard-page.jsx'));
+const AdminProductPage = lazy(() => import('./admin/product/product-page'));
+const AdminCreateProductPage = lazy(() => import('./admin/product/create-product-page'));
+const AdminEditProductPage = lazy(() => import('./admin/product/edit-product-page'))
+const AdminReceiptPage = lazy(() => import('./admin/receipt/receipt-page'))
 
 export {
   HomePage,
@@ -17,4 +23,10 @@ export {
   DetailProductPage,
   AccountInfoPage,
   UnAuthorizationPage,
+  AdminLogInPage,
+  AdminDashboardPage,
+  AdminProductPage,
+  AdminCreateProductPage,
+  AdminEditProductPage,
+  AdminReceiptPage,
 };
