@@ -454,14 +454,6 @@ export const Header = ({ handleLogout, user }) => {
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                {/* JUST FOR TEST => WILL REMOVE LATER */}
-                <Link
-                  to={"/user-info"}
-                  className="flex items-center text-blue-500 mx-5"
-                >
-                  Thông tin tài khoản
-                </Link>
-
                 {(_.isEmpty(user) || user.permission === ADMIN_PERMISSION) ? (
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <Link
