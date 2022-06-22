@@ -15,7 +15,7 @@ export {
   productService,
   paymentService,
   systemService,
-  commentService
+  commentService,
   adminAuthService,
   adminAccountService,
   adminStatisticsService,

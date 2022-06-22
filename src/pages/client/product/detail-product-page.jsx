@@ -47,16 +47,7 @@ export default function DetailProductPage() {
   const [qty, setQty] = useState(1);
 
   const [comments, setComments] = useState();
-  const handleAddComment = ({ nameOfCustomer, content }) => {
-    commentService
-      .addComment({ nameOfCustomer, content, productID: id })
-      .then(comment =>
-        setComments([comment, ...comments])
-      );
-  }
-
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const dispatch = useDispatch();
 
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
@@ -391,6 +382,15 @@ export default function DetailProductPage() {
   };
 
   const renderComment = () => {
+    const handleAddComment = ({ nameOfCustomer, content }) => {
+      commentService
+        .addComment({ nameOfCustomer, content, productID: id })
+        .then(comment => {
+          reset();
+          setComments([comment, ...comments])
+        });
+    }
+
     return (
       <div className="mx-6 mt-20 lg:w-4/5 flex flex-wrap lg:mx-auto ">
         <div className="bg-grey w-full">
