@@ -11,7 +11,7 @@ export const Table = ({ columns, data, onRowClick = null, theme = "dark" }) => {
   const isClickable = !_.isNull(onRowClick) ? "cursor-pointer" : "";
 
   return (
-    <table className={`w-full text-sm text-left 
+    <table className={`w-full text-sm text-left mb-10 border border-solid border-slate-700
     ${theme === "dark" ? "text-gray-500 dark:text-gray-400" : ""}`}>
       <thead className={`text-xs uppercase text-gray-700 bg-gray-50 
       ${theme === "dark" ? "dark:bg-gray-700 dark:text-gray-400" : "border-2 border-slate-200"}`}>
@@ -41,7 +41,12 @@ export const Table = ({ columns, data, onRowClick = null, theme = "dark" }) => {
                     key={index}
                     className="px-6 py-4 whitespace-normal text-center"
                   >
-                    {Array.isArray(ele) ? ele.join(", ") : (typeof ele === "number" ? currencyFomatter(ele) : ele)}
+                    {(!_.isEmpty(ele) && !_.isNull(ele) && !_.isNaN(ele)) 
+                      ?
+                      Array.isArray(ele) ? ele.join(", ") : (typeof ele === "number" ? currencyFomatter(ele) : ele)
+                      :
+                      "Chưa cập nhật"
+                    }
                   </td>
                 );
               })}

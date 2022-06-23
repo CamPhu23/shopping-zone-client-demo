@@ -99,6 +99,12 @@ export const DetailReceipt = ({ item, onEditClick }) => {
                 {item._id}
               </dd>
             </div>
+            <div className="flex-1">
+              <dt className="text-sm font-medium text-gray-500">Tài khoản</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                {item.client.username}
+              </dd>
+            </div>
           </div>
 
           <div className="px-4 pt-5 pb-2 sm:px-6 flex flex-row">
@@ -220,7 +226,7 @@ export const DetailReceipt = ({ item, onEditClick }) => {
             </div>
           </div>
 
-          <div className="px-4 pt-5 sm:px-6 flex flex-row pb-5">
+          <div className="w-1/4 px-4 sm:px-6 flex flex-row pb-5">
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">Cập nhật trạng thái</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 pt-2">
@@ -236,7 +242,7 @@ export const DetailReceipt = ({ item, onEditClick }) => {
             onClick={() => HandleEditing()}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-0 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-4 my-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Chỉnh sửa
+            Cập nhật
           </button>
         </div>
       </div>

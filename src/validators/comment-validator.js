@@ -1,4 +1,4 @@
-export const commentValidator = {
+export const CommentValidator = {
   nameOfCustomer: {
     required: {
       value: true,
@@ -13,6 +13,6 @@ export const commentValidator = {
   }
 }
 
-export const renderError = (error) => {
+export const CommentValidatorError = (error) => {
   return error && (<span className='flex justify-start mx-1 text-red-500' role="alert">{error.message}</span>)
 }
