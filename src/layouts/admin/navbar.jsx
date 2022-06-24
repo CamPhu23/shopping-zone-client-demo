@@ -41,7 +41,7 @@ export const Navbar = ({ onSignOut, userInfo }) => {
             </li>
             <li
               className={`${
-                pathname === "/admin/receipts" ? "bg-gray-900" : ""
+                pathname.includes("/admin/receipts") ? "bg-gray-900" : ""
               } hover:bg-gray-700`}
             >
               <Link
@@ -61,7 +61,7 @@ export const Navbar = ({ onSignOut, userInfo }) => {
             </li>
             <li
               className={`${
-                pathname === "admin/products" ? "bg-gray-900" : ""
+                pathname.includes("/admin/products") ? "bg-gray-900" : ""
               } hover:bg-gray-700`}
             >
               <Link
@@ -81,11 +81,11 @@ export const Navbar = ({ onSignOut, userInfo }) => {
             </li>
             <li
               className={`${
-                pathname === "admin/customers" ? "bg-gray-900" : ""
+                pathname.includes("/admin/clients") ? "bg-gray-900" : ""
               } hover:bg-gray-700`}
             >
               <Link
-                to={"/admin/customers"}
+                to={"/admin/clients"}
                 className="flex items-center p-2 space-x-3 rounded-md"
               >
                 <svg

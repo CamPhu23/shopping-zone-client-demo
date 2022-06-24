@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import TopSection from "../../../components/common/main-top-section";
 // import Pagination from "../../../components/common/pagination";
 import _ from "lodash";
-import { useNavigate } from "react-router-dom";
 import { DetailDialog } from "../../../components/common/dialog";
 import { Table } from "../../../components/common/table";
 import { adminReceiptSevice } from "../../../services/modules";
@@ -74,7 +73,7 @@ const ReceiptPage = () => {
         <TopSection
           titleText="Danh sách hóa đơn"
         />
-        <div className="flex-1 mb-16 border border-solid border-slate-700">
+        <div className="flex-1">
           <Table
             columns={[
               "Mã hóa đơn",

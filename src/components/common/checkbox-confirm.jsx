@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { useEffect, useState } from "react";
 
 const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
@@ -11,10 +12,17 @@ const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
     }
   }, [isFocus]);
 
-  const onDeleteClicked = (id) => {
+  const onDeleteClicked = () => {
     if (!confirmVisible) setConfirmVisible(true);
     if (confirmVisible && !isChecked) setIsFocus(true);
-    if (confirmVisible && isChecked) onDelete(id);
+    if (confirmVisible && isChecked) {
+      if (!_.isEmpty(item.id)) {
+        onDelete(item.id);
+      }
+      else {
+        onDelete(item._id);
+      }
+    };
   };
 
   const onCheckboxChecked = () => {
@@ -56,13 +64,13 @@ const CheckboxConfirm = ({ item, onDelete, onEdit }) => {
           onClick={() => onEdit(item)}
           className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-0 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-4 my-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Chỉnh sửa
+          Cập nhật
         </button>
 
         {onDelete && (
           <button
             type="button"
-            onClick={() => onDeleteClicked(item.id)}
+            onClick={() => onDeleteClicked()}
             className="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-0 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 my-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
           >
             Xoá
