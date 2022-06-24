@@ -35,7 +35,7 @@ const EditAccountPage = () => {
     <>
       <div className="p-6 pb-2 flex justify-center">
         <div className="text-xl text-slate-100 font-bold text-">
-          Biểu mẫu cập nhật sản phẩm
+          Biểu mẫu cập nhật tài khoản
         </div>
       </div>
 

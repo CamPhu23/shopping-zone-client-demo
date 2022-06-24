@@ -98,9 +98,9 @@ const AccountPage = () => {
               "Mã tài khoản",
               "Tên tài khoản",
               "Email",
+              "Địa chỉ",
               "Họ và tên",
               "Số điện thoại",
-              "Địa chỉ",
             ]}
             data={data.accounts}
             onRowClick={onTableRowClick}

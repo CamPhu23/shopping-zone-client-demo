@@ -23,7 +23,7 @@ const AccountForm = ({ type, handleSubmitForm, item = null }) => {
               defaultValue={item ? item.username : ""}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               {...register("username", AccountValidator.username)}
-              readOnly={type !== EDIT_FORM_TYPE ? true : false}
+              readOnly={type === EDIT_FORM_TYPE ? true : false}
             />
             <label
               htmlFor="username"
@@ -86,7 +86,7 @@ const AccountForm = ({ type, handleSubmitForm, item = null }) => {
               placeholder=" "
               defaultValue={item ? item.email : ""}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              readOnly={type !== EDIT_FORM_TYPE ? true : false}
+              readOnly={type === EDIT_FORM_TYPE ? true : false}
               {...register("email", AccountValidator.email)}
             />
             <label
