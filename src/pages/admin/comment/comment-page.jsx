@@ -7,6 +7,8 @@ import { dateFomatter } from "../../../utils/date-formatter";
 import Toast from "../../../components/toast/toast";
 import { ICON } from "../../../assets/svg-icon";
 import commentService from "../../../services/modules/admin/admin-comment-service";
+import { useForm } from "react-hook-form";
+import _ from "lodash";
 
 const TOGGLE_TYPE = {
   Comment: "comment",
@@ -21,11 +23,38 @@ const CommentPage = () => {
   const [toastMessages, setToastMessages] = useState("");
   const [toastIcon, setToastIcon] = useState(null);
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const validateInput = {
+    replyTo: {
+      required: {
+        value: true,
+        message: "Mã định danh bình luận không hợp lệ",
+      },
+    },
+    content: {
+      required: {
+        value: true,
+        message: "Nội dung bình luận không được để trống",
+      },
+      validate: (content) => {
+        return content.trim().length > 0
+          ? true
+          : "Nội dung bình luận không hợp lệ";
+      },
+    },
+  };
+
   useEffect(() => {
     //call api to get list comment here
     commentService
       .getAllComments()
-      .then((data) => formatData(data))
+      .then(({ data }) => formatData(data))
       .then((formatedData) => setComments(formatedData))
       .catch((error) => {
         console.log(error);
@@ -33,36 +62,36 @@ const CommentPage = () => {
         setToastMessages("Loi");
         setToastIcon(ICON.Fail);
       });
-
-    // const data = formatData(dummyData);
-    // setComments(data);
   }, []);
 
   const formatData = (rawData) => {
     if (!rawData || rawData.length <= 0) return [];
 
-    const comments = rawData.filter((comment) => !comment.replyTo);
+    let comments = rawData.filter((comment) => !comment.replyTo);
+    comments = _.sortBy(comments, (c) => c.updatedAt);
+
     for (let i = 0; i < comments.length; i++) {
       const currentComment = comments[i];
       const replyTo = rawData.filter(
         (comment) => comment.replyTo === currentComment.id
       );
-      comments[i].replyTo = replyTo;
+      comments[i].replyTo = _.sortBy(replyTo, (r) => r.updatedAt);
     }
 
     return comments;
   };
 
   const handleRefreshClick = () => {
-    console.log("refresh clicked");
-    //recall api to get newest list of comments here
+    console.log("refresh run");
   };
 
   const handleMarkComment = (id) => {
-    console.log("marked comment to done ", id);
+    const currentComment = comments.find((comment) => comment.id === id);
+    const ids = currentComment.replyTo.map((reply) => reply.id);
+    ids.push(currentComment.id);
 
     commentService
-      .markComment(id)
+      .markComment(ids)
       .then((res) => {
         setShowToast(true);
         setToastMessages("Thanh cong");
@@ -79,21 +108,78 @@ const CommentPage = () => {
   };
 
   const handleDeleteComment = (id) => {
-    console.log("deleted comment to done ", id);
-    const deleteComment = comments.find((comment) => comment.id === id);
-    const ids = deleteComment.replyTo
-      ? [id, ...deleteComment.replyTo.map((reply) => reply.id)]
-      : [id];
+    const deleteComment =
+      comments.find((comment) => comment.id === id) ||
+      comments.find((comment) => comment.id === showReplies);
+
+    let ids = [];
+    if (deleteComment.id === id) {
+      //delete comment and all reply
+      ids = [id, ...deleteComment.replyTo.map((reply) => reply.id)];
+    } else {
+      //only delete specific reply
+      ids = [id];
+    }
+
+    const formData = {
+      ids,
+      productId: deleteComment.product.id,
+    };
 
     commentService
-      .deleteComment(ids)
-      .then((res) => {
+      .deleteComment(formData)
+      .then(() => {
+        if (deleteComment.id === id) {
+          return comments.filter((comment) => comment.id !== id);
+        } else {
+          deleteComment.replyTo = deleteComment.replyTo.filter(
+            (r) => r.id !== ids[0]
+          );
+
+          return comments.map((comment) =>
+            comment.id === deleteComment.id ? deleteComment : comment
+          );
+        }
+      })
+      .then((newComments) => {
         setShowToast(true);
         setToastMessages("Thanh cong");
         setToastIcon(ICON.Success);
-        return comments.filter((comment) => comment.id !== id);
+
+        setComments(newComments);
       })
-      .then((newComments) => setComments(newComments))
+      .catch((error) => {
+        console.log(error);
+        setShowToast(true);
+        setToastMessages("Loi");
+        setToastIcon(ICON.Fail);
+      });
+  };
+
+  const handleSubmitForm = (data) => {
+    const formData = {
+      ...data,
+      productId: comments.find((comment) => comment.id === data.replyTo)
+        ?.product.id,
+    };
+
+    commentService
+      .replyComment(formData)
+      .then(({ data }) => {
+        const index = comments.findIndex(
+          (comment) => comment.id === data.replyTo
+        );
+        const currentComment = comments[index];
+        currentComment.replyTo.push(data);
+
+        const newComments = comments.map((comment) =>
+          comment.id === currentComment.id ? currentComment : comment
+        );
+
+        reset({ content: "" });
+
+        return setComments(newComments);
+      })
       .catch((error) => {
         console.log(error);
         setShowToast(true);
@@ -108,6 +194,7 @@ const CommentPage = () => {
   };
 
   const handleReplyFormClick = (currentId) => {
+    reset({ content: "" });
     if (currentId === showReplyForm) {
       setShowReplies("");
       setShowReplyForm("");
@@ -115,10 +202,6 @@ const CommentPage = () => {
     }
     setShowReplies(currentId);
     setShowReplyForm(currentId);
-  };
-
-  const handleReplySubmit = () => {
-    console.log("submit click clicked");
   };
 
   //type must be 'comment' or 'reply'
@@ -230,7 +313,11 @@ const CommentPage = () => {
       </div>
     ) : type === TOGGLE_TYPE.Reply ? (
       <div className="h-full flex items-center space-x-3">
-        <div className="cursor-pointer" title="Chỉnh sửa bình luận">
+        {/* <div
+          className="cursor-pointer"
+          title="Chỉnh sửa bình luận"
+          onClick={() => handleEditReplyClick(id)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
@@ -245,8 +332,12 @@ const CommentPage = () => {
               d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
             />
           </svg>
-        </div>
-        <div className="cursor-pointer" title="Xoá bình luận">
+        </div> */}
+        <div
+          className="cursor-pointer"
+          title="Xoá bình luận"
+          onClick={() => handleDeleteComment(id)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-4 w-4"
@@ -353,7 +444,7 @@ const CommentPage = () => {
           <div className="text-gray-400 text-sm flex">
             <span>Lúc {dateFomatter(reply.updatedAt)}</span>
             <span className="mx-2">|</span>
-            <div>{renderToggles(TOGGLE_TYPE.Reply)}</div>
+            <div>{renderToggles(TOGGLE_TYPE.Reply, reply.id)}</div>
           </div>
           <div className="mt-2 text-sm text-gray-500">{reply.content}</div>
         </div>
@@ -387,17 +478,32 @@ const CommentPage = () => {
             </svg>
           </div>
         </div>
-        <form className="mt-1">
+        <form className="mt-1" onSubmit={handleSubmit(handleSubmitForm)}>
+          <input
+            type="text"
+            id="replyTo"
+            name="replyTo"
+            className="hidden"
+            defaultValue={showReplyForm}
+            {...register("replyTo", validateInput.replyTo)}
+          />
           <textarea
-            id="message"
+            id="content"
+            name="content"
             rows={2}
-            className="block p-2.5 w-full text-sm rounded-lg border border-gray-300 bg-gray-50 border-gray-200 placeholder-gray-400 text-gray-500 mb-3"
+            className="block p-2.5 w-full text-sm rounded-lg border border-gray-300 bg-gray-50 border-gray-200 placeholder-gray-400 text-gray-500"
             placeholder="Nhập nội dung bình luận..."
+            {...register("content", validateInput.content)}
           ></textarea>
 
-          <div className="flex justify-end space-x-3">
+          {errors && (errors.replyTo || errors.content) && (
+            <span className="text-sm text-red-500" role="alert">
+              {errors.replyTo?.message || errors.content?.message}
+            </span>
+          )}
+
+          <div className="flex justify-end space-x-3 mt-3">
             <button
-              onClick={handleReplySubmit}
               type="submit"
               className="inline-flex items-center px-5 py-1 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800"
             >
