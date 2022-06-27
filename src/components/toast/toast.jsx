@@ -65,7 +65,7 @@ const Toast = ({
         role="alert"
       >
         {renderIcon()}
-        <div className="ml-3 text-sm font-normal truncate">{messages}</div>
+        <div className="ml-3 text-sm font-normal">{messages}</div>
         <button
           type="button"
           className={`ml-6 -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex h-8 w-8 ${

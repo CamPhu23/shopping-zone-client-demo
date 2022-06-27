@@ -1,12 +1,9 @@
-import { Fragment, useState } from "react";
-import { Dialog, Popover, Tab, Transition } from "@headlessui/react";
-import {
-  MenuIcon,
-  SearchIcon,
-  ShoppingCartIcon,
-  XIcon,
-} from "@heroicons/react/outline";
-import _ from "lodash";
+import { Fragment, useState } from 'react'
+import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
+import _ from 'lodash'
+import { Cart } from "../../components/cart/cart"
+import { ADMIN_PERMISSION, CLIENT_PERMISSION } from '../../constants/authentication'
 import { Link } from "react-router-dom";
 
 const navigation = {
@@ -118,11 +115,7 @@ export const Header = ({ handleLogout, user }) => {
     <div className="bg-white">
       {/* Mobile menu */}
       <Transition.Root show={open} as={Fragment}>
-        <Dialog
-          as="div"
-          className="z-50 fixed inset-0 flex z-40 lg:hidden"
-          onClose={setOpen}
-        >
+        <Dialog as="div" className="z-50 fixed inset-0 flex lg:hidden" onClose={setOpen}>
           <Transition.Child
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -264,8 +257,11 @@ export const Header = ({ handleLogout, user }) => {
               </div>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                {_.isEmpty(user) ? (
-                  <>
+
+
+                {(_.isEmpty(user) || user.permission === ADMIN_PERMISSION)?
+
+                  (<>
                     <div className="flow-root">
                       <Link
                         to={"/sign-in"}
@@ -458,15 +454,7 @@ export const Header = ({ handleLogout, user }) => {
               </Popover.Group>
 
               <div className="ml-auto flex items-center">
-                {/* JUST FOR TEST => WILL REMOVE LATER */}
-                <Link
-                  to={"/user-info"}
-                  className="flex items-center text-blue-500 mx-5"
-                >
-                  Thông tin tài khoản
-                </Link>
-
-                {_.isEmpty(user) ? (
+                {(_.isEmpty(user) || user.permission === ADMIN_PERMISSION) ? (
                   <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                     <Link
                       to={"/sign-in"}
@@ -505,18 +493,7 @@ export const Header = ({ handleLogout, user }) => {
                 )}
 
                 {/* Cart */}
-                <div className="ml-4 flow-root lg:ml-6">
-                  <a href="#" className="group -m-2 p-2 flex items-center">
-                    <ShoppingCartIcon
-                      className="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
-                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                      0
-                    </span>
-                    <span className="sr-only">items in cart, view bag</span>
-                  </a>
-                </div>
+                <Cart />
               </div>
             </div>
           </div>

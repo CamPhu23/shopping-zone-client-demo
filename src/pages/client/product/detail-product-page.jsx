@@ -1,56 +1,18 @@
 import { RadioGroup } from "@headlessui/react";
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import Comments from "../../../components/comment/comments";
 import Icon1 from '../../../assets/Icon1.png';
 import Icon2 from '../../../assets/Icon2.png';
 import Icon3 from '../../../assets/Icon3.png';
-import { useDispatch } from "react-redux";
-import { addToCartRequest } from '../../../services/actions/product-action'
-import { productService } from '../../../services/modules'
-import { Star } from '../../../components/star/star'
-
-const dummyProduct = {
-  id: "624570fbee34ac4d28c4b979",
-  name: "product product product 1",
-  description: "description 1",
-  price: 120000,
-  discount: 10,
-  category: "ao-thun-nu",
-  tags: ["san-pham-moi"],
-  images: [
-    {
-      id: "624571b4ee34ac4d28c4b97c",
-      name: "image 1",
-      url: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    },
-    {
-      id: "624571b4ee34ac4d28c4b97b",
-      name: "image 2",
-      url: "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    },
-  ],
-  warehouses: {
-    info: [
-      {
-        color: "White",
-        sizes: ["M", "L", "S"],
-      },
-      {
-        color: "Black",
-        sizes: ["M"],
-      },
-    ],
-    sold: 50,
-  },
-  comments: [],
-  ratings: {
-    stars: 4,
-    totalRatings: 10,
-  },
-  isDelete: false,
-};
+import { Star } from '../../../components/star/star';
+import { addToCartRequest } from '../../../services/actions/product-action';
+import { productService, commentService } from '../../../services/modules';
+import { useParams } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import Comments from "../../../components/comment/comments";
+import { CommentValidator, CommentValidatorError } from '../../../validators/comment-validator.js'
 
 const COLOR_CODES = {
   trang: {
@@ -69,34 +31,34 @@ const COLOR_CODES = {
     selectedClass: "ring-gray-400",
   },
   xanh: {
-    displayName: "Xám",
+    displayName: "Xanh",
     class: "bg-blue-200",
     selectedClass: "ring-blue-400",
   },
 };
 
 export default function DetailProductPage() {
-  const id = window.location.pathname.split("/").pop();
+  const { id } = useParams();
 
   const [product, setProduct] = useState({})
   const [selectedColor, setSelectedColor] = useState();
   const [selectedSize, setSelectedSize] = useState();
   const [sizes, setSizes] = useState([]);
-  const [qty, setQty] = useState(0);
+  const [qty, setQty] = useState(1);
 
+  const [comments, setComments] = useState();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const dispatch = useDispatch();
 
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
 
   useEffect(() => {
-    // setProduct(dummyProduct); //just for test (building UI)
-
-    //call product service to get product detail here
     productService.getProductById(id)
-    .then(product => {
-      setProduct(product);
-    })
-  }, []);
+      .then(product => {
+        setProduct(product);
+        setComments(product.comments.reverse());
+      })
+  }, [id]);
 
   useEffect(() => {
     if (product && product.warehouses) {
@@ -111,19 +73,22 @@ export default function DetailProductPage() {
 
   const onAddToCartClicked = () => {
     dispatch(addToCartRequest({
-      productId: product.id,
-      images: product.images[0].url,
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      discountPrice: product.price * (product.discount / 100),
+      image: product.images[0].url,
       color: selectedColor,
       size: selectedSize,
-      quantity: qty
+      quantity: qty,
     }));
   };
 
   const renderProductImage = (images) => {
     return (
       images && (
-        <div className="text-center object-cover object-center rounded md:w-5/12">
-          <Carousel showStatus={false} showArrows={false}>
+        <div className="text-center object-cover object-center rounded w-full md:w-1/2 md:mr-3">
+          <Carousel showStatus={false} showArrows={false} autoPlay={true} thumbWidth={60} >
             {images.map((img) => (
               <div key={img.id}>
                 <img src={img.url} className="rounded-lg" alt={img.name} />
@@ -142,8 +107,9 @@ export default function DetailProductPage() {
     return (
       <div className="flex mb-4">
         <span className="flex items-center">
-          <Star rate={stars}/>
-          <span className="text-gray-600 mx-3">{totalRatings} đánh giá</span>|
+          <Star rate={stars} />
+          <span className="ml-3">|</span>
+          <span className="text-gray-600 mx-3">{totalRatings} đánh giá</span>
           <span className="text-gray-600 ml-3">
             {totalSold} sản phẩm đã bán
           </span>
@@ -161,21 +127,18 @@ export default function DetailProductPage() {
     }
 
     const getCurrency = (prices) =>
-      prices.toLocaleString("it-IT", {
-        style: "currency",
-        currency: "VND",
-      });
+      prices.toLocaleString("it-IT");
 
     return (
-      <div className="flex mt-6 mb-8">
+      <div className="flex my-4 lg:mt-6 lg:mb-8">
         <span className="font-medium text-xl text-gray-700">
-          {getCurrency(finalPrices)}
+          {getCurrency(finalPrices)}đ
         </span>
 
         {discount && discount > 0 ? (
           <>
             <span className="mx-6 font-medium text-xl text-gray-300 line-through">
-              {getCurrency(price)}
+              {getCurrency(price)}đ
             </span>
 
             <span className="font-medium text-xl text-rose-600">{discount}%</span>
@@ -191,7 +154,7 @@ export default function DetailProductPage() {
 
     return (
       colors && (
-        <div className="flex items-center mt-5 mb-4">
+        <div className="flex items-center my-4 lg:mt-5 lg:mb-4">
           <span className="mr-8">Màu sắc:</span>
           <RadioGroup value={selectedColor} onChange={setSelectedColor}>
             <RadioGroup.Label className="sr-only">
@@ -292,7 +255,7 @@ export default function DetailProductPage() {
     return (
       <div className="my-4">
         <div className="flex items-center h-10">
-          <div className="flex flex-row h-10 w-full rounded-lg relative bg-transparent mt-1 w-40">
+          <div className="flex flex-row h-10 rounded-lg relative bg-transparent mt-1 w-40">
             <button
               className=" bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none"
               onClick={decreaseStep}
@@ -319,10 +282,12 @@ export default function DetailProductPage() {
   };
 
   const renderAddToCartButton = () => {
+
     return (
       <button
-        className="flex text-white bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-12 mb-10"
+        className="flex text-white justify-center bg-teal-600 border-0 py-2 px-10 focus:outline-none hover:bg-teal-700 rounded mt-6 mb-4 w-full lg:mt-12 lg:mb-10"
         onClick={onAddToCartClicked}
+        disabled={qty == 0 || !selectedColor || !selectedSize}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -345,7 +310,7 @@ export default function DetailProductPage() {
 
   const renderCommitment = () => {
     return (
-      <div className="mt-16">
+      <div className="mt-6">
         <hr />
         <div className="flex">
           <div className="flex-1 border mt-2 p-2 transition ease-in-out hover:-translate-y-1 hover:shadow-lg">
@@ -375,10 +340,11 @@ export default function DetailProductPage() {
     );
   };
 
+
   const renderProductInfo = (product) => {
     return (
       product && (
-        <div className="flex-1 lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-2 pt-24 lg:mt-0">
+        <div className="flex-1 w-full sm:pt-7 md:py-0 md:ml-3 lg:py-0 lg:w-1/2 lg:pl-10 lg:mt-0">
           <h2 className="text-sm title-font text-gray-500 tracking-widest">
             {product.category}
           </h2>
@@ -401,8 +367,8 @@ export default function DetailProductPage() {
   const renderProductDescription = (description) => {
     return (
       description && (
-        <div className="bg-white">
-          <div className="max-w-2xl mx-auto py-2 px-4 grid grid-cols-1 text-justify sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 ">
+        <div className="max-w-full lg:w-4/5 mx-auto">
+          <div className="max-w-2xl grid grid-cols-1 text-justify mx-6 mt-6 lg:max-w-7xl lg:px-6 ">
             <div>
               <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                 Mô tả sản phẩm
@@ -415,9 +381,71 @@ export default function DetailProductPage() {
     );
   };
 
+  const renderComment = () => {
+    const handleAddComment = ({ nameOfCustomer, content }) => {
+      commentService
+        .addComment({ nameOfCustomer, content, productID: id })
+        .then(comment => {
+          reset();
+          setComments([comment, ...comments])
+        });
+    }
+
+    return (
+      <div className="mx-6 mt-20 lg:w-4/5 flex flex-wrap lg:mx-auto ">
+        <div className="bg-grey w-full">
+          <div className="max-w-5xl mx-auto mt-2 lg:px-6">
+            <div className="bg-white modal__content rounded">
+              <div className="modal__body my-1">
+                <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+                  Bình luận
+                </h2>
+              </div>
+              <div className="modal__footer mt-3">
+                <div className="text-right">
+                  <form onSubmit={handleSubmit(handleAddComment)}>
+                    <div className="mt-4 border border-grey w-full border-1 rounded-lg p-2 relative focus:border-red">
+                      <div className="my-3">
+                        <input type="text" placeholder="Nhập tên"
+                          className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                          {...register("nameOfCustomer", CommentValidator.nameOfCustomer)}
+                        />
+                        {CommentValidatorError(errors.nameOfCustomer)}
+                      </div>
+
+                      <div className="my-3">
+                        <textarea
+                          placeholder="Nhập bình luận"
+                          className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
+                          name="content"
+                          rows={3}
+                          {...register("content", CommentValidator.content)}
+                        ></textarea>
+                        {CommentValidatorError(errors.content)}
+                      </div>
+
+                      <button
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                        type="submit"
+                      >
+                        Bình luận
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <Comments commentsList={comments} />
+      </div>
+    );
+  }
+
   return (
-    <section className="text-gray-600 body-font overflow-hidden">
-      <div className="container px-16 m-5 mx-auto">
+    <section className="text-gray-600 body-font overflow-hidden ">
+      <div className="container px-6 mt-5 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           {renderProductImage(product.images)}
           {renderProductInfo(product)}
@@ -425,66 +453,7 @@ export default function DetailProductPage() {
       </div>
 
       {renderProductDescription(product.description)}
-
-      {/* Q&A */}
-      {/* <div className="bg-grey px-2 w-full max-w-5xl mx-auto">
-        <div className="max-w-5xl mx-auto mt-10">
-          <div className="bg-white p-1 modal__content rounded">
-            <div className="modal__body my-1">
-              <h2 className="text-gray-900 font-bold mb-1 text-lg">
-                {" "}
-                Leave a Comment
-              </h2>
-              <div className="mt-2 border border-grey w-full border-1 rounded-lg p-2 relative focus:border-red">
-                <textarea
-                  placeholder="Add your comment..."
-                  className="w-full p-2 focus:outline-1 focus:outline-blue-500 font-bold border-[0.1px] resize-none h-[120px] border-[#9EA5B1] rounded-md"
-                ></textarea>
-              </div>
-            </div>
-            <div className="modal__footer mt-3">
-              <div className="text-right">
-                <button className="bg-purple text-black border-2 border-purple p-3 rounded-md text-xs font-semibold hover:bg-sky-700 hover:border-purple-dark hover:text-white">
-                  Gửi đánh giá
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* <!-- component --> */}
-      {/* <Comments /> */}
-      {/* <div className="antialiased mx-auto max-w-5xl px-2">
-    <h2 className="mb-4 text-lg font-bold text-gray-900">Comments</h2>
-      <div className="space-y-4">
-        <div className="flex">
-          <div className="flex-shrink-0 mr-3">
-            <img className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
-          </div>
-          <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-            <strong>tên</strong> <span className="text-xs text-gray-400">3:34 PM</span>
-            <p className="text-sm md:text-base">nội dung cmt</p>
-            <h4 className="my-5 uppercase tracking-wide text-gray-400 font-bold text-xs">Replies</h4>
-            <div className="space-y-4" >
-              <div className="flex">
-                <div className="flex-shrink-0 mr-3">
-                  <img className="mt-3 rounded-full w-6 h-6 sm:w-8 sm:h-8" src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80" alt=""/>
-                </div>
-                <div className="flex-1 bg-gray-100 rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-                  <strong >tên ai</strong> <span className="text-xs text-gray-400">3:34 PM</span>
-                  <p className="text-sm md:text-base">
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-                    sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                    magna aliquyam erat, sed diam voluptua.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>    
-  </div> */}
+      {renderComment()}
     </section>
   );
 }
