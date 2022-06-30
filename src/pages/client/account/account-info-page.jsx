@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ICON } from "../../../assets/svg-icon";
 import Toast from "../../../components/toast/toast";
+import { CLIENT_AVT } from "../../../constants/avatar-url";
 
 //JUST FOR TEST => WILL REMOVE LATER
 const dummyUserInfo = {
@@ -162,7 +163,7 @@ const AccountInfoPage = () => {
               <div className="flex flex-col items-center">
                 <img
                   className="mb-3 w-24 h-24 rounded-full shadow-lg"
-                  src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+                  src={CLIENT_AVT}
                   alt="Bonnie image"
                 />
                 <h5 className="mb-1 text-xl font-medium text-gray-900">
