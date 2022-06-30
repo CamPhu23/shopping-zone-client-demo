@@ -2,29 +2,43 @@ import { useEffect, useState } from "react";
 import TopSection from "../../../components/common/main-top-section";
 // import Pagination from "../../../components/common/pagination";
 import { Table } from "../../../components/common/table";
-import { adminProductService } from "../../../services/modules";
+import { adminAccountService, adminProductService } from "../../../services/modules";
 import { DEFAULT_PAGE_NUMBER, NUMBER_RECORD_PER_PAGE } from "../../../constants/variables.js";
 import { DetailDialog } from "../../../components/common/dialog";
-import { DetailProduct } from "./detail-product";
+import { DetailAccount } from "./detail-account";
 import { useNavigate } from "react-router-dom";
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
 import { numberToStringConverter } from "../../../converter/data-type.js"
 import _ from "lodash";
 
-const ProductPage = () => {
-  const [data, setData] = useState({ products: [], totalPage: 0, currentPage: 0 });
+const AccountPage = () => {
+  const [data, setData] = useState({ accounts: [], totalPage: 0, currentPage: 0 });
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    adminProductService
-      .getAllProducts()
+    adminAccountService
+      .getAllClients()
       .then((response) => {
-        response
-          && response.map(ele => ele.discount = numberToStringConverter(ele.discount));
-        setData({ ...data, products: response });
+        if (!_.isEmpty(response)) {
+          response = response.map((ele) => {
+            if (!ele.fullname) {
+              ele.fullname = "";
+            }
+            if (!ele.phone) {
+              ele.phone = "";
+            }
+            if (!ele.address) {
+              ele.address = "";
+            }
+
+            return ele
+          });
+        }
+        
+        setData({ ...data, accounts: response });
       });
   }, []);
 
@@ -35,12 +49,12 @@ const ProductPage = () => {
   }, [dialogParam]);
 
   const onCreateNewButtonClick = () => {
-    navigate(NAVIGATE_URL.PRODUCT_CREATE);
+    navigate(NAVIGATE_URL.CLIENT_CREATE);
   };
 
   const onTableRowClick = (id) => {
-    adminProductService
-      .getProductById(id)
+    adminAccountService
+      .getClientById(id)
       .then((data) => {
         setDialogParam(data);
       });
@@ -55,16 +69,16 @@ const ProductPage = () => {
   };
 
   const onEditClick = (item) => {
-    navigate(NAVIGATE_URL.PRODUCT_EDIT, { state: { data: item } });
+    navigate(NAVIGATE_URL.CLIENT_UPDATE, { state: { data: item } });
   };
 
   const onDeleteClick = (id) => {
-    adminProductService
-      .deleteProductById(id)
+    adminAccountService
+      .deleteClient(id)
       .then((result) => {
         if (result) {
-          const newProducts = data.products.filter((product) => product._id !== id);
-          setData({ ...data, products: newProducts });
+          const newProducts = data.accounts.filter((product) => product._id !== id);
+          setData({ ...data, accounts: newProducts });
           setOpenDialog(false);
         }
       });
@@ -74,21 +88,21 @@ const ProductPage = () => {
     <div className="flex h-full">
       <div className="w-full flex flex-col relative shadow-md sm:rounded-lg">
         <TopSection
-          titleText="Danh sách sản phẩm"
-          buttonText="Thêm sản phẩm"
+          titleText="Danh sách khách hàng"
+          buttonText="Tạo tài khoản"
           onButtonClick={onCreateNewButtonClick}
         />
         <div className="flex-1">
           <Table
             columns={[
-              "Mã sản phẩm",
-              "Tên sản phẩm",
-              "Giá tiền",
-              "Giảm giá (%)",
-              "Thể loại",
-              "Đặc trưng",
+              "Mã tài khoản",
+              "Tên tài khoản",
+              "Email",
+              "Địa chỉ",
+              "Họ và tên",
+              "Số điện thoại",
             ]}
-            data={data.products}
+            data={data.accounts}
             onRowClick={onTableRowClick}
           />
         </div>
@@ -107,7 +121,7 @@ const ProductPage = () => {
         isOpen={openDialog}
         onClose={() => setOpenDialog(false)}
         component={
-          <DetailProduct
+          <DetailAccount
             item={dialogParam}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
@@ -118,4 +132,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default AccountPage;

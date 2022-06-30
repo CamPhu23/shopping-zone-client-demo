@@ -56,10 +56,6 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
     setImages([...Array.from(files)]);
   };
 
-  useEffect(() => {
-    console.log(images);
-  }, [images])
-
   const onChoosenImageDelete = (image) => {
     const index = images.indexOf(image);
     if (index > -1) {

@@ -32,8 +32,8 @@ export const ProductValidator = {
   },
   discount: {
     min: {
-      value: 1,
-      message: "Khuyến mãi hợp lệ trong khoảng 1-99%",
+      value: 0,
+      message: "Khuyến mãi hợp lệ trong khoảng 0-99%",
     },
     max: {
       value: 99,

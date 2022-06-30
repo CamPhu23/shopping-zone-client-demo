@@ -12,7 +12,7 @@ import { productService, commentService } from '../../../services/modules';
 import { useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Comments from "../../../components/comment/comments";
-import { commentValidator, renderError } from '../../../validators/comment-validator.js'
+import { CommentValidator, CommentValidatorError } from '../../../validators/comment-validator.js'
 
 const COLOR_CODES = {
   trang: {
@@ -47,16 +47,7 @@ export default function DetailProductPage() {
   const [qty, setQty] = useState(1);
 
   const [comments, setComments] = useState();
-  const handleAddComment = ({ nameOfCustomer, content }) => {
-    commentService
-      .addComment({ nameOfCustomer, content, productID: id })
-      .then(comment =>
-        setComments([comment, ...comments])
-      );
-  }
-
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const dispatch = useDispatch();
 
   const classNames = (...classes) => classes.filter(Boolean).join(" ");
@@ -391,6 +382,15 @@ export default function DetailProductPage() {
   };
 
   const renderComment = () => {
+    const handleAddComment = ({ nameOfCustomer, content }) => {
+      commentService
+        .addComment({ nameOfCustomer, content, productID: id })
+        .then(comment => {
+          reset();
+          setComments([comment, ...comments])
+        });
+    }
+
     return (
       <div className="mx-6 mt-20 lg:w-4/5 flex flex-wrap lg:mx-auto ">
         <div className="bg-grey w-full">
@@ -408,9 +408,9 @@ export default function DetailProductPage() {
                       <div className="my-3">
                         <input type="text" placeholder="Nhập tên"
                           className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
-                          {...register("nameOfCustomer", commentValidator.nameOfCustomer)}
+                          {...register("nameOfCustomer", CommentValidator.nameOfCustomer)}
                         />
-                        {renderError(errors.nameOfCustomer)}
+                        {CommentValidatorError(errors.nameOfCustomer)}
                       </div>
 
                       <div className="my-3">
@@ -419,9 +419,9 @@ export default function DetailProductPage() {
                           className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                           name="content"
                           rows={3}
-                          {...register("content", commentValidator.content)}
+                          {...register("content", CommentValidator.content)}
                         ></textarea>
-                        {renderError(errors.content)}
+                        {CommentValidatorError(errors.content)}
                       </div>
 
                       <button
