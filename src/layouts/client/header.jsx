@@ -5,6 +5,7 @@ import _ from 'lodash'
 import { Cart } from "../../components/cart/cart"
 import { ADMIN_PERMISSION, CLIENT_PERMISSION } from '../../constants/authentication'
 import { Link, useLocation } from "react-router-dom";
+import { CLIENT_AVT, LOGO } from '../../constants/avatar-url'
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -145,8 +146,8 @@ export const Header = ({ handleLogout, user }) => {
                 <Link to={"/"}>
                   <span className="sr-only">Workflow</span>
                   <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600"
+                    className="h-8 w-auto rounded-full"
+                    src={LOGO}
                     alt=""
                   />
                 </Link>
@@ -203,7 +204,7 @@ export const Header = ({ handleLogout, user }) => {
                     >
                       <img
                         className="inline-block h-10 w-10 rounded-full ring-2 ring-white"
-                        src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src={CLIENT_AVT}
                         alt=""
                       />
                     </Link>
