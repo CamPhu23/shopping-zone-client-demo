@@ -1,4 +1,5 @@
 import axiosRequest from "../../config/http-request";
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "../../constants/default-axios-product";
 import { BASE_URL } from "../../constants/http";
 
 const getUserInfo = () => {
@@ -20,7 +21,7 @@ const updateUserInfo = (formData) => {
     })
 };
 
-const getUserOrderHistory = (id, page = 1, size = 10) => {
+const getUserOrderHistory = (id, page = DEFAULT_PAGE, size = DEFAULT_PAGE_SIZE) => {
   return axiosRequest
     .get(`${BASE_URL}/account/orders?id=${id}&page=${page}&size=${size}`)
     .then((orders) => orders)

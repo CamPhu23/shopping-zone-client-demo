@@ -7,6 +7,8 @@ import { dateFomatter } from "../../../converter/date-formatter.js";
 import { currencyFomatter } from "../../../converter/currency-fomatter";
 import { DetailDialog } from "../../../components/common/dialog";
 import { Receipt } from "../../../components/receipt/detail-receipt";
+import { Paging } from "../../../components/paging/paging";
+import { DEFAULT_PAGE_SIZE } from '../../../constants/default-axios-product'
 
 const AccountInfoPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -75,6 +77,16 @@ const AccountInfoPage = () => {
       .then((data) => {
         console.log(data);
         setDialogParam(data);
+      });
+  }
+
+  const handleChangePage = (text, nextPage) => {
+    accountService.getUserOrderHistory(userInfo.id, nextPage)
+      .then((data) => {
+        setLoading(false);
+        setOrderList(data.receipts);
+        setPageInfo(data.info)
+        setShowOrderList(true);
       });
   }
 
@@ -295,7 +307,7 @@ const AccountInfoPage = () => {
       <div className="mt-5">
         <div className="p-4 flex flex justify-between items-center">
           <div className="font-bold text-2xl">Danh sách lịch sử đơn hàng</div>
-          <div className="text-gray-700">Đang hiển thị {pageInfo.currentIndex} trên {pageInfo.total} trang</div>
+          <div className="text-gray-700">Đang hiển thị {pageInfo.currentIndex} trên {Math.ceil(pageInfo.total/pageInfo.currentSize)} trang</div>
         </div>
 
         <div className="relative overflow-x-auto border-gray-200 border-2 shadow-md sm:rounded-lg">
@@ -337,7 +349,9 @@ const AccountInfoPage = () => {
             </tbody>
           </table>
         </div>
-        <div>pagination here</div>
+{console.log(pageInfo)}
+        <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+          handleChangePage={handleChangePage} descriptionText="Hóa đơn"/>
       </div>
     );
   };

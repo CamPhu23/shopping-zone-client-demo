@@ -68,9 +68,9 @@ export const Receipt = ({ item }) => {
                             {product.name}
                           </span>
                         </Link>
-                      </div>
+                    </div>
                       <div className="flex">
-                        <span className="ml-2 flex-1">(Chi tiết: {product.size} - {colorConverter(product.color)}, Số lượng: {product.quantity})</span>
+                        <span className="ml-2 flex-1">Chi tiết: {product.size} - {colorConverter(product.color)}, Số lượng: {product.quantity}</span>
                       </div>
                       <div className="flex justify-end">
                         <span className="ml-2">{currencyFomatter(product.price)}</span>
