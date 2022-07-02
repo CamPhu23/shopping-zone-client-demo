@@ -6,6 +6,7 @@ export const Paging = forwardRef(({
   totalItem,
   numOfShowingPerPage,
   handleChangePage,
+  descriptionText = "Sản phẩm"
 }, ref) => {
   useImperativeHandle(ref, () => ({
     changeCurrentPage: handlePageTransition
@@ -38,8 +39,8 @@ export const Paging = forwardRef(({
       <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Sản phẩm <span className="font-medium">{totalItem == 0 ? '0' : currentPage * numOfShowingPerPage - (numOfShowingPerPage - 1)}</span> đến <span className="font-medium">{currentPage != totalPage ? totalItem - (totalItem - currentPage * numOfShowingPerPage) : totalItem}</span> trong{' '}
-            <span className="font-medium">{totalItem}</span> sản phẩm
+            {descriptionText} <span className="font-medium">{totalItem == 0 ? '0' : currentPage * numOfShowingPerPage - (numOfShowingPerPage - 1)}</span> đến <span className="font-medium">{currentPage != totalPage ? totalItem - (totalItem - currentPage * numOfShowingPerPage) : totalItem}</span> trong{' '}
+            <span className="font-medium">{totalItem}</span> <span className="lowercase">{descriptionText}</span>
           </p>
         </div>
         <div>

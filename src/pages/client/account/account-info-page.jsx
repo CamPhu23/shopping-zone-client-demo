@@ -2,48 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ICON } from "../../../assets/svg-icon";
 import Toast from "../../../components/toast/toast";
+import { accountService } from '../../../services/modules';
+import { dateFomatter } from "../../../converter/date-formatter.js";
+import { currencyFomatter } from "../../../converter/currency-fomatter";
+import { DetailDialog } from "../../../components/common/dialog";
+import { Receipt } from "../../../components/receipt/detail-receipt";
+import { Paging } from "../../../components/paging/paging";
+import { DEFAULT_PAGE_SIZE } from '../../../constants/default-axios-product'
 import { CLIENT_AVT } from "../../../constants/avatar-url";
-
-//JUST FOR TEST => WILL REMOVE LATER
-const dummyUserInfo = {
-  id: 1,
-  fullname: "David Brown",
-  phone: "0902110302",
-  email: "davidbrown@gmail.com",
-  address: "24 London Street, NYC, USA",
-};
-
-//JUST FOR TEST => WILL REMOVE LATER
-const dummyOrdersHistory = [
-  {
-    id: 1,
-    status: "processing",
-    paymentType: "cod",
-    totalPay: 125000,
-    createAt: "06/03/2022",
-  },
-  {
-    id: 2,
-    status: "delivered",
-    paymentType: "cod",
-    totalPay: 125000,
-    createAt: "06/03/2022",
-  },
-  {
-    id: 3,
-    status: "processing",
-    paymentType: "cod",
-    totalPay: 125000,
-    createAt: "06/03/2022",
-  },
-  {
-    id: 4,
-    status: "delivering",
-    paymentType: "cod",
-    totalPay: 125000,
-    createAt: "06/03/2022",
-  },
-];
 
 const AccountInfoPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -54,13 +20,14 @@ const AccountInfoPage = () => {
   const [showOrderList, setShowOrderList] = useState(false);
   const [loading, setLoading] = useState(false);
   const [orderList, setOrderList] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogParam, setDialogParam] = useState({});
 
   useEffect(() => {
-    // UNCOMMENT WHEN INTERGATE INTO MAIN
-    // accountService.getUserInfo().then((info) => setUserInfo(info));
-
-    //JUST FOR TEST => WILL REMOVE LATER
-    setUserInfo(dummyUserInfo);
+    accountService
+      .getUserInfo()
+      .then((info) => setUserInfo(info));
   }, []);
 
   const {
@@ -70,14 +37,18 @@ const AccountInfoPage = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    // UNCOMMENT WHEN INTERGATE INTO MAIN
-    // accountService.updateUserInfo(data).then((response) => {
-    // });
+    accountService.updateUserInfo(data)
+      .then(() => {
+        setToastShow(true);
+        setToastMessages("Cập nhật thành công");
+        setToastIcon(ICON.Success);
+      })
+      .catch((e) => {
+        setToastShow(true);
+        setToastMessages("Cập nhật thất bại");
+        setToastIcon(ICON.Fail);
+      });
 
-    //JUST FOR TEST => WILL REMOVE LATER
-    setToastShow(true);
-    setToastMessages("Cập nhật thành công");
-    setToastIcon(ICON.Success);
   };
 
   const onToastCloseClick = () => {
@@ -88,33 +59,37 @@ const AccountInfoPage = () => {
     if (!showOrderList) {
       setLoading(true);
 
-      // UNCOMMENT WHEN INTERGATE INTO MAIN
-      // accountService.getUserOrderHistory().then((data) => {
-      //   setLoading(false);
-      //   setOrderList(data);
-      //   setShowOrderList(true);
-      // });
-
-      //JUST FOR TEST => WILL REMOVE LATER
-      setTimeout(() => {
-        setLoading(false);
-        setOrderList(dummyOrdersHistory);
-        setShowOrderList(!showOrderList);
-      }, 3000);
+      accountService.getUserOrderHistory(userInfo.id)
+        .then((data) => {
+          setLoading(false);
+          setOrderList(data.receipts);
+          setPageInfo(data.info)
+          setShowOrderList(true);
+        });
     } else if (showOrderList) {
       setShowOrderList(false);
     }
   };
 
   const onTableRowClick = (id) => {
-    console.log("clicked row: " + id);
+    setOpenDialog(true);
+    accountService
+      .getReceiptById(id)
+      .then((data) => {
+        console.log(data);
+        setDialogParam(data);
+      });
   }
 
-  const getCurrency = (prices) =>
-    prices.toLocaleString("it-IT", {
-      style: "currency",
-      currency: "VND",
-    });
+  const handleChangePage = (text, nextPage) => {
+    accountService.getUserOrderHistory(userInfo.id, nextPage)
+      .then((data) => {
+        setLoading(false);
+        setOrderList(data.receipts);
+        setPageInfo(data.info)
+        setShowOrderList(true);
+      });
+  }
 
   const validateInput = {
     fullname: {
@@ -333,7 +308,7 @@ const AccountInfoPage = () => {
       <div className="mt-5">
         <div className="p-4 flex flex justify-between items-center">
           <div className="font-bold text-2xl">Danh sách lịch sử đơn hàng</div>
-          <div className="text-gray-700">Đang hiển thị 1 trên 8 trang</div>
+          <div className="text-gray-700">Đang hiển thị {pageInfo.currentIndex} trên {Math.ceil(pageInfo.total/pageInfo.currentSize)} trang</div>
         </div>
 
         <div className="relative overflow-x-auto border-gray-200 border-2 shadow-md sm:rounded-lg">
@@ -359,23 +334,25 @@ const AccountInfoPage = () => {
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order.id} onClick={() => onTableRowClick(order.id)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+                <tr key={order._id} onClick={() => onTableRowClick(order._id)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                   >
-                    {order.id}
+                    {order._id}
                   </th>
-                  <td className="px-6 py-4">{order.createAt}</td>
-                  <td className="px-6 py-4">{order.paymentType}</td>
-                  <td className="px-6 py-4">{getCurrency(order.totalPay)}</td>
+                  <td className="px-6 py-4">{dateFomatter(order.createdAt)}</td>
+                  <td className="px-6 py-4">{order.paymentMethod}</td>
+                  <td className="px-6 py-4">{currencyFomatter(order.totalBill)}</td>
                   <td className="px-6 py-4 uppercase">{order.status}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <div>pagination here</div>
+{console.log(pageInfo)}
+        <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+          handleChangePage={handleChangePage} descriptionText="Hóa đơn"/>
       </div>
     );
   };
@@ -393,6 +370,16 @@ const AccountInfoPage = () => {
 
           {showOrderList && renderOrderList(orderList)}
         </div>
+
+        <DetailDialog
+          isOpen={openDialog}
+          onClose={() => setOpenDialog(false)}
+          component={
+            <Receipt
+              item={dialogParam}
+            />
+          }
+        />
 
         <Toast
           show={toastShow}
