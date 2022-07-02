@@ -9,6 +9,7 @@ import { DetailDialog } from "../../../components/common/dialog";
 import { Receipt } from "../../../components/receipt/detail-receipt";
 import { Paging } from "../../../components/paging/paging";
 import { DEFAULT_PAGE_SIZE } from '../../../constants/default-axios-product'
+import { CLIENT_AVT } from "../../../constants/avatar-url";
 
 const AccountInfoPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -137,7 +138,7 @@ const AccountInfoPage = () => {
               <div className="flex flex-col items-center">
                 <img
                   className="mb-3 w-24 h-24 rounded-full shadow-lg"
-                  src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+                  src={CLIENT_AVT}
                   alt="Bonnie image"
                 />
                 <h5 className="mb-1 text-xl font-medium text-gray-900">
