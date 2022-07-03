@@ -400,7 +400,6 @@ const AccountInfoPage = () => {
             </tbody>
           </table>
         </div>
-
         <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
           handleChangePage={handleChangePage} descriptionText="Hóa đơn" />
       </div>
