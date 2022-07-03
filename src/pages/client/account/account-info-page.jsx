@@ -10,6 +10,7 @@ import { Receipt } from "../../../components/receipt/detail-receipt";
 import { Paging } from "../../../components/paging/paging";
 import { DEFAULT_PAGE_SIZE } from '../../../constants/default-axios-product'
 import { CLIENT_AVT } from "../../../constants/avatar-url";
+import { RatingProduct } from "../../../components/receipt/rating-product";
 
 const AccountInfoPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -22,6 +23,7 @@ const AccountInfoPage = () => {
   const [orderList, setOrderList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
+  const [openRatingDialog, setOpenRatingDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
 
   useEffect(() => {
@@ -76,9 +78,38 @@ const AccountInfoPage = () => {
     accountService
       .getReceiptById(id)
       .then((data) => {
-        console.log(data);
+        setDialogParam({});
         setDialogParam(data);
       });
+  }
+
+  const onRatingButtonClick = (id) => {
+    setOpenRatingDialog(true);
+    accountService
+      .getReceiptById(id)
+      .then((data) => {
+        setDialogParam({});
+
+        let product = data.products.map(t1 => ({ ...t1, ...data.ratings.find(t2 => t2.product === t1.id) }))
+        data.products = product;
+
+        setDialogParam(data);
+      });
+  }
+
+  const saveRating = (data) => {
+    accountService
+      .postRating(data)
+      .then(() => {
+        setOpenRatingDialog(false);
+
+        setToastShow(true);
+        setToastMessages("Đánh giá thành công");
+        setToastIcon(ICON.Success);        
+      })
+      .catch((e) => {
+        console.log(e);
+      })
   }
 
   const handleChangePage = (text, nextPage) => {
@@ -308,7 +339,7 @@ const AccountInfoPage = () => {
       <div className="mt-5">
         <div className="p-4 flex flex justify-between items-center">
           <div className="font-bold text-2xl">Danh sách lịch sử đơn hàng</div>
-          <div className="text-gray-700">Đang hiển thị {pageInfo.currentIndex} trên {Math.ceil(pageInfo.total/pageInfo.currentSize)} trang</div>
+          <div className="text-gray-700">Đang hiển thị {pageInfo.currentIndex} trên {Math.ceil(pageInfo.total / pageInfo.currentSize)} trang</div>
         </div>
 
         <div className="relative overflow-x-auto border-gray-200 border-2 shadow-md sm:rounded-lg">
@@ -330,29 +361,48 @@ const AccountInfoPage = () => {
                 <th scope="col" className="px-6 py-3">
                   Trạng thái
                 </th>
+                <th scope="col" className="px-6 py-3"></th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
-                <tr key={order._id} onClick={() => onTableRowClick(order._id)} className="cursor-pointer bg-white border-b hover:bg-gray-100">
+                <tr key={order._id} className="cursor-pointer bg-white border-b hover:bg-gray-100">
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+                    onClick={() => onTableRowClick(order._id)}
                   >
                     {order._id}
                   </th>
-                  <td className="px-6 py-4">{dateFomatter(order.createdAt)}</td>
-                  <td className="px-6 py-4">{order.paymentMethod}</td>
-                  <td className="px-6 py-4">{currencyFomatter(order.totalBill)}</td>
-                  <td className="px-6 py-4 uppercase">{order.status}</td>
+                  <td className="px-6 py-4"
+                    onClick={() => onTableRowClick(order._id)}>
+                    {dateFomatter(order.createdAt)}
+                  </td>
+                  <td className="px-6 py-4"
+                    onClick={() => onTableRowClick(order._id)}>
+                    {order.paymentMethod}
+                  </td>
+                  <td className="px-6 py-4"
+                    onClick={() => onTableRowClick(order._id)}>
+                    {currencyFomatter(order.totalBill)}
+                  </td>
+                  <td className="px-6 py-4 uppercase" onClick={() => onTableRowClick(order._id)}>{order.status}</td>
+                  <td className="px-2 py-4 uppercase">
+                    <button
+                      onClick={() => onRatingButtonClick(order._id)}
+                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700"
+                    >
+                      Đánh giá
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-{console.log(pageInfo)}
+
         <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
-          handleChangePage={handleChangePage} descriptionText="Hóa đơn"/>
+          handleChangePage={handleChangePage} descriptionText="Hóa đơn" />
       </div>
     );
   };
@@ -376,6 +426,17 @@ const AccountInfoPage = () => {
           onClose={() => setOpenDialog(false)}
           component={
             <Receipt
+              item={dialogParam}
+            />
+          }
+        />
+
+        <DetailDialog
+          isOpen={openRatingDialog}
+          onClose={() => setOpenRatingDialog(false)}
+          component={
+            <RatingProduct
+              saveRating={saveRating}
               item={dialogParam}
             />
           }

@@ -30,9 +30,18 @@ const getUserOrderHistory = (id, page = DEFAULT_PAGE, size = DEFAULT_PAGE_SIZE) 
     });
 };
 
-const getReceiptById= (id) => {
+const getReceiptById = (id) => {
   return axiosRequest
     .get(`${BASE_URL}/account/order/${id}`)
+    .then((order) => order)
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
+const postRating = (formData) => {
+  return axiosRequest
+    .post(`${BASE_URL}/account/rating`, formData)
     .then((order) => order)
     .catch((err) => {
       throw new Error(err);
@@ -43,5 +52,6 @@ export default {
   getUserInfo,
   getUserOrderHistory,
   updateUserInfo,
-  getReceiptById
+  getReceiptById,
+  postRating,
 };

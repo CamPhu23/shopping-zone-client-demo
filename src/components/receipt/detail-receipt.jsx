@@ -61,10 +61,10 @@ export const Receipt = ({ item }) => {
               <ul role="list" className="border border-gray-200 rounded-md divide-y divide-gray-200">
                 {item.products && item.products.map((product) => {
                   return (
-                    <li className="pl-3 pr-4 py-3 flex text-sm sm:grid sm:grid-cols-3">
-                      <div className="ml-2 flex-shrink-0">
+                    <li key={product.id} className="pl-3 pr-4 py-3 flex text-sm sm:grid sm:grid-cols-3">
+                      <div className="ml-2 flex-shrink-0 truncate">
                         <Link to={`/product/${product.id}`} className="font-bold">
-                          <span className="ml-2 flex-1 truncate">
+                          <span className="ml-2 flex-1">
                             {product.name}
                           </span>
                         </Link>
