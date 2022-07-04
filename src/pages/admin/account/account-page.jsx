@@ -86,7 +86,7 @@ const AccountPage = () => {
 
   return (
     <div className="flex h-full">
-      <div className="w-full flex flex-col relative shadow-md sm:rounded-lg">
+      <div className="w-full flex flex-col relative">
         <TopSection
           titleText="Danh sách khách hàng"
           buttonText="Tạo tài khoản"

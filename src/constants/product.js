@@ -14,7 +14,24 @@ const TAGS = [
   "san-pham-khuyen-mai"
 ];
 
+const COLOR = [
+  "trang",
+  "xam",
+  "den",
+  "xanh"
+]
+
+const SIZE = [
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL"
+]
+
 export const PRODUCT_CONSTANT = {
   CATEGORIES,
   TAGS,
+  COLOR,
+  SIZE,
 }

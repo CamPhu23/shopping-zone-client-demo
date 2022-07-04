@@ -16,6 +16,7 @@ const AdminReceiptPage = lazy(() => import('./admin/receipt/receipt-page'));
 const AdminAccountPage = lazy(() => import('./admin/account/account-page'));
 const AdminCreateAccountPage = lazy(() => import('./admin/account/create-account-page'));
 const AdminEditAccountPage = lazy(() => import('./admin/account/edit-account-page'));
+const AdminWarehousePage = lazy(() => import('./admin/warehouse/warehouse-page'));
 
 export {
   HomePage,
@@ -35,4 +36,5 @@ export {
   AdminAccountPage,
   AdminCreateAccountPage,
   AdminEditAccountPage,
+  AdminWarehousePage,
 };
