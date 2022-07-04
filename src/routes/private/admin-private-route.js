@@ -8,6 +8,7 @@ import {
   AdminAccountPage,
   AdminCreateAccountPage,
   AdminEditAccountPage,
+  AdminWarehousePage,
 } from '../../pages';
 import { NAVIGATE_URL } from '../../constants/navigate-url'
 
@@ -108,6 +109,16 @@ const PRIVATE_CLIENT_UPDATE_ROUTE = {
   ...PRIVATE_ADMIN_ROUTE
 };
 
+const PRIVATE_WAREHOUSE_ROUTE = {
+  path: NAVIGATE_URL.WAREHOUSE,
+  component: <AdminWarehousePage />,
+  breadcrumbs: [
+    { name: "Dashboard", path: NAVIGATE_URL.DASHBORAD },
+    { name: "Quản lý kho hàng" },
+  ],
+  ...PRIVATE_ADMIN_ROUTE,
+};
+
 export default [
   ADMIN_DASHBOARD_ROUTE,
   PRIVATE_PRODUCT_LIST_ROUTE,
@@ -117,4 +128,5 @@ export default [
   PRIVATE_CLIENT_LIST_ROUTE,
   PRIVATE_CLIENT_CREATE_ROUTE,
   PRIVATE_CLIENT_UPDATE_ROUTE,
+  PRIVATE_WAREHOUSE_ROUTE,
 ];
