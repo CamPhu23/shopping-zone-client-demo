@@ -1,8 +1,5 @@
-import _ from 'lodash';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
-import { adminAuthService, adminStatisticsService } from '../../services/modules';
+import { useEffect, useState } from 'react';
+import { adminStatisticsService } from '../../services/modules';
 
 export default function DashboardPage() {
   const [statisticData, setStatisticData] = useState({
