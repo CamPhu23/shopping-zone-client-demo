@@ -96,6 +96,32 @@ export const Navbar = ({ onSignOut, userInfo }) => {
               </Link>
             </li>
             <li
+              className={`${
+                pathname.includes("/admin/comments") ? "bg-gray-900" : ""
+              } hover:bg-gray-700`}
+            >
+              <Link
+                to={"/admin/comments"}
+                className="flex items-center p-2 space-x-3 rounded-md"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+                <span>Trả lời bình luận</span>
+                </Link>
+            </li>
+            <li
               className={`${pathname.includes("/admin/warehouse") ? "bg-gray-900" : ""
                 } hover:bg-gray-700`}
             >

@@ -11,6 +11,7 @@ const CLIENT_LIST = "/admin/clients";
 const CLIENT_CREATE = "/admin/clients/create";
 const CLIENT_UPDATE = "/admin/clients/update";
 
+const COMMENT_LIST = "/admin/comments";
 const WAREHOUSE = "/admin/warehouse";
 
 const AUTHENTICATION_SIGN_IN = "/admin/sign-in";
@@ -25,6 +26,7 @@ export const NAVIGATE_URL = {
   CLIENT_LIST,
   CLIENT_CREATE,
   CLIENT_UPDATE,
+  COMMENT_LIST,
   AUTHENTICATION_SIGN_IN,
   WAREHOUSE,
 }
