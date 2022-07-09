@@ -15,7 +15,7 @@ export const Header = ({ handleLogout, user }) => {
   const { pathname } = useLocation();
 
   const isCartCickable = !(pathname.includes('/payment') || pathname.includes('/sign-in')
-    || pathname.includes('/sign-up'));
+    || pathname.includes('/sign-up') || pathname.includes('/forgot-password') || pathname.includes('/reset-password'));
   const [open, setOpen] = useState(false);
 
   return (

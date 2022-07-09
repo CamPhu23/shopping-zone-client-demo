@@ -54,10 +54,30 @@ const handleLogout = () => {
   systemService.deleteRefreshToken();
 }
 
+const handleForgotPassword = (formInput) => {
+  return axiosRequest
+    .post(`${BASE_URL}/auth/forgot-password`, formInput)
+    .then((res) => res)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+const handleResetPassword = ({token, newPassword}) => {
+  return axiosRequest
+    .post(`${BASE_URL}/auth/reset-password/${token}`, {newPassword})
+    .then((res) => res)
+    .catch((error) => {
+      throw error;
+    });
+};
+
 export default {
   handleLogin,
   getAcessToken,
   handleRefreshToken,
   handleRegister,
   handleLogout,
+  handleForgotPassword,
+  handleResetPassword,
 };
