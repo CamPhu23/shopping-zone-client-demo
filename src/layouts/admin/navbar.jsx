@@ -1,17 +1,16 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { ADMIN_AVT } from "../../constants/avatar-url";
 
 export const Navbar = ({ onSignOut, userInfo }) => {
   const { pathname } = useLocation();
-  let adminAvt =
-    "https://tailwindui.com/img/logos/workflow-mark.svg?color=indigo&shade=600";
 
   return (
     <div className="flex h-full">
       <div className="p-3 space-y-2 w-60 bg-gray-800 text-slate-100">
         <div className="flex items-center p-2 space-x-4">
           <img
-            src={adminAvt}
+            src={ADMIN_AVT}
             alt=""
             className="w-12 h-12 rounded-full dark:bg-coolGray-500"
           />
@@ -22,9 +21,8 @@ export const Navbar = ({ onSignOut, userInfo }) => {
         <div className="divide-y divide-coolGray-700">
           <ul className="pt-2 pb-4 space-y-1 text-sm">
             <li
-              className={`${
-                pathname === "/admin/dashboard" ? "bg-gray-900" : ""
-              } hover:bg-gray-700`}
+              className={`${pathname === "/admin/dashboard" ? "bg-gray-900" : ""
+                } hover:bg-gray-700`}
             >
               <Link
                 to={"/admin/dashboard"}
@@ -41,9 +39,8 @@ export const Navbar = ({ onSignOut, userInfo }) => {
               </Link>
             </li>
             <li
-              className={`${
-                pathname.includes("/admin/receipts") ? "bg-gray-900" : ""
-              } hover:bg-gray-700`}
+              className={`${pathname.includes("/admin/receipts") ? "bg-gray-900" : ""
+                } hover:bg-gray-700`}
             >
               <Link
                 to={"/admin/receipts"}
@@ -61,9 +58,8 @@ export const Navbar = ({ onSignOut, userInfo }) => {
               </Link>
             </li>
             <li
-              className={`${
-                pathname.includes("/admin/products") ? "bg-gray-900" : ""
-              } hover:bg-gray-700`}
+              className={`${pathname.includes("/admin/products") ? "bg-gray-900" : ""
+                } hover:bg-gray-700`}
             >
               <Link
                 to={"/admin/products"}
@@ -81,9 +77,8 @@ export const Navbar = ({ onSignOut, userInfo }) => {
               </Link>
             </li>
             <li
-              className={`${
-                pathname.includes("/admin/clients") ? "bg-gray-900" : ""
-              } hover:bg-gray-700`}
+              className={`${pathname.includes("/admin/clients") ? "bg-gray-900" : ""
+                } hover:bg-gray-700`}
             >
               <Link
                 to={"/admin/clients"}
@@ -124,6 +119,27 @@ export const Navbar = ({ onSignOut, userInfo }) => {
                   />
                 </svg>
                 <span>Trả lời bình luận</span>
+                </Link>
+            </li>
+            <li
+              className={`${pathname.includes("/admin/warehouse") ? "bg-gray-900" : ""
+                } hover:bg-gray-700`}
+            >
+              <Link
+                to={"/admin/warehouse"}
+                className="flex items-center p-2 space-x-3 rounded-md"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}>
+                  <path strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                </svg>
+                <span>Quản lý kho hàng</span>
               </Link>
             </li>
           </ul>
