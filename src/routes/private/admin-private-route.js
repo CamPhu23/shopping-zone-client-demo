@@ -8,6 +8,7 @@ import {
   AdminAccountPage,
   AdminCreateAccountPage,
   AdminEditAccountPage,
+  AdminCommentPage,
   AdminWarehousePage,
 } from '../../pages';
 import { NAVIGATE_URL } from '../../constants/navigate-url'
@@ -109,6 +110,16 @@ const PRIVATE_CLIENT_UPDATE_ROUTE = {
   ...PRIVATE_ADMIN_ROUTE
 };
 
+const PRIVATE_COMMENT_LIST_ROUTE = {
+  path: NAVIGATE_URL.COMMENT_LIST,
+  component: <AdminCommentPage />,
+  breadcrumbs: [
+    { name: "Dashboard", path: NAVIGATE_URL.DASHBORAD },
+    { name: "Quản lý bình luận" },
+     ],
+  ...PRIVATE_ADMIN_ROUTE,
+};
+
 const PRIVATE_WAREHOUSE_ROUTE = {
   path: NAVIGATE_URL.WAREHOUSE,
   component: <AdminWarehousePage />,
@@ -128,5 +139,6 @@ export default [
   PRIVATE_CLIENT_LIST_ROUTE,
   PRIVATE_CLIENT_CREATE_ROUTE,
   PRIVATE_CLIENT_UPDATE_ROUTE,
+  PRIVATE_COMMENT_LIST_ROUTE,
   PRIVATE_WAREHOUSE_ROUTE,
 ];
