@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import _ from "lodash";
 import { RegisterForm } from "../../../components/form/register-form";
 import { registerRequest } from "../../../services/actions/auth-action";
+import { CLIENT_PERMISSION } from "../../../constants/authentication";
 
 export default function RegisterPage() {
   const user = useSelector((state) => state.auth.user);
@@ -12,7 +13,7 @@ export default function RegisterPage() {
     dispatch(registerRequest(formData));
   };
 
-  return !_.isEmpty(user) ? (
+  return (!_.isEmpty(user) && user.permission === CLIENT_PERMISSION) ? (
     <Navigate to="/" replace />
   ) : (
     <>

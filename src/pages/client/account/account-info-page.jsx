@@ -61,7 +61,7 @@ const AccountInfoPage = () => {
     if (!showOrderList) {
       setLoading(true);
 
-      accountService.getUserOrderHistory(userInfo.id)
+      accountService.getUserOrderHistory(userInfo._id)
         .then((data) => {
           setLoading(false);
           setOrderList(data.receipts);
@@ -113,7 +113,7 @@ const AccountInfoPage = () => {
   }
 
   const handleChangePage = (text, nextPage) => {
-    accountService.getUserOrderHistory(userInfo.id, nextPage)
+    accountService.getUserOrderHistory(userInfo._id, nextPage)
       .then((data) => {
         setLoading(false);
         setOrderList(data.receipts);

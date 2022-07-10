@@ -1,5 +1,10 @@
 // PRODUCT LIST
-import { AnnotationIcon, GlobeAltIcon, LightningBoltIcon, ScaleIcon } from '@heroicons/react/outline'
+import { AnnotationIcon, CashIcon, CursorClickIcon, ReceiptRefundIcon } from '@heroicons/react/outline'
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ProducList } from '../../../components/product/product-list';
+import { productService } from '../../../services/modules';
 
 const products = [
   {
@@ -35,6 +40,7 @@ const products = [
 const callouts = [
   {
     name: 'Áo thun nam',
+    value: "ao-thun-nam",
     //description: 'Work from home accessories',
     imageSrc: 'https://bizweb.sapocdn.net/100/438/408/products/apm3791-nav-2-aebfb314-b3e8-4920-ac57-b7e47ffac268.jpg?v=1652072325207',
     imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
@@ -42,6 +48,7 @@ const callouts = [
   },
   {
     name: 'Áo thun nữ',
+    value: "ao-thun-nu",
     //description: 'Journals and note-taking',
     imageSrc: 'https://bizweb.sapocdn.net/100/438/408/products/tsn5008-tra-3.jpg?v=1655948346477',
     imageAlt: 'Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.',
@@ -49,6 +56,7 @@ const callouts = [
   },
   {
     name: 'Áo khoác nam',
+    value: "ao-khoac-nam",
     //description: 'Daily commute essentials',
     imageSrc: 'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/akm4029-xah-qjm3063-den-4.jpg?v=1637735749000',
     imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
@@ -56,6 +64,7 @@ const callouts = [
   },
   {
     name: 'Áo khoác nữ',
+    value: "ao-khoac-nu",
     //description: 'Daily commute essentials',
     imageSrc: 'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/akn4024-hog-1.jpg?v=1650612473000',
     imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
@@ -63,6 +72,7 @@ const callouts = [
   },
   {
     name: 'Sơ mi nam',
+    value: "ao-so-mi-nam",
     //description: 'Daily commute essentials',
     imageSrc: 'https://bizweb.sapocdn.net/100/438/408/products/smm4073-tra-3.jpg?v=1641780163303',
     imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
@@ -70,6 +80,7 @@ const callouts = [
   },
   {
     name: 'Sơ mi nữ',
+    value: "ao-so-mi-nu",
     //description: 'Daily commute essentials',
     imageSrc: 'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/scn5130-den-4.jpg?v=1649998619000',
     imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
@@ -82,31 +93,56 @@ const features = [
   {
     name: 'Giá cả cạnh tranh',
     description:
-      'Chúng tôi mang đến cho khách hàng những sản phẩm tốt với giá cả phải chăng.',
-    icon: GlobeAltIcon,
+      'Mang đến cho khách hàng những sản phẩm có giá tốt nhất.',
+    icon: CashIcon,
   },
   {
     name: 'Miễn phí đổi trả sản phẩm',
     description:
       'Miễn phí đổi trả sản phẩm trong 60 ngày nếu có vấn đề với sản phẩm.',
-    icon: ScaleIcon,
+    icon: ReceiptRefundIcon,
   },
   {
-    name: 'Miễn phí vận chuyển cho đơn hàng từ 500.000 đồng',
+    name: 'Mua hàng dễ dành',
     description:
-      'Với đơn hàng từ 500.000 đồng trở lên, khách hàng sẽ được miễn chi phí vận chuyển.',
-    icon: LightningBoltIcon,
+      'Chỉ với những cú click có thể dễ dàng chọn những sản phẩm yêu thích.',
+    icon: CursorClickIcon,
   },
   {
     name: 'Tư vấn tận tình',
     description:
-      'Đội ngũ nhân viên sẽ hỗ trợ tư vấn cho khách hàng chọn được những sản phẩm thật sự ưng ý.',
+      'Đội ngũ nhân viên nhiệt tình hỗ trợ tư vấn cho khách hàng.',
     icon: AnnotationIcon,
   },
 ]
 
 
 const HomePage = () => {
+  const [newProduct, setNewProduct] = useState();
+  const [bestSaleProduct, setBestSaleProduct] = useState();
+
+  useEffect(() => {
+    const newProductAPI = "feature=san-pham-moi&s=4";
+    const bestSaleProducAPI = "feature=san-pham-ban-chay&s=4";
+
+    productService
+      .getAllProduct(newProductAPI)
+      .then((data) => {
+        setNewProduct(data.products);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+
+    productService
+      .getAllProduct(bestSaleProducAPI)
+      .then((data) => {
+        setBestSaleProduct(data.products);
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
+  }, [])
 
   return (
     <>
@@ -115,10 +151,10 @@ const HomePage = () => {
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sm:static">
             <div className="sm:max-w-lg">
               <h1 className="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">
-                Thời trang cho mọi người 
+                Thời trang cho mọi người
               </h1>
               <p className="mt-4 text-xl text-gray-500">
-                Trang phục không những phải đẹp, nó còn phải tạo nên phong cách của riêng bạn. Hãy cùng Shopping Zone 
+                Trang phục không những phải đẹp, nó còn phải tạo nên phong cách của riêng bạn. Hãy cùng Shopping Zone
                 chọn cho mình những bộ quần áo thật ưng ý nào.
               </p>
             </div>
@@ -190,20 +226,20 @@ const HomePage = () => {
                   </div>
                 </div>
 
-                <a
-                  href="#"
-                  className="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700"
+                <Link
+                  to="/product"
+                  className="inline-block text-center bg-teal-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-teal-700"
                 >
                   Mua sắm ngay
-                </a>
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-    {/* Category Previews */}
-    <div className="bg-white">
+      {/* Category Previews */}
+      <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto pt-16 pb-0 sm:py-18 lg:pt-20 lg:pb-0 lg:max-w-none text-center">
             <h2 className="text-4xl font-extrabold text-gray-900">Dòng sản phẩm</h2>
@@ -219,10 +255,13 @@ const HomePage = () => {
                     />
                   </div>
                   <h3 className="mt-6 font-semibold text-lg text-gray-900">
-                    <a href={callout.href}>
+                    <Link to={"/product"}
+                      state={{
+                        filter: { name: callout.name, value: callout.value, current: true },
+                      }}>
                       <span className="absolute inset-0" />
                       {callout.name}
-                    </a>
+                    </Link>
                   </h3>
                   <p className="text-base font-semibold text-gray-900">{callout.description}</p>
                 </div>
@@ -234,75 +273,24 @@ const HomePage = () => {
 
       {/* PRODUCT LIST */}
       <div className="bg-white">
-        <div className="max-w-2xl mx-auto pt-16 pb-0 px-4 sm:py-18 lg:pt-20 lg:pb-0 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="max-w-2xl mx-auto pt-10 pb-0 px-4 sm:py-18 lg:pt-10 lg:pb-0 sm:px-6 lg:max-w-7xl lg:px-8">
           <h2 className="text-4xl font-extrabold tracking-tight text-gray-900 text-center">Sản phẩm mới nhất</h2>
-
-          <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product) => (
-              <div key={product.id} className="group relative">
-                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                  <img
-                    src={product.imageSrc}
-                    alt={product.imageAlt}
-                    className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          {newProduct && <ProducList products={newProduct} columns={4}></ProducList>}
         </div>
       </div>
 
       <div className="bg-white">
-        <div className="max-w-2xl mx-auto pt-16 pb-0 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:pt-20 lg:pb-0">
+        <div className="max-w-2xl mx-auto pt-10 pb-0 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 lg:pt-10 lg:pb-0">
           <h2 className="text-4xl font-extrabold tracking-tight text-gray-900 text-center">Sản phẩm bán chạy</h2>
-
-          <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product) => (
-              <div key={product.id} className="group relative">
-                <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                  <img
-                    src={product.imageSrc}
-                    alt={product.imageAlt}
-                    className="w-full h-full object-center object-cover lg:w-full lg:h-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900">{product.price}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          {bestSaleProduct && <ProducList products={bestSaleProduct} columns={4}></ProducList>}
         </div>
       </div>
 
-      
       {/* Feature Sections */}
-      <div className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pt-20 lg:pb-0">
+      <div className="pb-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:pt-10 lg:pb-0">
           <div className="lg:text-center">
-            {/* <h2 className="text-base text-indigo-600 font-semibold tracking-wide uppercase">Transactions</h2> */}
+            {/* <h2 className="text-base text-teal-600 font-semibold tracking-wide uppercase">Transactions</h2> */}
             <p className="mt-2 text-4xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
               Điều khác biệt mang tên Shopping Zone
             </p>
@@ -316,7 +304,7 @@ const HomePage = () => {
               {features.map((feature) => (
                 <div key={feature.name} className="relative">
                   <dt>
-                    <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-indigo-500 text-white">
+                    <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-teal-600 text-white">
                       <feature.icon className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <p className="ml-16 text-lg leading-6 font-medium text-gray-900">{feature.name}</p>
@@ -330,32 +318,24 @@ const HomePage = () => {
       </div>
 
       {/* CTA Sections */}
-      {/* <div className="bg-gray-50">
+      <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
           <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            <span className="block">Ready to dive in?</span>
-            <span className="block text-indigo-600">Start your free trial today.</span>
+            <span className="block">Đã sẵn sàng mua sắm?</span>
+            <span className="block text-teal-600">Hãy tạo ngay tài khoản để mua sắm.</span>
           </h2>
           <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
             <div className="inline-flex rounded-md shadow">
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+              <Link
+                to="/sign-up"
+                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700"
               >
-                Get started
-              </a>
-            </div>
-            <div className="ml-3 inline-flex rounded-md shadow">
-              <a
-                href="#"
-                className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-600 bg-white hover:bg-indigo-50"
-              >
-                Learn more
-              </a>
+                Tạo tài khoản
+              </Link>
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };

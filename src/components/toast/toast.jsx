@@ -60,7 +60,7 @@ const Toast = ({
           ${
             mode === "light"
               ? "bg-gray-100 text-gray-800"
-              : "text-gray-300 bg-gray-700"
+              : "text-gray-300 bg-gray-700 border-gray-700"
           }`}
         role="alert"
       >

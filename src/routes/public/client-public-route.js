@@ -1,4 +1,13 @@
-import { AdminLogInPage, HomePage, LoginPage, ProductPage, RegisterPage, DetailProductPage, ForgotPasswordPage, NotFoundPage, UnAuthorizationPage, AboutPage} from '../../pages';
+import {
+  HomePage,
+  LoginPage,
+  ProductPage,
+  RegisterPage,
+  DetailProductPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
+  AboutPage,
+} from '../../pages';
 import { CLIENT_PERMISSION } from '../../constants/authentication';
 import ContactPage from '../../pages/client/about-contact/contact-page';
 
@@ -56,6 +65,20 @@ const CONTACT_PAGE_ROUTE = {
   ...PUBLIC_CLIENT_ROUTE,
 }
 
+const FORGOT_PASSWORD_ROUTE = {
+  path: '/forgot-password',
+  component: <ForgotPasswordPage />,
+  exact: true,
+  ...PUBLIC_CLIENT_ROUTE,
+}
+
+const RESET_PASSWORD_ROUTE = {
+  path: '/reset-password/:token',
+  component: <ResetPasswordPage />,
+  exact: true,
+  ...PUBLIC_CLIENT_ROUTE,
+}
+
 export default [
   HOME_ROUTE,
   CLIENT_LOGIN_ROUTE,
@@ -64,4 +87,6 @@ export default [
   DETAIL_PRODUCT_ROUTE,
   ABOUT_PAGE_ROUTE,
   CONTACT_PAGE_ROUTE,
+  FORGOT_PASSWORD_ROUTE,
+  RESET_PASSWORD_ROUTE,
 ];

@@ -16,10 +16,13 @@ const AdminReceiptPage = lazy(() => import('./admin/receipt/receipt-page'));
 const AdminAccountPage = lazy(() => import('./admin/account/account-page'));
 const AdminCreateAccountPage = lazy(() => import('./admin/account/create-account-page'));
 const AdminEditAccountPage = lazy(() => import('./admin/account/edit-account-page'));
+const AdminCommentPage = lazy(() => import('./admin/comment/comment-page'));
 const AdminWarehousePage = lazy(() => import('./admin/warehouse/warehouse-page'));
 const NotFoundPage = lazy(() => import('./errors/not-found-page'));
 const AboutPage = lazy(() => import('./client/about-contact/about-page'));
 const ContactPage = lazy(() => import('./client/about-contact/contact-page'));
+const ForgotPasswordPage = lazy(() => import('./client/login-register/forgot-password-page'));
+const ResetPasswordPage = lazy(() => import('./client/login-register/reset-password-page'));
 
 export {
   HomePage,
@@ -40,7 +43,10 @@ export {
   AdminAccountPage,
   AdminCreateAccountPage,
   AdminEditAccountPage,
+  AdminCommentPage,
   AdminWarehousePage,
   AboutPage,
   ContactPage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
 };
