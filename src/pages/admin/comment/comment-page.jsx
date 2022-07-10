@@ -9,6 +9,7 @@ import { ICON } from "../../../assets/svg-icon";
 import commentService from "../../../services/modules/admin/admin-comment-service";
 import { useForm } from "react-hook-form";
 import _ from "lodash";
+import { ADMIN_AVT, CLIENT_AVT } from "../../../constants/avatar-url";
 
 const TOGGLE_TYPE = {
   Comment: "comment",
@@ -418,10 +419,10 @@ const CommentPage = () => {
       <div className="mb-6">
         <div className="wrapper bg-white flex flex-row p-3 rounded-xl shadow-md my-2">
           <div className="w-1/12 flex-grow-0">
-            <div className="rounded-full w-full h-auto border-black border-2 p-1 overflow-hidden">
+            <div className="rounded-full w-full h-auto p-1 overflow-hidden">
               <img
                 className="pt-0 rounded-full w-full"
-                src="https://reqres.in/img/faces/10-image.jpg"
+                src={CLIENT_AVT}
                 alt=""
               />
             </div>
@@ -465,10 +466,10 @@ const CommentPage = () => {
     return (
       <div className="sm:ml-8 lg:ml-12 wrapper bg-white flex flex-row p-3 rounded-xl shadow-md my-2">
         <div className="w-1/12 flex-grow-0">
-          <div className="rounded-full w-full h-auto border-black border-2 p-1 overflow-hidden">
+          <div className="rounded-full w-full h-auto p-1 overflow-hidden">
             <img
               className="pt-0 rounded-full w-full"
-              src="https://reqres.in/img/faces/10-image.jpg"
+              src={ADMIN_AVT}
               alt=""
             />
           </div>

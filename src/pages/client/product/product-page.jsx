@@ -3,6 +3,7 @@ import { XIcon } from '@heroicons/react/outline'
 import { ChevronRightIcon, FilterIcon } from '@heroicons/react/solid'
 import _ from 'lodash'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Filter } from '../../../components/filter/filter'
 import { Paging } from '../../../components/paging/paging'
 import { ProducList } from '../../../components/product/product-list'
@@ -56,8 +57,8 @@ const filters = [
     id: 'feature',
     name: 'Dịch vụ & Khuyến mãi',
     options: [
-      { value: 'san-pham-moi', label: 'Sản phẩm mới', checked: false },
-      { value: 'san-pham-khuyen-mai', label: 'Sản phẩm khuyến mãi', checked: false },
+      { value: 'san-pham-moi', label: 'Sản phẩm mới', checked: true },
+      { value: 'san-pham-khuyen-mai', label: 'Sản phẩm khuyến mãi', checked: true },
       { value: 'san-pham-ban-chay', label: 'Sản phẩm bán chạy', checked: false },
     ],
   },
@@ -81,9 +82,17 @@ let parameters = [
   { name: 'size', value: [] },
   { name: 'feature', value: [] },
   { name: 'search', value: "" },
+  { name: 'sort', value: "" },
 ];
 
 export default function ProductPage() {
+  const { state } = useLocation();
+  // @ts-ignore
+  let filter = null;
+  if (state) {
+    filter = state.filter;
+  }
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const page = useRef(null);
 
@@ -130,7 +139,7 @@ export default function ProductPage() {
   const handleAddParameter = (name, value) => {
     var parameter = parameters.find(x => x.name == name);
 
-    if (name !== 'p' && name !== 's' && name !== 'category' && name !== 'search') {
+    if (name !== 'p' && name !== 's' && name !== 'category' && name !== 'search' && name !== 'sort') {
       parameters.find(x => x.name == 'p').value = '1';
       if (!_.isEmpty(parameter) && !parameter.value.includes(value)) parameter.value.push(value);
     } else {
@@ -158,7 +167,18 @@ export default function ProductPage() {
 
   // call the first time render to fetch product from api
   useEffect(() => {
-    handleProduct();
+    if (filter) {
+      // set new filter
+      var sub = [...subCategories];
+      var index = sub.findIndex(x => x.value == filter.value);
+      sub[index] = filter;
+
+      setSubCategories(sub);
+      handleAddParameter("category", filter.value)
+    }
+    else {
+      handleProduct();
+    }
   }, [])
 
   // Sort functions
@@ -194,16 +214,16 @@ export default function ProductPage() {
 
     switch (option) {
       case 'name-asc':
-        productsList.sort(sortFunction('name'));
+        handleAddParameter("sort", "name_asc");
         break
       case 'name-desc':
-        productsList.sort(sortFunction('-name'));
+        handleAddParameter("sort", "name_desc");
         break
       case 'price-asc':
-        productsList.sort(sortFunction('price'));
+        handleAddParameter("sort", "price_asc");
         break
       case 'price-desc':
-        productsList.sort(sortFunction('-price'));
+        handleAddParameter("sort", "price_desc");
         break
     }
 
