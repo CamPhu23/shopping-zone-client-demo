@@ -446,7 +446,7 @@ export default function DetailProductPage() {
   return (
     <section className="text-gray-600 body-font overflow-hidden ">
       <div className="container px-6 mt-5 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex flex-wrap">
+        <div className="lg:w-4/5 mx-auto flex">
           {renderProductImage(product.images)}
           {renderProductInfo(product)}
         </div>

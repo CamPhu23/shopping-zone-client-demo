@@ -17,6 +17,9 @@ const AdminAccountPage = lazy(() => import('./admin/account/account-page'));
 const AdminCreateAccountPage = lazy(() => import('./admin/account/create-account-page'));
 const AdminEditAccountPage = lazy(() => import('./admin/account/edit-account-page'));
 const AdminWarehousePage = lazy(() => import('./admin/warehouse/warehouse-page'));
+const NotFoundPage = lazy(() => import('./errors/not-found-page'));
+const AboutPage = lazy(() => import('./client/about-contact/about-page'));
+const ContactPage = lazy(() => import('./client/about-contact/contact-page'));
 
 export {
   HomePage,
@@ -25,6 +28,7 @@ export {
   PaymentPage,
   ProductPage,
   DetailProductPage,
+  NotFoundPage,
   AccountInfoPage,
   UnAuthorizationPage,
   AdminLogInPage,
@@ -37,4 +41,6 @@ export {
   AdminCreateAccountPage,
   AdminEditAccountPage,
   AdminWarehousePage,
+  AboutPage,
+  ContactPage,
 };

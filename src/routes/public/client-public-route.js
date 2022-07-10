@@ -1,5 +1,6 @@
-import { AdminLogInPage, HomePage, LoginPage, ProductPage, RegisterPage, DetailProductPage } from '../../pages';
+import { AdminLogInPage, HomePage, LoginPage, ProductPage, RegisterPage, DetailProductPage, ForgotPasswordPage, NotFoundPage, UnAuthorizationPage, AboutPage} from '../../pages';
 import { CLIENT_PERMISSION } from '../../constants/authentication';
+import ContactPage from '../../pages/client/about-contact/contact-page';
 
 const PUBLIC_CLIENT_ROUTE = {
   private: false,
@@ -41,10 +42,26 @@ const DETAIL_PRODUCT_ROUTE = {
   ...PUBLIC_CLIENT_ROUTE,
 }
 
+const ABOUT_PAGE_ROUTE = {
+  path:'/about',
+  component: <AboutPage />,
+  exact: true,
+  ...PUBLIC_CLIENT_ROUTE,
+}
+
+const CONTACT_PAGE_ROUTE = {
+  path:'/contact',
+  component: <ContactPage />,
+  exact: true,
+  ...PUBLIC_CLIENT_ROUTE,
+}
+
 export default [
   HOME_ROUTE,
   CLIENT_LOGIN_ROUTE,
   CLIENT_REGISTER_ROUTE,
   PRODUCT_ROUTE,
   DETAIL_PRODUCT_ROUTE,
+  ABOUT_PAGE_ROUTE,
+  CONTACT_PAGE_ROUTE,
 ];

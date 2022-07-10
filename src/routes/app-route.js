@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { AdminPrivateRoutes, ClientPrivateRoutes } from "./private";
 import { ADMIN_PERMISSION, CLIENT_PERMISSION } from "../constants/authentication";
 import { AdminPublicRoutes, ClientPublicRoutes } from "./public";
+import { NotFoundPage } from "../pages";
 
 const AppRoute = ({ routes }) => {
   return (
@@ -58,6 +59,7 @@ const AppRoute = ({ routes }) => {
           }
         }
       })}
+      <Route path='*' element={<NotFoundPage/>}/>
     </Routes>
   );
 };

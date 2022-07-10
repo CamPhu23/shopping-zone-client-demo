@@ -33,7 +33,7 @@ export const Breadscrum = ({ breadcrumbs }) => {
 
   return (
     <nav
-      className="flex py-3 px-5 text-gray-700 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+      className="flex py-3 px-5 text-gray-700 rounded-lg border bg-gray-800 border-gray-700"
       aria-label="Breadcrumb"
     >
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
@@ -46,14 +46,14 @@ export const Breadscrum = ({ breadcrumbs }) => {
               {isCurrent ? (
                 <div className="flex items-center">
                   {icon}
-                  <span className="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500">
+                  <span className="ml-1 text-sm font-medium md:ml-2 text-gray-500">
                     {name}
                   </span>
                 </div>
               ) : (
                 <Link
                   to={path}
-                  className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                  className="inline-flex items-center text-sm font-medium text-gray-400 hover:text-white"
                 >
                   {icon}
                   {name}

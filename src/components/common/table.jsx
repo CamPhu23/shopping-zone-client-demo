@@ -12,9 +12,9 @@ export const Table = ({ columns, data, onRowClick = null, theme = "dark" }) => {
 
   return (
     <table className={`w-full text-sm text-left mb-10 border border-solid border-slate-700
-    ${theme === "dark" ? "text-gray-500 dark:text-gray-400" : ""}`}>
-      <thead className={`text-xs uppercase text-gray-700 bg-gray-50 
-      ${theme === "dark" ? "dark:bg-gray-700 dark:text-gray-400" : "border-2 border-slate-200"}`}>
+    ${theme === "dark" ? "text-gray-400" : ""}`}>
+      <thead className={`text-xs uppercase bg-gray-50 
+      ${theme === "dark" ? "bg-gray-700 text-gray-400" : "border-2 border-slate-200"}`}>
         <tr>
           {columns.map((column, index) => {
             return (
@@ -33,7 +33,7 @@ export const Table = ({ columns, data, onRowClick = null, theme = "dark" }) => {
               key={index}
               onClick={() => onRowClick && onRowClick(item._id)}
               className={`bg-white border-b hover:bg-gray-50 
-              ${theme === "dark" ? "dark:hover:bg-gray-600 dark:bg-gray-800 dark:border-gray-700" : "border-2 border-slate-200"}`}
+              ${theme === "dark" ? "hover:bg-gray-600 bg-gray-800 border-gray-700" : "border-2 border-slate-200"}`}
             >
               {values.map((ele, index) => {
                 return (
