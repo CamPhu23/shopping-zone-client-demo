@@ -60,11 +60,11 @@ const WarehousePage = () => {
   useEffect(() => {
     adminProductService
       .getAllProducts()
-      .then(products => {
-        setProducts(products)
+      .then(response => {
+        setProducts(response.products)
 
-        if (products.length != 0) {
-          setSelectedProduct(products[0].name);
+        if (response.products.length != 0) {
+          setSelectedProduct(response.products[0].name);
         }
       })
   }, [])

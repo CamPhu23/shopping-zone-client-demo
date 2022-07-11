@@ -10,11 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
 import { numberToStringConverter } from "../../../converter/data-type.js"
 import _ from "lodash";
+import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
+import { Paging } from "../../../components/paging/paging";
 
 const AccountPage = () => {
   const [data, setData] = useState({ accounts: [], totalPage: 0, currentPage: 0 });
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
+  const [pageInfo, setPageInfo] = useState({});
 
   const navigate = useNavigate();
 
@@ -23,7 +26,7 @@ const AccountPage = () => {
       .getAllClients()
       .then((response) => {
         if (!_.isEmpty(response)) {
-          response = response.map((ele) => {
+          response.clients = response.clients.map((ele) => {
             if (!ele.fullname) {
               ele.fullname = "";
             }
@@ -34,11 +37,11 @@ const AccountPage = () => {
               ele.address = "";
             }
 
-            return ele
+            return ele;
           });
         }
         
-        setData({ ...data, accounts: response });
+        setData({ ...data, accounts: response.clients });
       });
   }, []);
 
@@ -60,13 +63,31 @@ const AccountPage = () => {
       });
   };
 
-  const onPageNumberClick = (pageNumber) => {
-    // productService
-    //   .getProductList(pageNumber, NUMBER_RECORD_PER_PAGE)
-    //   .then((response) => {
-    //     setData(response);
-    //   });
-  };
+  const handleChangePage = (text, nextPage) => {
+    adminAccountService
+      .getAllClients(nextPage)
+      .then((response) => {
+        console.log(response);
+        if (!_.isEmpty(response)) {
+          response.clients = response.clients.map((ele) => {
+            if (!ele.fullname) {
+              ele.fullname = "";
+            }
+            if (!ele.phone) {
+              ele.phone = "";
+            }
+            if (!ele.address) {
+              ele.address = "";
+            }
+
+            return ele;
+          });
+        }
+
+        setData({ ...data, accounts: response.clients });
+        setPageInfo(response.info)
+      });
+  }
 
   const onEditClick = (item) => {
     navigate(NAVIGATE_URL.CLIENT_UPDATE, { state: { data: item } });
@@ -77,7 +98,7 @@ const AccountPage = () => {
       .deleteClient(id)
       .then((result) => {
         if (result) {
-          const newProducts = data.accounts.filter((product) => product._id !== id);
+          const newProducts = data.accounts.filter((account) => account._id !== id);
           setData({ ...data, accounts: newProducts });
           setOpenDialog(false);
         }
@@ -107,15 +128,10 @@ const AccountPage = () => {
           />
         </div>
 
-        {/* {data.totalPage > 1 && (
-          <div className="absolute bottom-0 right-0 mb-4">
-            <Pagination
-              total={data.totalPage}
-              current={data.currentPage}
-              onClick={onPageNumberClick}
-            />
-          </div>
-        )} */}
+        <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+          handleChangePage={handleChangePage} descriptionText="Tài khoản"
+          theme={"dark"}/>
+
       </div>
       <DetailDialog
         isOpen={openDialog}

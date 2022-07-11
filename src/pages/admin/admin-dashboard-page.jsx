@@ -1,34 +1,56 @@
 import { useEffect, useState } from 'react';
 import { adminStatisticsService } from '../../services/modules';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from "recharts";
+import _ from 'lodash';
 
 export default function DashboardPage() {
   const [statisticData, setStatisticData] = useState({
     totalAccounts: 0,
     totalProducts: 0,
     totalReceipts: 0,
+    overview: []
   });
 
   useEffect(() => {
     adminStatisticsService.getOverviewStatistics()
       .then(data => {
+        const newOverview = data?.overview.map(m => (
+          {
+            month: m.month,
+            client: 'client' in m ? m.client : 0, 
+            product: 'product' in m ? m.product : 0, 
+            receipt: 'receipt' in m ? m.receipt : 0, 
+          }
+        ))
+        data.overview = newOverview;
+
         setStatisticData({
           totalAccounts: data.totalAccounts || 0,
           totalProducts: data.totalProducts || 0,
           totalReceipts: data.totalReceipts || 0,
+          overview: data.overview || []
         });
       });
   }, [])
 
   return (
-    <div className="flex h-full overflow-hidden">
-      <div className="w-full relative shadow-md sm:rounded-lg">
+    <div className="h-full grid lg:grid-cols-2 sm:grid-cols-1">
+      <div className="w-full relative">
         <div className="p-6 flex justify-between">
           <div className="text-xl text-slate-100 font-bold text-">
-            Dashboard
+            Thống kê
           </div>
         </div>
-        <div className="flex flex-wrap -mx-6 px-6">
-          <div className="w-full px-5 sm:w-1/2 xl:w-1/3">
+        <div className="-mx-6 px-6">
+          <div className="w-full px-5 sm:w-2/3">
             <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
               <div className="p-3 rounded-full bg-indigo-600 bg-opacity-75">
                 <svg
@@ -71,7 +93,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="w-full mt-6 px-5 sm:w-1/2 xl:w-1/3 sm:mt-0">
+          <div className="w-full mt-6 px-5 sm:w-2/3">
             <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
               <div className="p-3 rounded-full bg-orange-600 bg-opacity-75">
                 <svg
@@ -104,7 +126,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="w-full mt-6 px-5 sm:w-1/2 xl:w-1/3 xl:mt-0">
+          <div className="w-full mt-6 px-5 sm:w-2/3">
             <div className="flex items-center px-5 py-6 shadow-sm rounded-md bg-white">
               <div className="p-3 rounded-full bg-pink-600 bg-opacity-75">
                 <svg
@@ -137,6 +159,41 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div>
+        <div className="p-6 flex justify-between">
+          <div className="text-xl text-slate-100 font-bold text-">
+            Tổng quan
+          </div>
+        </div>
+        {console.log(statisticData.overview)}
+        <LineChart
+          width={500}
+          height={300}
+          data={statisticData.overview}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="month" name='Tháng' />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="receipt"
+            stroke="#ef8349"
+            activeDot={{ r: 8 }}
+            name='Tổng số đơn hàng'
+          />
+          <Line type="monotone" dataKey="client" stroke="#7b74e2" name='Tổng số tài khoản'/>
+          <Line type="monotone" dataKey="product" stroke="#ee82ff" name='Tổng số sản phẩm'/>
+        </LineChart>
       </div>
     </div>
   );
