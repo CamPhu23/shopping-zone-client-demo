@@ -18,6 +18,8 @@ const AdminCreateAccountPage = lazy(() => import('./admin/account/create-account
 const AdminEditAccountPage = lazy(() => import('./admin/account/edit-account-page'));
 const AdminCommentPage = lazy(() => import('./admin/comment/comment-page'));
 const AdminWarehousePage = lazy(() => import('./admin/warehouse/warehouse-page'));
+const ForgotPasswordPage = lazy(() => import('./client/login-register/forgot-password-page'));
+const ResetPasswordPage = lazy(() => import('./client/login-register/reset-password-page'));
 
 export {
   HomePage,
@@ -39,4 +41,6 @@ export {
   AdminEditAccountPage,
   AdminCommentPage,
   AdminWarehousePage,
+  ForgotPasswordPage,
+  ResetPasswordPage,
 };

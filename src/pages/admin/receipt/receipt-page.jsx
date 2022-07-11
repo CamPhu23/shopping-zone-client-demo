@@ -8,6 +8,8 @@ import { adminReceiptSevice } from "../../../services/modules";
 import { DetailReceipt } from "./detail-receipt";
 import Toast from "../../../components/toast/toast";
 import { ICON } from "../../../assets/svg-icon";
+import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
+import { Paging } from "../../../components/paging/paging";
 
 const ReceiptPage = () => {
   const [toastShow, setToastShow] = useState(false);
@@ -17,12 +19,13 @@ const ReceiptPage = () => {
   const [data, setData] = useState({ receipts: [], totalPage: 0, currentPage: 0 });
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
+  const [pageInfo, setPageInfo] = useState({});
 
   const updateUI = () => {
     adminReceiptSevice
       .getAllReceipts()
       .then((response) => {
-        setData({ ...data, receipts: response });
+        setData({ ...data, receipts: response.receipts });
       });
   }
 
@@ -44,13 +47,14 @@ const ReceiptPage = () => {
       });
   };
 
-  const onPageNumberClick = (pageNumber) => {
-    // productService
-    //   .getProductList(pageNumber, NUMBER_RECORD_PER_PAGE)
-    //   .then((response) => {
-    //     setData(response);
-    //   });
-  };
+  const handleChangePage = (text, nextPage) => {
+    adminReceiptSevice
+      .getAllReceipts(nextPage)
+      .then((response) => {
+        setData({ ...data, receipts: response.receipts });
+        setPageInfo(response.info)
+      });
+  }
 
   const onEditClick = (item) => {
     adminReceiptSevice.
@@ -89,15 +93,10 @@ const ReceiptPage = () => {
           />
         </div>
 
-        {/* {data.totalPage > 1 && (
-          <div className="absolute bottom-0 right-0 mb-4">
-            <Pagination
-              total={data.totalPage}
-              current={data.currentPage}
-              onClick={onPageNumberClick}
-            />
-          </div>
-        )} */}
+        <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+          handleChangePage={handleChangePage} descriptionText="Hóa đơn"
+          theme={"dark"}/>
+
       </div>
       <DetailDialog
         isOpen={openDialog}

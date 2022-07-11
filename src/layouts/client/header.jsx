@@ -15,7 +15,7 @@ export const Header = ({ handleLogout, user }) => {
   const { pathname } = useLocation();
 
   const isCartCickable = !(pathname.includes('/payment') || pathname.includes('/sign-in')
-    || pathname.includes('/sign-up'));
+    || pathname.includes('/sign-up') || pathname.includes('/forgot-password') || pathname.includes('/reset-password'));
   const [open, setOpen] = useState(false);
 
   return (
@@ -57,7 +57,15 @@ export const Header = ({ handleLogout, user }) => {
               </div>
 
               <div className="border-t border-gray-200 py-6 px-4 space-y-6">
-                <div className="flow-root">
+              <div className="flow-root" onClick={() => setOpen(false)}>
+                  <Link
+                    to={"/"}
+                    className="-m-2 p-2 block font-medium text-gray-900"
+                  >
+                    Trang chủ
+                  </Link>
+                </div>
+                <div className="flow-root" onClick={() => setOpen(false)}>
                   <Link
                     to={"/product"}
                     className="-m-2 p-2 block font-medium text-gray-900"
@@ -65,7 +73,7 @@ export const Header = ({ handleLogout, user }) => {
                     Sản phẩm
                   </Link>
                 </div>
-                <div className="flow-root">
+                <div className="flow-root" onClick={() => setOpen(false)}>
                   <Link
                     to={"/"}
                     className="-m-2 p-2 block font-medium text-gray-900"
@@ -74,7 +82,7 @@ export const Header = ({ handleLogout, user }) => {
                   </Link>
                 </div>
 
-                <div className="flow-root">
+                <div className="flow-root" onClick={() => setOpen(false)}>
                   <Link
                     to={"/"}
                     className="-m-2 p-2 block font-medium text-gray-900"
@@ -90,7 +98,7 @@ export const Header = ({ handleLogout, user }) => {
                 {(_.isEmpty(user) || user.permission === ADMIN_PERMISSION) ?
 
                   (<>
-                    <div className="flow-root">
+                    <div className="flow-root" onClick={() => setOpen(false)}>
                       <Link
                         to={"/sign-in"}
                         className="-m-2 p-2 block font-medium text-gray-900"
@@ -98,7 +106,7 @@ export const Header = ({ handleLogout, user }) => {
                         Đăng nhập
                       </Link>
                     </div>
-                    <div className="flow-root">
+                    <div className="flow-root" onClick={() => setOpen(false)}>
                       <Link
                         to={"/sign-up"}
                         className="-m-2 p-2 block font-medium text-gray-900"
@@ -109,7 +117,15 @@ export const Header = ({ handleLogout, user }) => {
                   </>
                   ) : (
                     <>
-                      <div className="flow-root">
+                      <div className="flow-root" onClick={() => setOpen(false)}>
+                        <Link
+                          to={"/user-info"}
+                          className="-m-2 p-2 block font-medium text-gray-900"
+                        >
+                          Tài khoản
+                        </Link>
+                      </div>
+                      <div className="flow-root" onClick={() => setOpen(false)}>
                         <button
                           onClick={handleLogout}
                           className="-m-2 p-2 block font-medium text-gray-900"
@@ -142,11 +158,11 @@ export const Header = ({ handleLogout, user }) => {
               </button>
 
               {/* Logo */}
-              <div className="ml-4 flex lg:ml-0">
+              <div className="hidden lg:block ml-4 flex lg:ml-0">
                 <Link to={"/"}>
                   <span className="sr-only">Workflow</span>
                   <img
-                    className="h-8 w-auto rounded-full"
+                    className="h-10 w-10 w-auto rounded-full"
                     src={LOGO}
                     alt=""
                   />

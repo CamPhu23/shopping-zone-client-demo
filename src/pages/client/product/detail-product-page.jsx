@@ -13,6 +13,8 @@ import { useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import Comments from "../../../components/comment/comments";
 import { CommentValidator, CommentValidatorError } from '../../../validators/comment-validator.js'
+import Toast from "../../../components/toast/toast";
+import { ICON } from "../../../assets/svg-icon";
 
 const COLOR_CODES = {
   trang: {
@@ -40,7 +42,11 @@ const COLOR_CODES = {
 export default function DetailProductPage() {
   const { id } = useParams();
 
-  const [product, setProduct] = useState({})
+  const [toastShow, setToastShow] = useState(false);
+  const [toastMessages, setToastMessages] = useState("");
+  const [toastIcon, setToastIcon] = useState(null);
+
+  const [product, setProduct] = useState({});
   const [selectedColor, setSelectedColor] = useState();
   const [selectedSize, setSelectedSize] = useState();
   const [sizes, setSizes] = useState([]);
@@ -81,7 +87,11 @@ export default function DetailProductPage() {
       color: selectedColor,
       size: selectedSize,
       quantity: qty,
-    }));
+    }))
+
+    setToastShow(true);
+    setToastMessages("Đã thêm sản phẩm vào giỏ hàng");
+    setToastIcon(ICON.Success);
   };
 
   const renderProductImage = (images) => {
@@ -454,6 +464,15 @@ export default function DetailProductPage() {
 
       {renderProductDescription(product.description)}
       {renderComment()}
+
+      <Toast
+        show={toastShow}
+        messages={toastMessages}
+        icon={toastIcon}
+        mode={"light"}
+        onClose={() => setToastShow(false)}
+        autoClose={5000}
+      />
     </section>
   );
 }

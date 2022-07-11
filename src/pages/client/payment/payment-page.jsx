@@ -51,9 +51,14 @@ export default function PaymentPage() {
     };
 
     paymentService.postPayment(paymentData)
-      .then(result => {
-        console.log(result)
-        dispatch(clearCartRequest());
+      .then(result => {        
+        setToastShow(true);
+        setToastMessages("Thanh toán thành công");
+        setToastIcon(ICON.Success);
+        
+        setTimeout(() => {
+          dispatch(clearCartRequest());
+        }, 5000)
       })
       .catch(error => {
         setToastShow(true);
