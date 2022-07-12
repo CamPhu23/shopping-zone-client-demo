@@ -57,8 +57,8 @@ const filters = [
     id: 'feature',
     name: 'Dịch vụ & Khuyến mãi',
     options: [
-      { value: 'san-pham-moi', label: 'Sản phẩm mới', checked: false },
-      { value: 'san-pham-khuyen-mai', label: 'Sản phẩm khuyến mãi', checked: false },
+      { value: 'san-pham-moi', label: 'Sản phẩm mới', checked: true },
+      { value: 'san-pham-khuyen-mai', label: 'Sản phẩm khuyến mãi', checked: true },
       { value: 'san-pham-ban-chay', label: 'Sản phẩm bán chạy', checked: false },
     ],
   },
