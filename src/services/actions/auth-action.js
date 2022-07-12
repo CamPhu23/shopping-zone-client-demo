@@ -7,6 +7,13 @@ export const loginRequest = (formData) => {
   };
 };
 
+export const googleLoginRequest = (formData) => {
+  return {
+    type: actionTypes.GOOGLE_LOGIN_REQUEST,
+    payload: formData
+  };
+};
+
 export const loginSuccess = (tokenData) => {
   return {
     type: actionTypes.AUTH_LOGIN_SUCCESS,

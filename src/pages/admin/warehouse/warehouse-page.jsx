@@ -59,7 +59,7 @@ const WarehousePage = () => {
 
   useEffect(() => {
     adminProductService
-      .getAllProducts()
+      .getAllProducts("1", "All")
       .then(response => {
         setProducts(response.products)
 

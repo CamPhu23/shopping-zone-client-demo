@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import TopSection from "../../../components/common/main-top-section";
-// import Pagination from "../../../components/common/pagination";
-import { Table } from "../../../components/common/table";
-import { adminAccountService, adminProductService } from "../../../services/modules";
-import { DEFAULT_PAGE_NUMBER, NUMBER_RECORD_PER_PAGE } from "../../../constants/variables.js";
-import { DetailDialog } from "../../../components/common/dialog";
-import { DetailAccount } from "./detail-account";
-import { useNavigate } from "react-router-dom";
-import { NAVIGATE_URL } from "../../../constants/navigate-url";
-import { numberToStringConverter } from "../../../converter/data-type.js"
 import _ from "lodash";
-import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
+import { useNavigate } from "react-router-dom";
+import { DetailDialog } from "../../../components/common/dialog";
+import { Table } from "../../../components/common/table";
 import { Paging } from "../../../components/paging/paging";
+import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
+import { NAVIGATE_URL } from "../../../constants/navigate-url";
+import { adminAccountService } from "../../../services/modules";
+import { DetailAccount } from "./detail-account";
 
 const AccountPage = () => {
   const [data, setData] = useState({ accounts: [], totalPage: 0, currentPage: 0 });
@@ -27,17 +24,16 @@ const AccountPage = () => {
       .then((response) => {
         if (!_.isEmpty(response)) {
           response.clients = response.clients.map((ele) => {
-            if (!ele.fullname) {
-              ele.fullname = "";
-            }
-            if (!ele.phone) {
-              ele.phone = "";
-            }
-            if (!ele.address) {
-              ele.address = "";
+            let newClient = {
+              _id: ele._id,
+              username: ele.username ? ele.username : "Tài khoản Google",
+              email: ele.email ? ele.email : "",
+              fullname: ele.fullname ? ele.fullname : "",
+              phone: ele.phone ? ele.phone : "",
+              address: ele.address ? ele.address : "",
             }
 
-            return ele;
+            return newClient;
           });
         }
         
@@ -70,17 +66,16 @@ const AccountPage = () => {
         console.log(response);
         if (!_.isEmpty(response)) {
           response.clients = response.clients.map((ele) => {
-            if (!ele.fullname) {
-              ele.fullname = "";
-            }
-            if (!ele.phone) {
-              ele.phone = "";
-            }
-            if (!ele.address) {
-              ele.address = "";
+            let newClient = {
+              _id: ele._id,
+              username: ele.username ? ele.username : "Tài khoản Google",
+              email: ele.email ? ele.email : "",
+              fullname: ele.fullname ? ele.fullname : "",
+              phone: ele.phone ? ele.phone : "", 
+              address: ele.address ? ele.address : "",
             }
 
-            return ele;
+            return newClient;
           });
         }
 
@@ -119,9 +114,9 @@ const AccountPage = () => {
               "Mã tài khoản",
               "Tên tài khoản",
               "Email",
-              "Địa chỉ",
               "Họ và tên",
               "Số điện thoại",
+              "Địa chỉ",
             ]}
             data={data.accounts}
             onRowClick={onTableRowClick}
