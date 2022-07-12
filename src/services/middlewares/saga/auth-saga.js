@@ -29,6 +29,25 @@ function* loginWorker(action) {
   }
 }
 
+function* googleLoginWorker(action) {
+  try {
+    let response;
+    let payload = action.payload
+    response = yield call(authService.handleGoogleLogin, payload);
+
+    const { accessToken, refreshToken, user } = response;
+    yield put(loginSuccess({ accessToken, user }));
+    systemService.saveRefreshToken(refreshToken);
+  } catch (e) {
+    const { status } = JSON.parse(e.message);
+    const message = status == 404
+      ? "Tên tài khoản hoặc mật khẩu bị sai"
+      : "Lỗi đăng nhập, vui lòng thử lại";
+
+    yield put(loginFail({ status, message }))
+  }
+}
+
 function* refreshTokenWorker(action) {
   try {
     let response;
@@ -75,6 +94,7 @@ function* logoutWorker() {
 
 function* authSaga() {
   yield takeEvery(actionTypes.AUTH_LOGIN_REQUEST, loginWorker);
+  yield takeEvery(actionTypes.GOOGLE_LOGIN_REQUEST, googleLoginWorker);
   yield takeLatest(actionTypes.AUTH_REFRESH_TOKEN_REQUEST, refreshTokenWorker);
   yield takeEvery(actionTypes.AUTH_REGISTER_REQUEST, registerWorker);
   yield takeLatest(actionTypes.AUTH_LOGOUT_REQUEST, logoutWorker);

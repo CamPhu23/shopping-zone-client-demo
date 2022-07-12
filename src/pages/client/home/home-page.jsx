@@ -254,7 +254,7 @@ const HomePage = () => {
                       className="w-full h-full object-center object-cover"
                     />
                   </div>
-                  <h3 className="mt-6 font-semibold text-lg text-gray-900">
+                  <h3 className="font-semibold text-lg text-gray-900">
                     <Link to={"/product"}
                       state={{
                         filter: { name: callout.name, value: callout.value, current: true },
@@ -263,7 +263,7 @@ const HomePage = () => {
                       {callout.name}
                     </Link>
                   </h3>
-                  <p className="text-base font-semibold text-gray-900">{callout.description}</p>
+                  <p className="mb-6 text-base font-semibold text-gray-900">{callout.description}</p>
                 </div>
               ))}
             </div>

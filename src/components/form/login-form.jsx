@@ -4,10 +4,24 @@ import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetAuthError } from '../../services/actions/auth-action';
 import { Link } from 'react-router-dom';
+import { GoogleLogin } from "react-google-login";
+import { gapi } from 'gapi-script';
+import { googleLoginRequest } from '../../services/actions/auth-action'
 
-export const LoginForm = ({handleSubmitForm}) => {
+export const LoginForm = ({ handleSubmitForm }) => {
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: "939863896050-2ekkkkrlvfkrn3bg5ssn51a6o54d2sgb.apps.googleusercontent.com",
+        scope: 'email',
+      });
+    }
+
+    gapi.load('client:auth2', start);
+  }, []);
+
   const { register, handleSubmit, formState: { errors }, setFocus, reset } = useForm();
-  
+
   const dispatch = useDispatch();
   const authError = useSelector(state => state.auth.error);
   const [serverError, setServerError] = useState("");
@@ -24,7 +38,7 @@ export const LoginForm = ({handleSubmitForm}) => {
       setFocus('username');
 
       setServerError(message);
-    } 
+    }
   }, [authError]);
 
   const handleLogin = (data) => {
@@ -37,6 +51,15 @@ export const LoginForm = ({handleSubmitForm}) => {
       setServerError("");
     }
   }
+
+  const handleGoogleLoginResponse = (res) => {
+    console.log(res);
+    if (!res.profileObj) return;
+    console.log(res.profileObj)
+    const { name, email } = res.profileObj;
+    const data = { fullname: name, email, method: "Google" }
+    dispatch(googleLoginRequest(data));
+  };
 
   return (
     <div className="py-2 col-span-3 md:col-span-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -67,7 +90,7 @@ export const LoginForm = ({handleSubmitForm}) => {
                   required: {
                     value: true,
                     message: "Tên tài khoản không được bỏ trống"
-                  }, 
+                  },
                 })}
               />
 
@@ -88,11 +111,11 @@ export const LoginForm = ({handleSubmitForm}) => {
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 shadow-sm rounded-md focus:outline-none focus:ring-teal-500 focus:border-teal-500 focus:z-10 sm:text-sm"
                 placeholder="Mật khẩu"
                 onChangeCapture={handleOnChange}
-                {...register("password", { 
+                {...register("password", {
                   required: {
                     value: true,
                     message: "Mật khẩu không được bỏ trống"
-                  }, 
+                  },
                   minLength: {
                     value: 8,
                     message: "Mật khẩu cần ít nhất 8 ký tự"
@@ -124,13 +147,17 @@ export const LoginForm = ({handleSubmitForm}) => {
             <div className="flex-grow border-t border-gray-400"></div>
           </div>
 
-          <button
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent border-red-600 text-sm font-medium rounded-md text-red-500 bg-white-600 hover:text-white hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-red-500"
+          <div
+            className="group relative w-full flex justify-center px-4 text-sm font-medium rounded-md bg-white-600"
           >
-            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-            </span>
-            Google
-          </button>
+            <GoogleLogin
+              clientId="939863896050-2ekkkkrlvfkrn3bg5ssn51a6o54d2sgb.apps.googleusercontent.com"
+              onSuccess={handleGoogleLoginResponse}
+              onFailure={handleGoogleLoginResponse}
+              buttonText="Đăng nhập bằng Google"
+              cookiePolicy={'single_host_origin'}
+            />
+          </div>
 
           <div className="text-sm mt-3 pt-3 flex items-center justify-center">
             <Link to={'/forgot-password'} className="font-medium text-teal-600 hover:text-teal-500">

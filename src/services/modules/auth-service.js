@@ -14,6 +14,15 @@ const handleLogin = (formInput) => {
     });
 };
 
+const handleGoogleLogin = (formInput) => {
+  return axiosRequest
+    .post(`${BASE_URL}/auth/google-login`, formInput)
+    .then((token) => token)
+    .catch((err) => {
+      throw new Error(err);
+    });
+};
+
 const getAcessToken = () => {
   const state = store.getState();
   const { accessToken, expiredTime, user } = state.auth;
@@ -80,4 +89,5 @@ export default {
   handleLogout,
   handleForgotPassword,
   handleResetPassword,
+  handleGoogleLogin,
 };
