@@ -7,8 +7,14 @@ import { CREATE_FORM_TYPE } from "../../../constants/variables";
 import { adminCloudinaryService, adminProductService } from "../../../services/modules";
 import LoadingPage from "../../loaders/loading-page";
 import _ from "lodash"
+import Toast from "../../../components/toast/toast";
+import { ICON } from "../../../assets/svg-icon";
 
 const CreateProductPage = () => {
+  const [toastShow, setToastShow] = useState(false);
+  const [toastMessages, setToastMessages] = useState("");
+  const [toastIcon, setToastIcon] = useState(null);
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,8 +48,23 @@ const CreateProductPage = () => {
     adminProductService
       .createProduct(formData)
       .then((data) => {
-        console.log(data);
-        navigate(NAVIGATE_URL.PRODUCT_LIST)
+        setIsLoading(false);
+        
+        setToastShow(true);
+        setToastMessages("Tạo sản phẩm thành công");
+        setToastIcon(ICON.Success);
+        
+        setTimeout(() => {
+          navigate(NAVIGATE_URL.PRODUCT_LIST);
+        }, 5000)
+      })
+      .catch(e => {
+        console.log(e);
+        setIsLoading(false);
+
+        setToastShow(true);
+        setToastMessages("Tạo sản phẩm thất bại");
+        setToastIcon(ICON.Fail);
       });
   };
 
@@ -60,6 +81,15 @@ const CreateProductPage = () => {
       <ProductForm
         type={CREATE_FORM_TYPE}
         handleSubmitForm={onSubmitForm}
+      />
+
+      <Toast
+        show={toastShow}
+        messages={toastMessages}
+        icon={toastIcon}
+        mode={"light"}
+        onClose={() => setToastShow(false)}
+        autoClose={5000}
       />
     </>
   );

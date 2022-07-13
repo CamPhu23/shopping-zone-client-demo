@@ -1,15 +1,12 @@
-import { useEffect, useState, Fragment } from "react";
-import TopSection from "../../../components/common/main-top-section";
-import _ from "lodash";
-import { DetailDialog } from "../../../components/common/dialog";
-import { Table } from "../../../components/common/table";
-import Toast from "../../../components/toast/toast";
-import { ICON } from "../../../assets/svg-icon";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import { adminProductService, adminWarehouseSevice } from "../../../services/modules";
-import { PRODUCT_CONSTANT } from "../../../constants/product";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { ICON } from "../../../assets/svg-icon";
+import TopSection from "../../../components/common/main-top-section";
+import Toast from "../../../components/toast/toast";
+import { PRODUCT_CONSTANT } from "../../../constants/product";
+import { adminProductService, adminWarehouseSevice } from "../../../services/modules";
 import { WarehouseValidator, WarehouseValidatorError } from "../../../validators/warehouse-validator";
 
 const WarehousePage = () => {
@@ -18,13 +15,13 @@ const WarehousePage = () => {
     handleSubmit,
     setError,
     formState: { errors },
+    reset
   } = useForm();
 
   const [toastShow, setToastShow] = useState(false);
   const [toastMessages, setToastMessages] = useState("");
   const [toastIcon, setToastIcon] = useState(null);
 
-  const [isOpen, setIsOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState();
 
@@ -49,8 +46,11 @@ const WarehousePage = () => {
         setToastShow(true);
         setToastMessages("Nhập hàng thành công");
         setToastIcon(ICON.Success);
+
+        reset();
       })
       .catch((error) => {
+        console.log(error);
         setToastShow(true);
         setToastMessages("Nhập hàng thất bại");
         setToastIcon(ICON.Fail);
@@ -63,7 +63,7 @@ const WarehousePage = () => {
       .then(response => {
         setProducts(response.products)
 
-        if (response.products.length != 0) {
+        if (response.products.length !== 0) {
           setSelectedProduct(response.products[0].name);
         }
       })

@@ -63,11 +63,16 @@ const ReceiptPage = () => {
         setOpenDialog(false);
         updateUI();
 
-        if (!data) {
-          setToastShow(true);
-          setToastMessages("Lỗi cập nhật vui lòng thử lại sau");
-          setToastIcon(ICON.Fail);
-        }
+        setToastShow(true);
+        setToastMessages("Cập nhật thành công");
+        setToastIcon(ICON.Success);
+      })
+      .catch(e => {
+        console.log(e);
+
+        setToastShow(true);
+        setToastMessages("Cập nhật thất bại");
+        setToastIcon(ICON.Fail);
       });
   };
 
@@ -95,7 +100,7 @@ const ReceiptPage = () => {
 
         <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
           handleChangePage={handleChangePage} descriptionText="Hóa đơn"
-          theme={"dark"}/>
+          theme={"dark"} />
 
       </div>
       <DetailDialog
