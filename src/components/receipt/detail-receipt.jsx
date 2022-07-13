@@ -35,7 +35,7 @@ export const Receipt = ({ item }) => {
             <dt className="text-sm font-medium text-gray-500">Trạng thái đơn hàng:</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0">{item.status}</dd>
             <dt className="text-sm font-medium text-gray-500">Phương thức:</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0">{item.paymentMethod}</dd>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0">{item.paymentMethod === "COD" ? item.paymentMethod : "Thẻ tín dụng"}</dd>
           </div>
           <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Tổng tiền hàng:</dt>
@@ -46,7 +46,7 @@ export const Receipt = ({ item }) => {
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Tổng tiền vận chuyển:</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 ">{currencyFomatter(item.shippingCost)}</dd>
-            <dt className="text-sm font-medium text-gray-500">Tổng tiền hóa đơn</dt>
+            <dt className="text-sm font-medium text-gray-500">Tổng tiền hóa đơn:</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 ">{currencyFomatter(item.totalBill)}</dd>
           </div>
           <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">

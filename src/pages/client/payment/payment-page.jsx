@@ -67,9 +67,12 @@ export default function PaymentPage() {
           dispatch(clearCartRequest());
         }, 5000)
       })
-      .catch(error => {
+      .catch(e => {
+        let error = JSON.parse(e);
+        
+        setLoading(false);
         setToastShow(true);
-        setToastMessages(error?.message);
+        setToastMessages(error?.data.messages);
         setToastIcon(ICON.Fail);
       });
   };
