@@ -27,7 +27,7 @@ export const AdminLayout = ({ component, breadcrumbs, ...rest }) => {
         <div className="p-8 flex flex-col h-screen">
           <Breadscrum breadcrumbs={breadcrumbs} />
 
-          <div className="flex-1 mt-4 py-3 px-5 text-gray-700 rounded-lg border bg-gray-800 border-gray-700 overflow-y-scroll">
+          <div className="flex-1 mt-4 py-3 px-5 text-gray-700 rounded-lg border bg-gray-800 border-gray-700 overflow-y-scroll no-scrollbar">
             {component}
           </div>
         </div>
