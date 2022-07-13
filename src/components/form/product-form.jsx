@@ -250,6 +250,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
 
   // Submit form
   const onSubmitForm = async (data) => {
+    console.log(data);
     if (images.length == 0) {
       if (
         type === CREATE_FORM_TYPE ||
@@ -318,6 +319,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
               type="number"
               name="price"
               placeholder=" "
+              onWheel={(e) => e.target.blur()}
               defaultValue={item ? item.price : ""}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               {...register("price", ProductValidator.price)}
@@ -338,6 +340,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
               type="number"
               name="discount"
               placeholder=" "
+              onWheel={(e) => e.target.blur()}
               defaultValue={item ? (item.discount ? item.discount : "0") : ""}
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               {...register("discount", ProductValidator.discount)}
