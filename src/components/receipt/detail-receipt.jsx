@@ -63,7 +63,7 @@ export const Receipt = ({ item }) => {
                   return (
                     <li key={product.id} className="pl-3 pr-4 py-3 flex text-sm sm:grid sm:grid-cols-3">
                       <div className="ml-2 flex-shrink-0 truncate">
-                        <Link to={`/product/${product.id}`} className="font-bold">
+                        <Link to={`/product/${product.id}`} target="_blank" className="font-bold">
                           <span className="ml-2 flex-1">
                             {product.name}
                           </span>

@@ -25,7 +25,7 @@ const createClient = async (formData) => {
     .post(`${BASE_URL}/admin/clients/create`, formData)
     .then((data) => data)
     .catch(error => {
-      throw new Error(error);
+      throw error;
     })
 }
 
