@@ -41,8 +41,8 @@ export default function LoginPage() {
   const renderLoginForm = () => {
     return (
 
-      <div className="flex justify-center h-screen bg-stone-700">
-        <div className="w-2/5 self-center">
+      <div className="flex justify-center h-screen bg-gradient-to-r from-sky-800 to-teal-900">
+        <div className="lg:w-2/5 self-center">
           <div className="border-gray-200 border-2 shadow overflow-hidden sm:rounded-md">
             <div className="py-7 bg-white col-span-3 md:col-span-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
               <div className="py-2 col-span-3 md:col-span-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
