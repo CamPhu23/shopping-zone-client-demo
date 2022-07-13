@@ -381,7 +381,7 @@ const AccountInfoPage = () => {
                   </td>
                   <td className="px-6 py-4"
                     onClick={() => onTableRowClick(order._id)}>
-                    {order.paymentMethod}
+                    {order.paymentMethod === "COD" ? order.paymentMethod : "Thẻ tín dụng"}
                   </td>
                   <td className="px-6 py-4"
                     onClick={() => onTableRowClick(order._id)}>

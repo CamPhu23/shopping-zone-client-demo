@@ -170,7 +170,7 @@ export const DetailReceipt = ({ item, onEditClick }) => {
                 Phương thức thanh toán
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.paymentMethod}
+                {item.paymentMethod === "COD" ? item.paymentMethod : "Thẻ tín dụng"}
               </dd>
             </div>
           </div>
