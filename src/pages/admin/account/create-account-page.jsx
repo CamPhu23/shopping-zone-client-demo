@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProductForm from "../../../components/form/product-form";
-import { CLOUDINARY_CONFIG } from "../../../config/cloudinary";
+import { ICON } from "../../../assets/svg-icon";
+import AccountForm from "../../../components/form/account-form";
+import Toast from "../../../components/toast/toast";
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
 import { CREATE_FORM_TYPE } from "../../../constants/variables";
-import { adminAccountService, adminCloudinaryService, adminProductService } from "../../../services/modules";
+import { adminAccountService } from "../../../services/modules";
 import LoadingPage from "../../loaders/loading-page";
-import _ from "lodash"
-import AccountForm from "../../../components/form/account-form";
 
 const CreateAccountPage = () => {
+  const [toastShow, setToastShow] = useState(false);
+  const [toastMessages, setToastMessages] = useState("");
+  const [toastIcon, setToastIcon] = useState(null);
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,8 +28,29 @@ const CreateAccountPage = () => {
     adminAccountService
       .createClient(data)
       .then((data) => {
-        console.log(data);
-        navigate(NAVIGATE_URL.CLIENT_LIST)
+        setIsLoading(false);
+        
+        setToastShow(true);
+        setToastMessages("Tạo tài khoản thành công");
+        setToastIcon(ICON.Success);
+        
+        setTimeout(() => {
+          navigate(NAVIGATE_URL.CLIENT_LIST);
+        }, 5000)
+      })
+      .catch(e => {
+        console.log(e);
+        setIsLoading(false);
+
+        let error = JSON.parse(e);
+        const message =
+          (error.status == 400)
+            ? "Tài khoản hoặc email đã được sử dụng"
+            : "Tạo tài khoản thất bại";
+
+        setToastShow(true);
+        setToastMessages(message);
+        setToastIcon(ICON.Fail);
       });
   };
 
@@ -43,6 +67,15 @@ const CreateAccountPage = () => {
       <AccountForm
         type={CREATE_FORM_TYPE}
         handleSubmitForm={onSubmitForm}
+      />
+
+      <Toast
+        show={toastShow}
+        messages={toastMessages}
+        icon={toastIcon}
+        mode={"light"}
+        onClose={() => setToastShow(false)}
+        autoClose={5000}
       />
     </>
   );

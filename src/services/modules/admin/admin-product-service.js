@@ -1,9 +1,10 @@
 import axiosRequest from "../../../config/http-request";
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
 import { BASE_URL } from "../../../constants/http";
 
-const getAllProducts = async () => {
+const getAllProducts = async (page = DEFAULT_PAGE, size = DEFAULT_PAGE_SIZE) => {
   return axiosRequest
-    .get(`${BASE_URL}/admin/products`)
+    .get(`${BASE_URL}/admin/products?page=${page}&size=${size}`)
     .then((data) => data)
     .catch(error => {
       throw new Error(error);

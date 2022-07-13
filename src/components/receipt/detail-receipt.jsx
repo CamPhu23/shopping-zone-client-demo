@@ -6,7 +6,7 @@ import { colorConverter } from '../../converter/color-converter'
 
 export const Receipt = ({ item }) => {
   return (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+    <div className="bg-white shadow overflow-hidden sm:rounded-lg no-scrollbar">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-lg leading-6 font-medium text-gray-900">Thông tin hóa đơn</h3>
         <p className="mt-1 max-w-2xl text-sm text-gray-500">Mã hóa đơn: {item._id}</p>
@@ -15,7 +15,7 @@ export const Receipt = ({ item }) => {
         <dl>
           <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-4 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Họ và tên người nhận:</dt>
-            <dd className="mt-1 text-sm text-gray-900 sm:mt-0">{item.fullname}</dd>
+          <dd className="mt-1 text-sm text-gray-900 sm:mt-0">{item.fullname}</dd>
             <dt className="text-sm font-medium text-gray-500">Email:</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0">{item.email}</dd>
           </div>
@@ -63,7 +63,7 @@ export const Receipt = ({ item }) => {
                   return (
                     <li key={product.id} className="pl-3 pr-4 py-3 flex text-sm sm:grid sm:grid-cols-3">
                       <div className="ml-2 flex-shrink-0 truncate">
-                        <Link to={`/product/${product.id}`} className="font-bold">
+                        <Link to={`/product/${product.id}`} target="_blank" className="font-bold">
                           <span className="ml-2 flex-1">
                             {product.name}
                           </span>

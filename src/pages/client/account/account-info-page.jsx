@@ -11,6 +11,7 @@ import { Paging } from "../../../components/paging/paging";
 import { DEFAULT_PAGE_SIZE } from '../../../constants/default-axios-product'
 import { CLIENT_AVT } from "../../../constants/avatar-url";
 import { RatingProduct } from "../../../components/receipt/rating-product";
+import { RECEIPT_CONSTANT } from "../../../constants/receipt";
 
 const AccountInfoPage = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -105,7 +106,7 @@ const AccountInfoPage = () => {
 
         setToastShow(true);
         setToastMessages("Đánh giá thành công");
-        setToastIcon(ICON.Success);        
+        setToastIcon(ICON.Success);
       })
       .catch((e) => {
         console.log(e);
@@ -387,14 +388,16 @@ const AccountInfoPage = () => {
                     {currencyFomatter(order.totalBill)}
                   </td>
                   <td className="px-6 py-4 uppercase" onClick={() => onTableRowClick(order._id)}>{order.status}</td>
-                  <td className="px-2 py-4 uppercase">
-                    <button
-                      onClick={() => onRatingButtonClick(order._id)}
-                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700"
-                    >
-                      Đánh giá
-                    </button>
-                  </td>
+                  {order.status == RECEIPT_CONSTANT.RECEIPT_DONE && 
+                    (<td className="px-2 py-4 uppercase">
+                      <button
+                        onClick={() => onRatingButtonClick(order._id)}
+                        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-teal-600 hover:bg-teal-700"
+                      >
+                        Đánh giá
+                      </button>
+                    </td>)
+                  }
                 </tr>
               ))}
             </tbody>

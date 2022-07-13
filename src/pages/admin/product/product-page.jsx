@@ -10,11 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
 import { numberToStringConverter } from "../../../converter/data-type.js"
 import _ from "lodash";
+import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
+import { Paging } from "../../../components/paging/paging";
 
 const ProductPage = () => {
   const [data, setData] = useState({ products: [], totalPage: 0, currentPage: 0 });
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
+  const [pageInfo, setPageInfo] = useState({});
 
   const navigate = useNavigate();
 
@@ -23,8 +26,8 @@ const ProductPage = () => {
       .getAllProducts()
       .then((response) => {
         response
-          && response.map(ele => ele.discount = numberToStringConverter(ele.discount));
-        setData({ ...data, products: response });
+          && response.products.map(ele => ele.discount = numberToStringConverter(ele.discount));
+        setData({ ...data, products: response.products });
       });
   }, []);
 
@@ -46,13 +49,16 @@ const ProductPage = () => {
       });
   };
 
-  const onPageNumberClick = (pageNumber) => {
-    // productService
-    //   .getProductList(pageNumber, NUMBER_RECORD_PER_PAGE)
-    //   .then((response) => {
-    //     setData(response);
-    //   });
-  };
+  const handleChangePage = (text, nextPage) => {
+    adminProductService
+      .getAllProducts(nextPage)
+      .then((response) => {
+        response
+          && response.products.map(ele => ele.discount = numberToStringConverter(ele.discount));
+        setData({ ...data, products: response.products });
+        setPageInfo(response.info)
+      });
+  }
 
   const onEditClick = (item) => {
     navigate(NAVIGATE_URL.PRODUCT_EDIT, { state: { data: item } });
@@ -92,16 +98,10 @@ const ProductPage = () => {
             onRowClick={onTableRowClick}
           />
         </div>
-
-        {/* {data.totalPage > 1 && (
-          <div className="absolute bottom-0 right-0 mb-4">
-            <Pagination
-              total={data.totalPage}
-              current={data.currentPage}
-              onClick={onPageNumberClick}
-            />
-          </div>
-        )} */}
+        
+        <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+          handleChangePage={handleChangePage} theme={"dark"}/>
+          
       </div>
       <DetailDialog
         isOpen={openDialog}

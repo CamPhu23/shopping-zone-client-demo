@@ -22,7 +22,7 @@ export const ClientLayout = ({ component }) => {
         <div className="h-30 z-40 sticky top-0">
           <Header handleLogout={() => onLogout()} user={user} />
         </div>
-        <div className="flex-1 overflow-y-scroll">
+        <div className="flex-1 overflow-y-scroll no-scrollbar">
           {component}
         </div>
         <div className="h-10">

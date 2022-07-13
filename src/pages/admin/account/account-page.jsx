@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 import TopSection from "../../../components/common/main-top-section";
-// import Pagination from "../../../components/common/pagination";
-import { Table } from "../../../components/common/table";
-import { adminAccountService, adminProductService } from "../../../services/modules";
-import { DEFAULT_PAGE_NUMBER, NUMBER_RECORD_PER_PAGE } from "../../../constants/variables.js";
-import { DetailDialog } from "../../../components/common/dialog";
-import { DetailAccount } from "./detail-account";
-import { useNavigate } from "react-router-dom";
-import { NAVIGATE_URL } from "../../../constants/navigate-url";
-import { numberToStringConverter } from "../../../converter/data-type.js"
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
+import { DetailDialog } from "../../../components/common/dialog";
+import { Table } from "../../../components/common/table";
+import { Paging } from "../../../components/paging/paging";
+import { DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
+import { NAVIGATE_URL } from "../../../constants/navigate-url";
+import { adminAccountService } from "../../../services/modules";
+import { DetailAccount } from "./detail-account";
 
 const AccountPage = () => {
   const [data, setData] = useState({ accounts: [], totalPage: 0, currentPage: 0 });
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogParam, setDialogParam] = useState({});
+  const [pageInfo, setPageInfo] = useState({});
 
   const navigate = useNavigate();
 
@@ -23,22 +23,21 @@ const AccountPage = () => {
       .getAllClients()
       .then((response) => {
         if (!_.isEmpty(response)) {
-          response = response.map((ele) => {
-            if (!ele.fullname) {
-              ele.fullname = "";
-            }
-            if (!ele.phone) {
-              ele.phone = "";
-            }
-            if (!ele.address) {
-              ele.address = "";
+          response.clients = response.clients.map((ele) => {
+            let newClient = {
+              _id: ele._id,
+              username: ele.username ? ele.username : "Tài khoản Google",
+              email: ele.email ? ele.email : "",
+              fullname: ele.fullname ? ele.fullname : "",
+              phone: ele.phone ? ele.phone : "",
+              address: ele.address ? ele.address : "",
             }
 
-            return ele
+            return newClient;
           });
         }
         
-        setData({ ...data, accounts: response });
+        setData({ ...data, accounts: response.clients });
       });
   }, []);
 
@@ -60,13 +59,30 @@ const AccountPage = () => {
       });
   };
 
-  const onPageNumberClick = (pageNumber) => {
-    // productService
-    //   .getProductList(pageNumber, NUMBER_RECORD_PER_PAGE)
-    //   .then((response) => {
-    //     setData(response);
-    //   });
-  };
+  const handleChangePage = (text, nextPage) => {
+    adminAccountService
+      .getAllClients(nextPage)
+      .then((response) => {
+        console.log(response);
+        if (!_.isEmpty(response)) {
+          response.clients = response.clients.map((ele) => {
+            let newClient = {
+              _id: ele._id,
+              username: ele.username ? ele.username : "Tài khoản Google",
+              email: ele.email ? ele.email : "",
+              fullname: ele.fullname ? ele.fullname : "",
+              phone: ele.phone ? ele.phone : "", 
+              address: ele.address ? ele.address : "",
+            }
+
+            return newClient;
+          });
+        }
+
+        setData({ ...data, accounts: response.clients });
+        setPageInfo(response.info)
+      });
+  }
 
   const onEditClick = (item) => {
     navigate(NAVIGATE_URL.CLIENT_UPDATE, { state: { data: item } });
@@ -77,7 +93,7 @@ const AccountPage = () => {
       .deleteClient(id)
       .then((result) => {
         if (result) {
-          const newProducts = data.accounts.filter((product) => product._id !== id);
+          const newProducts = data.accounts.filter((account) => account._id !== id);
           setData({ ...data, accounts: newProducts });
           setOpenDialog(false);
         }
@@ -98,24 +114,19 @@ const AccountPage = () => {
               "Mã tài khoản",
               "Tên tài khoản",
               "Email",
-              "Địa chỉ",
               "Họ và tên",
               "Số điện thoại",
+              "Địa chỉ",
             ]}
             data={data.accounts}
             onRowClick={onTableRowClick}
           />
         </div>
 
-        {/* {data.totalPage > 1 && (
-          <div className="absolute bottom-0 right-0 mb-4">
-            <Pagination
-              total={data.totalPage}
-              current={data.currentPage}
-              onClick={onPageNumberClick}
-            />
-          </div>
-        )} */}
+        <Paging totalItem={pageInfo.total} numOfShowingPerPage={DEFAULT_PAGE_SIZE}
+          handleChangePage={handleChangePage} descriptionText="Tài khoản"
+          theme={"dark"}/>
+
       </div>
       <DetailDialog
         isOpen={openDialog}

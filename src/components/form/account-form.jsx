@@ -20,8 +20,8 @@ const AccountForm = ({ type, handleSubmitForm, item = null }) => {
               type="text"
               name="username"
               placeholder=" "
-              defaultValue={item ? item.username : ""}
               className="block py-2.5 px-0 w-full text-sm bg-transparent border-0 border-b-2 text-white border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              defaultValue={item?.username ? item.username : (type === EDIT_FORM_TYPE ? "Tài khoản Google" : "")}   
               {...register("username", AccountValidator.username)}
               readOnly={type === EDIT_FORM_TYPE ? true : false}
             />

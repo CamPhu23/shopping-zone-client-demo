@@ -5,8 +5,14 @@ import { EDIT_FORM_TYPE } from "../../../constants/variables";
 import LoadingPage from "../../loaders/loading-page";
 import { adminAccountService } from '../../../services/modules/'
 import { NAVIGATE_URL } from "../../../constants/navigate-url";
+import Toast from "../../../components/toast/toast";
+import { ICON } from "../../../assets/svg-icon";
 
 const EditAccountPage = () => {
+  const [toastShow, setToastShow] = useState(false);
+  const [toastMessages, setToastMessages] = useState("");
+  const [toastIcon, setToastIcon] = useState(null);
+
   const navigate = useNavigate();
   const { state } = useLocation();
   // @ts-ignore
@@ -24,8 +30,23 @@ const EditAccountPage = () => {
     adminAccountService
       .updateClient(formData)
       .then((result) => {
-        console.log(result);
-        navigate(NAVIGATE_URL.CLIENT_LIST)
+        setIsLoading(false);
+        
+        setToastShow(true);
+        setToastMessages("Cập nhật thành công");
+        setToastIcon(ICON.Success);
+        
+        setTimeout(() => {
+          navigate(NAVIGATE_URL.CLIENT_LIST);
+        }, 5000)
+      })
+      .catch(e => {
+        console.log(e);
+        setIsLoading(false);
+
+        setToastShow(true);
+        setToastMessages("Cập nhật thất bại");
+        setToastIcon(ICON.Fail);
       });
   };
 
@@ -43,6 +64,15 @@ const EditAccountPage = () => {
         type={EDIT_FORM_TYPE}
         handleSubmitForm={onSubmitForm}
         item={data}
+      />
+
+      <Toast
+        show={toastShow}
+        messages={toastMessages}
+        icon={toastIcon}
+        mode={"light"}
+        onClose={() => setToastShow(false)}
+        autoClose={5000}
       />
     </>
   );

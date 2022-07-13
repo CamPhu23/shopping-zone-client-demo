@@ -1,15 +1,13 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CREATE_FORM_TYPE, EDIT_FORM_TYPE } from "../../constants/variables";
-// import { categoryService } from "../../services/modules";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
+import { PRODUCT_CONSTANT } from "../../constants/product";
+import { ProductValidator, ProductValidatorError } from "../../validators/product-validator";
 import { Modal } from "../common/modal";
 import PreviewImageInput from "./preview-image-input";
 import UploadImageInput from "./upload-image-input";
-import _ from "lodash";
-import { PRODUCT_CONSTANT } from "../../constants/product";
-import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
-import { ProductValidator, ProductValidatorError } from "../../validators/product-validator";
 
 const ProductForm = ({ type, handleSubmitForm, item = null }) => {
   const {

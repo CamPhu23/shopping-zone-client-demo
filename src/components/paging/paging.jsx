@@ -6,7 +6,8 @@ export const Paging = forwardRef(({
   totalItem,
   numOfShowingPerPage,
   handleChangePage,
-  descriptionText = "Sản phẩm"
+  descriptionText = "Sản phẩm",
+  theme = "light"
 }, ref) => {
   useImperativeHandle(ref, () => ({
     changeCurrentPage: handlePageTransition
@@ -29,16 +30,17 @@ export const Paging = forwardRef(({
       tranPage === "next" ? setTransiPage(transiPage + 1) : setTransiPage(transiPage - 1)
     }
   })
-  
+
   useEffect(() => {
     handleChangePage('p', currentPage);
   }, [currentPage])
 
   return (
-    <div className="bg-white mt-10 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+    <div className={`mt-10 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6
+    ${theme === "light" ? "bg-white" : "bg-gray-800"}`}>
       <div className="sm:flex-1 sm:flex sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm text-gray-700">
+          <p className={`text-sm ${theme === "light" ? "text-gray-700" : "text-white"}`}>
             {descriptionText} <span className="font-medium">{totalItem == 0 ? '0' : currentPage * numOfShowingPerPage - (numOfShowingPerPage - 1)}</span> đến <span className="font-medium">{currentPage != totalPage ? totalItem - (totalItem - currentPage * numOfShowingPerPage) : totalItem}</span> trong{' '}
             <span className="font-medium">{totalItem}</span> <span className="lowercase">{descriptionText}</span>
           </p>
@@ -74,7 +76,8 @@ export const Paging = forwardRef(({
                       className={
                         indexPage === currentPage
                           ?
-                          "z-10 bg-teal-50 border-teal-500 text-teal-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                          `z-10 relative inline-flex items-center px-4 py-2 border text-sm font-medium 
+                          ${theme === "light" ? "bg-teal-50 border-teal-500 text-teal-600" : "bg-blue-50 border-blue-500 text-blue-600"}`
                           :
                           "bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"
                       }

@@ -34,7 +34,7 @@ export const DetailAccount = ({ item, onEditClick, onDeleteClick }) => {
                 Tên tài khoản
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.username}
+                {item.username ? item.username : "Tài khoản Google"}
               </dd>
             </div>
           </div>

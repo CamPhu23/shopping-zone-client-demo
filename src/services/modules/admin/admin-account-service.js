@@ -1,4 +1,5 @@
 import axiosRequest from "../../../config/http-request";
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from "../../../constants/default-axios-product";
 import { BASE_URL } from "../../../constants/http";
 
 const getUserInfo = async () => {
@@ -10,9 +11,9 @@ const getUserInfo = async () => {
     })
 }
 
-const getAllClients = async () => {
+const getAllClients = async (page = DEFAULT_PAGE, size = DEFAULT_PAGE_SIZE) => {
   return axiosRequest
-    .get(`${BASE_URL}/admin/clients`)
+    .get(`${BASE_URL}/admin/clients?page=${page}&size=${size}`)
     .then((data) => data)
     .catch(error => {
       throw new Error(error);
@@ -24,7 +25,7 @@ const createClient = async (formData) => {
     .post(`${BASE_URL}/admin/clients/create`, formData)
     .then((data) => data)
     .catch(error => {
-      throw new Error(error);
+      throw error;
     })
 }
 
