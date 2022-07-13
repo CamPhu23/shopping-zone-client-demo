@@ -75,7 +75,7 @@ export const Header = ({ handleLogout, user }) => {
                 </div>
                 <div className="flow-root" onClick={() => setOpen(false)}>
                   <Link
-                    to={"/"}
+                    to={"/about"}
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Thương hiệu
@@ -84,7 +84,7 @@ export const Header = ({ handleLogout, user }) => {
 
                 <div className="flow-root" onClick={() => setOpen(false)}>
                   <Link
-                    to={"/"}
+                    to={"/contact"}
                     className="-m-2 p-2 block font-medium text-gray-900"
                   >
                     Liên hệ
@@ -180,14 +180,14 @@ export const Header = ({ handleLogout, user }) => {
                   </Link>
 
                   <Link
-                    to={"/"}
+                    to={"/about"}
                     className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                   >
                     Thương hiệu
                   </Link>
 
                   <Link
-                    to={"/"}
+                    to={"/contact"}
                     className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                   >
                     Liên hệ
