@@ -102,7 +102,7 @@ export const DetailReceipt = ({ item, onEditClick }) => {
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">Tài khoản</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {item.client.username}
+                {item.client ? (item.client.username ? item.client.username : "Tài khoản Google") : "Tài khoản đã bị xóa"}
               </dd>
             </div>
           </div>
