@@ -88,7 +88,7 @@ export const DetailProduct = ({ item, onEditClick, onDeleteClick }) => {
           <div className="px-4 pt-5 sm:px-6 flex flex-row">
             <div className="flex-1">
               <dt className="text-sm font-medium text-gray-500">Mô tả</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 break-all">
                 {item.description}
               </dd>
             </div>
