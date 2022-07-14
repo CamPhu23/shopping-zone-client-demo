@@ -8,14 +8,14 @@ const AboutPage = () => {
                         <div className="w-full xl:w-1/2 px-3 sm:px-4 mx-10">
                             <div className="py-3 sm:py-4">
                                 <img
-                                    src="https://cdn.tailgrids.com/1.0/assets/images/services/image-1.jpg"
+                                    src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657819717/ShoppingZone/About_3_ckcgxh.jpg"
                                     alt=""
                                     className="rounded-2xl w-full"
                                     />
                             </div>
                             <div className="py-3 sm:py-4">
                                 <img
-                                    src="https://cdn.tailgrids.com/1.0/assets/images/services/image-2.jpg"
+                                    src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657819717/ShoppingZone/About_1_kmyqoz.jpg"
                                     alt=""
                                     className="rounded-2xl w-full"
                                     />
@@ -24,7 +24,7 @@ const AboutPage = () => {
                         <div className="w-full xl:w-1/2 px-3 sm:px-4 mr-10 lg:mx-0">
                             <div className="my-4 relative z-10">
                                 <img
-                                    src="https://cdn.tailgrids.com/1.0/assets/images/services/image-3.jpg"
+                                    src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657819717/ShoppingZone/About_2_vnr7jk.jpg"
                                     alt=""
                                     className="rounded-2xl w-full"
                                     />

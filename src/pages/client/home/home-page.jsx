@@ -42,48 +42,48 @@ const callouts = [
     name: 'Áo thun nam',
     value: "ao-thun-nam",
     //description: 'Work from home accessories',
-    imageSrc: 'https://bizweb.sapocdn.net/100/438/408/products/apm3791-nav-2-aebfb314-b3e8-4920-ac57-b7e47ffac268.jpg?v=1652072325207',
-    imageAlt: 'Desk with leather desk pad, walnut desk organizer, wireless keyboard and mouse, and porcelain mug.',
+    imageSrc: 'https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/aothunnam_home_result_qukfwe.jpg',
+    imageAlt: 'ao-thun-nam',
     href: '#',
   },
   {
     name: 'Áo thun nữ',
     value: "ao-thun-nu",
     //description: 'Journals and note-taking',
-    imageSrc: 'https://bizweb.sapocdn.net/100/438/408/products/tsn5008-tra-3.jpg?v=1655948346477',
-    imageAlt: 'Wood table with porcelain mug, leather journal, brass pen, leather key ring, and a houseplant.',
+    imageSrc: 'https://res.cloudinary.com/dazdxrnam/image/upload/v1657820012/ShoppingZone/aothunnu_home_result_jo4rte.jpg',
+    imageAlt: 'ao-thun-nu',
     href: '#',
   },
   {
     name: 'Áo khoác nam',
     value: "ao-khoac-nam",
     //description: 'Daily commute essentials',
-    imageSrc: 'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/akm4029-xah-qjm3063-den-4.jpg?v=1637735749000',
-    imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
+    imageSrc: 'https://res.cloudinary.com/dazdxrnam/image/upload/v1657820012/ShoppingZone/aokhoacnam_home_result_q9luqu.jpg',
+    imageAlt: 'ao-khoac-nam',
     href: '#',
   },
   {
     name: 'Áo khoác nữ',
     value: "ao-khoac-nu",
     //description: 'Daily commute essentials',
-    imageSrc: 'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/akn4024-hog-1.jpg?v=1650612473000',
-    imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
+    imageSrc: 'https://res.cloudinary.com/dazdxrnam/image/upload/v1657820012/ShoppingZone/aokhoacnu_home_result_vu1iom.jpg',
+    imageAlt: 'ao-khoac-nu',
     href: '#',
   },
   {
     name: 'Sơ mi nam',
     value: "ao-so-mi-nam",
     //description: 'Daily commute essentials',
-    imageSrc: 'https://bizweb.sapocdn.net/100/438/408/products/smm4073-tra-3.jpg?v=1641780163303',
-    imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
+    imageSrc: 'https://res.cloudinary.com/dazdxrnam/image/upload/v1657820014/ShoppingZone/sominam_home_result_wxbw7u.jpg',
+    imageAlt: 'ao-so-mi-nam',
     href: '#',
   },
   {
     name: 'Sơ mi nữ',
     value: "ao-so-mi-nu",
     //description: 'Daily commute essentials',
-    imageSrc: 'https://bizweb.sapocdn.net/thumb/large/100/438/408/products/scn5130-den-4.jpg?v=1649998619000',
-    imageAlt: 'Collection of four insulated travel bottles on wooden shelf.',
+    imageSrc: 'https://res.cloudinary.com/dazdxrnam/image/upload/v1657820014/ShoppingZone/sominu_home_result_imkgox.jpg',
+    imageAlt: 'ao-so-mi-nu',
     href: '#',
   },
 ]
@@ -170,37 +170,14 @@ const HomePage = () => {
                       <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                         <div className="w-44 h-64 rounded-lg overflow-hidden sm:opacity-0 lg:opacity-100">
                           <img
-                            src="https://bizweb.sapocdn.net/100/438/408/products/stm5003-dre-3.jpg?v=1648536762443"
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_1_result_ns5vtj.jpg"
                             alt=""
                             className="w-full h-full object-center object-cover"
                           />
                         </div>
                         <div className="w-44 h-64 rounded-lg overflow-hidden">
                           <img
-                            src="https://bizweb.sapocdn.net/100/438/408/products/tsn5276-nau2.jpg?v=1650701121620"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                      </div>
-                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://bizweb.sapocdn.net/thumb/large/100/438/408/products/scn5194-den-qan5162-bee-5.jpg?v=1653097872000"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://bizweb.sapocdn.net/100/438/408/products/scm4031-tit-5.jpg?v=1639021408260"
-                            alt=""
-                            className="w-full h-full object-center object-cover"
-                          />
-                        </div>
-                        <div className="w-44 h-64 rounded-lg overflow-hidden">
-                          <img
-                            src="https://bizweb.sapocdn.net/thumb/large/100/438/408/products/acn5010-xat-3.jpg?v=1653096236000"
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_2_result_qqzred.jpg"
                             alt=""
                             className="w-full h-full object-center object-cover"
                           />
@@ -209,14 +186,37 @@ const HomePage = () => {
                       <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
                         <div className="w-44 h-64 rounded-lg overflow-hidden">
                           <img
-                            src="https://bizweb.sapocdn.net/thumb/large/100/438/408/products/akm4027-xah-qjm3077-xde-4.jpg?v=1642381400000"
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_3_result_zkpvgh.jpg"
                             alt=""
                             className="w-full h-full object-center object-cover"
                           />
                         </div>
                         <div className="w-44 h-64 rounded-lg overflow-hidden">
                           <img
-                            src="https://bizweb.sapocdn.net/thumb/large/100/438/408/products/akn4054-xat-6.jpg?v=1650612411000"
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_4_result_qambnh.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_5_result_lzga1t.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                      </div>
+                      <div className="flex-shrink-0 grid grid-cols-1 gap-y-6 lg:gap-y-8">
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_6_result_nj1yls.jpg"
+                            alt=""
+                            className="w-full h-full object-center object-cover"
+                          />
+                        </div>
+                        <div className="w-44 h-64 rounded-lg overflow-hidden">
+                          <img
+                            src="https://res.cloudinary.com/dazdxrnam/image/upload/v1657820013/ShoppingZone/home_7_result_v1vl86.jpg"
                             alt=""
                             className="w-full h-full object-center object-cover"
                           />
