@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'signin-signup': "url('/src/assets/LoginBackground.jpg')",
+        'admin-login': "url('/src/assets/Logo.jpg')",
       },
 
       animation: {

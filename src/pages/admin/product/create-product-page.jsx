@@ -25,6 +25,7 @@ const CreateProductPage = () => {
   }, []);
 
   const onSubmitForm = async (data, images, selectedCategory, selectedTags) => {
+    console.log(data);
     setIsLoading(true);
 
     let imagesInfo = [];
@@ -37,9 +38,6 @@ const CreateProductPage = () => {
     }
 
     const formData = { ...data };
-    if (_.isEmpty(formData.discount)) {
-      formData.discount = 0;
-    }
     formData.images = imagesInfo;
     formData.tags = selectedTags;
     formData.category = selectedCategory;
