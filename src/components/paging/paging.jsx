@@ -16,7 +16,7 @@ export const Paging = forwardRef(({
   const LIMIT_PAGES = 4;
 
   let totalPage = 1;
-  if (totalItem > numOfShowingPerPage) totalPage = Math.round(totalItem / numOfShowingPerPage);
+  if (totalItem > numOfShowingPerPage) totalPage = Math.ceil(totalItem / numOfShowingPerPage);
 
   const [currentPage, setCurrentPage] = useState(1);
 

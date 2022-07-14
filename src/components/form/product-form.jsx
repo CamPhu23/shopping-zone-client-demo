@@ -341,7 +341,7 @@ const ProductForm = ({ type, handleSubmitForm, item = null }) => {
               name="discount"
               placeholder=" "
               onWheel={(e) => e.target.blur()}
-              defaultValue={item ? (item.discount ? item.discount : "0") : ""}
+              defaultValue={item ? item.discount : "0"}
               className="block py-2.5 px-0 w-full text-sm  bg-transparent border-0 border-b-2 appearance-none text-white border-gray-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               {...register("discount", ProductValidator.discount)}
             />
