@@ -267,50 +267,50 @@ const WarehousePage = () => {
             titleText="Quản lý kho hàng"
           />
           <div className="flex justify-center">
-            <form className="mx-4 mt-3 sm:w-3/4 lg:w-1/2" onSubmit={handleSubmit(handleImport)}>
+            <form className="mx-4 mt-3 sm:w-3/4 lg:w-3/4" onSubmit={handleSubmit(handleImport)}>
               <div className="flex flex-row mb-4">
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-1/3">
                   <div className="relative w-full mb-6 group text-white">
                     Tên sản phẩm
                   </div>
                 </div>
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-2/3">
                   <div className="relative w-full mb-6 group">
                     {renderProductSelection()}
                   </div>
                 </div>
               </div>
               <div className="flex flex-row mb-4">
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-1/3">
                   <div className="relative w-full mb-6 group text-white">
                     Màu sản phẩm
                   </div>
                 </div>
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-2/3">
                   <div className="relative w-full mb-6 group">
                     {renderColorSelection()}
                   </div>
                 </div>
               </div>
               <div className="flex flex-row mb-4">
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-1/3">
                   <div className="relative w-full mb-6 group text-white">
                     Size sản phẩm
                   </div>
                 </div>
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-2/3">
                   <div className="relative w-full mb-6 group">
                     {renderSizeSelection()}
                   </div>
                 </div>
               </div>
               <div className="flex flex-row mb-4">
-                <div className="w-full pr-5 sm:w-1/2">
+                <div className="w-full pr-5 sm:w-1/3">
                   <div className="relative w-full mb-6 group text-white">
                     Số lượng nhập
                   </div>
                 </div>
-                <div className="w-full sm:w-1/2 pr-5">
+                <div className="w-full sm:w-2/3 pr-5">
                   <div className="relative w-full mb-6 group">
                     {renderQuantityInput()}
                   </div>
