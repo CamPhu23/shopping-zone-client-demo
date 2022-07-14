@@ -383,7 +383,7 @@ export default function DetailProductPage() {
               <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
                 Mô tả sản phẩm
               </h2>
-              <p className="mt-4 text-gray-500 text-justify">{description}</p>
+              <p className="mt-4 text-gray-500 text-justify break-all">{description}</p>
             </div>
           </div>
         </div>
@@ -454,9 +454,9 @@ export default function DetailProductPage() {
   }
 
   return (
-    <section className="text-gray-600 body-font overflow-hidden ">
+    <section className="text-gray-600 body-font overflow-hidden">
       <div className="container px-6 mt-5 mx-auto">
-        <div className="lg:w-4/5 mx-auto flex">
+        <div className="lg:w-4/5 mx-auto flex flex-wrap">
           {renderProductImage(product.images)}
           {renderProductInfo(product)}
         </div>
