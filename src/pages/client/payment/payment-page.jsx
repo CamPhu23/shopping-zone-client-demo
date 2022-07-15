@@ -71,6 +71,8 @@ export default function PaymentPage() {
         let error = JSON.parse(e);
         
         setLoading(false);
+        setLoading(false);
+        
         setToastShow(true);
         setToastMessages(error?.data.messages);
         setToastIcon(ICON.Fail);
